@@ -17,6 +17,7 @@
         <button class="btn btn-glass btn-lg" type="button" data-open-modal="how-it-works">{{ icon('play', 'icon-lg') }} How it works</button>
       </div>
     </div>
+    <div class="hero-art" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -92,6 +93,7 @@
     <aside class="board-side" aria-label="Today's ranking">
       <div class="side-card">
         <div class="side-head"><h3><span class="live-pip"></span> Today's ranking</h3><a href="#startups" data-set-filter="category" data-value="" data-scroll-to-list>See all {{ icon('chevron-right', 'icon-sm') }}</a></div>
+        <div class="side-ranks">
         {% for position, s in todays_ranking %}
         <a class="side-rank" href="{{ url_for('startups.profile', slug=s.slug) }}">
           <span class="side-pos">#{{ position }}</span>
@@ -102,8 +104,9 @@
         {% else %}
         <p class="text-muted" style="font-size:.86rem;margin:0">No promoted startups yet.</p>
         {% endfor %}
+        </div>
       </div>
-      <div class="side-card">
+      <div class="side-card side-raising">
         <div class="side-head"><h3>Raising now</h3><a href="{{ url_for('funding.index') }}">View {{ icon('chevron-right', 'icon-sm') }}</a></div>
         <p class="text-muted" style="font-size:.86rem;margin:0 0 12px">{{ stats.raising }} startups are looking for funds.</p>
         <a class="btn btn-outline btn-block btn-sm" href="{{ url_for('funding.index') }}">Looking for Funds {{ icon('arrow-right', 'icon-sm') }}</a>
