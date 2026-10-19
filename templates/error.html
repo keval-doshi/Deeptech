@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="error-page container">
+  <p class="code text-gradient">{{ status }}</p>
+  <h1 style="font-size:1.8rem">{{ title }}</h1>
+  <p class="text-muted">{{ message }}</p>
+  <div class="row" style="justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-primary" href="{{ url_for('startups.index') }}">Go to homepage</a>
+    <a class="btn btn-ghost" href="{{ url_for('startups.index', _anchor='startups') }}">Explore startups</a>
+  </div>
+</section>
+{% endblock %}

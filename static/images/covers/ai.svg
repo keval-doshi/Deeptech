@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03051a"/><stop offset="0.55" stop-color="#0b1033"/><stop offset="1" stop-color="#140a3d"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="0.50" cy="0.44" r="0.5">
+    <stop offset="0" stop-color="#4f8bff" stop-opacity="0.55"/><stop offset="1" stop-color="#4f8bff" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="horizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2b6cff" stop-opacity="0"/><stop offset="0.5" stop-color="#5aa0ff"/>
+    <stop offset="1" stop-color="#2b6cff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff3c4"/><stop offset="0.5" stop-color="#ff9a3c"/><stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<rect width="800" height="500" fill="url(#glow)"/>
+<g><circle cx="177" cy="311" r="1.4" fill="#fff" opacity="0.61"/><circle cx="214" cy="54" r="1.2" fill="#fff" opacity="0.37"/><circle cx="56" cy="12" r="1.2" fill="#fff" opacity="0.41"/><circle cx="14" cy="296" r="1.4" fill="#fff" opacity="0.82"/><circle cx="618" cy="289" r="0.8" fill="#fff" opacity="0.57"/><circle cx="410" cy="170" r="0.6" fill="#fff" opacity="0.55"/><circle cx="769" cy="210" r="1.5" fill="#fff" opacity="0.71"/><circle cx="276" cy="320" r="1.3" fill="#fff" opacity="0.37"/><circle cx="266" cy="147" r="1.1" fill="#fff" opacity="0.37"/><circle cx="519" cy="148" r="1.1" fill="#fff" opacity="0.47"/><circle cx="419" cy="231" r="0.5" fill="#fff" opacity="0.62"/><circle cx="378" cy="374" r="1.1" fill="#fff" opacity="0.55"/><circle cx="3" cy="233" r="0.7" fill="#fff" opacity="0.81"/><circle cx="6" cy="145" r="0.5" fill="#fff" opacity="0.81"/><circle cx="726" cy="84" r="1.6" fill="#fff" opacity="0.37"/><circle cx="442" cy="266" r="1.0" fill="#fff" opacity="0.77"/><circle cx="133" cy="274" r="1.1" fill="#fff" opacity="0.44"/><circle cx="260" cy="78" r="1.0" fill="#fff" opacity="0.45"/><circle cx="499" cy="86" r="0.8" fill="#fff" opacity="0.71"/><circle cx="481" cy="305" r="1.7" fill="#fff" opacity="0.83"/><circle cx="69" cy="288" r="1.1" fill="#fff" opacity="0.60"/><circle cx="224" cy="292" r="1.0" fill="#fff" opacity="0.30"/><circle cx="742" cy="334" r="1.6" fill="#fff" opacity="0.65"/><circle cx="590" cy="178" r="1.2" fill="#fff" opacity="0.34"/><circle cx="11" cy="111" r="1.8" fill="#fff" opacity="0.55"/><circle cx="453" cy="128" r="1.3" fill="#fff" opacity="0.83"/><circle cx="68" cy="230" r="0.6" fill="#fff" opacity="0.83"/><circle cx="284" cy="22" r="1.7" fill="#fff" opacity="0.72"/><circle cx="411" cy="181" r="1.2" fill="#fff" opacity="0.40"/><circle cx="796" cy="57" r="0.8" fill="#fff" opacity="0.59"/><circle cx="285" cy="326" r="1.3" fill="#fff" opacity="0.30"/><circle cx="282" cy="114" r="1.7" fill="#fff" opacity="0.59"/><circle cx="16" cy="260" r="1.1" fill="#fff" opacity="0.49"/><circle cx="56" cy="60" r="0.7" fill="#fff" opacity="0.31"/><circle cx="543" cy="164" r="0.7" fill="#fff" opacity="0.80"/><circle cx="531" cy="233" r="1.0" fill="#fff" opacity="0.48"/><circle cx="400" cy="232" r="0.6" fill="#fff" opacity="0.60"/><circle cx="330" cy="269" r="1.4" fill="#fff" opacity="0.28"/><circle cx="212" cy="96" r="0.5" fill="#fff" opacity="0.88"/><circle cx="640" cy="148" r="1.2" fill="#fff" opacity="0.71"/><circle cx="212" cy="88" r="1.0" fill="#fff" opacity="0.36"/><circle cx="468" cy="295" r="1.5" fill="#fff" opacity="0.77"/><circle cx="747" cy="18" r="1.3" fill="#fff" opacity="0.88"/><circle cx="557" cy="332" r="1.5" fill="#fff" opacity="0.50"/><circle cx="299" cy="286" r="1.4" fill="#fff" opacity="0.73"/><circle cx="774" cy="243" r="1.1" fill="#fff" opacity="0.53"/><circle cx="612" cy="267" r="1.7" fill="#fff" opacity="0.34"/><circle cx="270" cy="115" r="1.4" fill="#fff" opacity="0.46"/><circle cx="273" cy="224" r="0.6" fill="#fff" opacity="0.53"/><circle cx="155" cy="168" r="1.4" fill="#fff" opacity="0.78"/><circle cx="369" cy="137" r="0.8" fill="#fff" opacity="0.40"/><circle cx="648" cy="103" r="1.3" fill="#fff" opacity="0.44"/><circle cx="326" cy="226" r="1.6" fill="#fff" opacity="0.60"/><circle cx="17" cy="242" r="1.3" fill="#fff" opacity="0.27"/><circle cx="665" cy="335" r="0.8" fill="#fff" opacity="0.28"/><circle cx="522" cy="137" r="0.9" fill="#fff" opacity="0.72"/><circle cx="521" cy="322" r="1.8" fill="#fff" opacity="0.82"/><circle cx="362" cy="4" r="1.8" fill="#fff" opacity="0.48"/><circle cx="593" cy="63" r="0.6" fill="#fff" opacity="0.30"/><circle cx="101" cy="67" r="0.8" fill="#fff" opacity="0.80"/><circle cx="725" cy="286" r="1.2" fill="#fff" opacity="0.28"/><circle cx="71" cy="324" r="0.6" fill="#fff" opacity="0.74"/><circle cx="174" cy="141" r="0.7" fill="#fff" opacity="0.53"/><circle cx="771" cy="148" r="1.5" fill="#fff" opacity="0.75"/><circle cx="635" cy="32" r="1.5" fill="#fff" opacity="0.58"/><circle cx="702" cy="322" r="1.6" fill="#fff" opacity="0.83"/><circle cx="673" cy="35" r="0.7" fill="#fff" opacity="0.80"/><circle cx="432" cy="367" r="1.8" fill="#fff" opacity="0.30"/><circle cx="315" cy="238" r="0.6" fill="#fff" opacity="0.65"/><circle cx="726" cy="26" r="1.6" fill="#fff" opacity="0.79"/></g>
+<ellipse cx="400.0" cy="1020" rx="880" ry="640" fill="#060b2a" stroke="url(#horizon)" stroke-width="3"/>
+<g stroke="#4f8bff" stroke-opacity="0.35" stroke-width="1"><path d="M396 444 L358 418"/><path d="M396 444 L266 336"/><path d="M396 444 L411 283"/><path d="M396 444 L326 426"/><path d="M396 444 L515 463"/><path d="M396 444 L456 382"/><path d="M396 444 L343 325"/><path d="M396 444 L451 375"/><path d="M358 418 L266 336"/><path d="M358 418 L411 283"/><path d="M358 418 L198 416"/><path d="M358 418 L326 426"/><path d="M358 418 L515 463"/><path d="M358 418 L456 382"/><path d="M358 418 L343 325"/><path d="M358 418 L451 375"/><path d="M266 336 L411 283"/><path d="M266 336 L198 416"/><path d="M266 336 L326 426"/><path d="M266 336 L343 325"/><path d="M542 301 L649 291"/><path d="M542 301 L411 283"/><path d="M542 301 L652 357"/><path d="M542 301 L515 463"/><path d="M542 301 L456 382"/><path d="M542 301 L661 417"/><path d="M542 301 L451 375"/><path d="M649 291 L652 357"/><path d="M649 291 L661 417"/><path d="M411 283 L326 426"/><path d="M411 283 L456 382"/><path d="M411 283 L343 325"/><path d="M411 283 L451 375"/><path d="M198 416 L326 426"/><path d="M326 426 L456 382"/><path d="M326 426 L343 325"/><path d="M326 426 L451 375"/><path d="M652 357 L661 417"/><path d="M515 463 L456 382"/><path d="M515 463 L661 417"/><path d="M515 463 L451 375"/><path d="M456 382 L343 325"/><path d="M456 382 L451 375"/><path d="M343 325 L451 375"/></g>
+<g fill="#4f8bff" opacity="0.9"><circle cx="396" cy="444" r="3.0"/><circle cx="358" cy="418" r="2.2"/><circle cx="266" cy="336" r="3.5"/><circle cx="542" cy="301" r="3.1"/><circle cx="649" cy="291" r="3.7"/><circle cx="411" cy="283" r="2.2"/><circle cx="198" cy="416" r="3.0"/><circle cx="326" cy="426" r="2.5"/><circle cx="652" cy="357" r="2.6"/><circle cx="515" cy="463" r="3.8"/><circle cx="456" cy="382" r="3.3"/><circle cx="661" cy="417" r="3.7"/><circle cx="343" cy="325" r="3.1"/><circle cx="451" cy="375" r="3.1"/></g>
+<g transform="translate(400 220) rotate(0) scale(0.95)" fill="none" stroke="#e8edff" stroke-width="5"
+   stroke-linecap="round" stroke-linejoin="round" filter="url(#soft)">
+  <style>
+    .thin { stroke-width: 2; stroke-opacity: .55; stroke: #4f8bff; }
+    .node { fill: #4f8bff; stroke: #fff; stroke-width: 2; }
+    .core { fill: #4f8bff; fill-opacity: .35; stroke: #4f8bff; }
+    .leaf { fill: #4f8bff; fill-opacity: .3; stroke: #4f8bff; }
+    .flame { fill: url(#flame); stroke: none; }
+    .sun { fill: #ffcf4a; fill-opacity: .25; stroke: #ffcf4a; }
+    .pulse { stroke: #4f8bff; stroke-width: 6; }
+    .sweep { fill: #4f8bff; fill-opacity: .35; stroke: none; }
+    .bolt { fill: #4f8bff; fill-opacity: .5; stroke: #4f8bff; }
+  </style>
+  <path class="thin" d="M-150 -90 L-50 -120"/>
+<path class="thin" d="M-150 -90 L-50 -60"/>
+<path class="thin" d="M-150 -90 L-50 0"/>
+<path class="thin" d="M-150 -90 L-50 60"/>
+<path class="thin" d="M-150 -90 L-50 120"/>
+<path class="thin" d="M-150 -30 L-50 -120"/>
+<path class="thin" d="M-150 -30 L-50 -60"/>
+<path class="thin" d="M-150 -30 L-50 0"/>
+<path class="thin" d="M-150 -30 L-50 60"/>
+<path class="thin" d="M-150 -30 L-50 120"/>
+<path class="thin" d="M-150 30 L-50 -120"/>
+<path class="thin" d="M-150 30 L-50 -60"/>
+<path class="thin" d="M-150 30 L-50 0"/>
+<path class="thin" d="M-150 30 L-50 60"/>
+<path class="thin" d="M-150 30 L-50 120"/>
+<path class="thin" d="M-150 90 L-50 -120"/>
+<path class="thin" d="M-150 90 L-50 -60"/>
+<path class="thin" d="M-150 90 L-50 0"/>
+<path class="thin" d="M-150 90 L-50 60"/>
+<path class="thin" d="M-150 90 L-50 120"/>
+<path class="thin" d="M-50 -120 L50 -120"/>
+<path class="thin" d="M-50 -120 L50 -60"/>
+<path class="thin" d="M-50 -120 L50 0"/>
+<path class="thin" d="M-50 -120 L50 60"/>
+<path class="thin" d="M-50 -120 L50 120"/>
+<path class="thin" d="M-50 -60 L50 -120"/>
+<path class="thin" d="M-50 -60 L50 -60"/>
+<path class="thin" d="M-50 -60 L50 0"/>
+<path class="thin" d="M-50 -60 L50 60"/>
+<path class="thin" d="M-50 -60 L50 120"/>
+<path class="thin" d="M-50 0 L50 -120"/>
+<path class="thin" d="M-50 0 L50 -60"/>
+<path class="thin" d="M-50 0 L50 0"/>
+<path class="thin" d="M-50 0 L50 60"/>
+<path class="thin" d="M-50 0 L50 120"/>
+<path class="thin" d="M-50 60 L50 -120"/>
+<path class="thin" d="M-50 60 L50 -60"/>
+<path class="thin" d="M-50 60 L50 0"/>
+<path class="thin" d="M-50 60 L50 60"/>
+<path class="thin" d="M-50 60 L50 120"/>
+<path class="thin" d="M-50 120 L50 -120"/>
+<path class="thin" d="M-50 120 L50 -60"/>
+<path class="thin" d="M-50 120 L50 0"/>
+<path class="thin" d="M-50 120 L50 60"/>
+<path class="thin" d="M-50 120 L50 120"/>
+<path class="thin" d="M50 -120 L150 -60"/>
+<path class="thin" d="M50 -120 L150 0"/>
+<path class="thin" d="M50 -120 L150 60"/>
+<path class="thin" d="M50 -60 L150 -60"/>
+<path class="thin" d="M50 -60 L150 0"/>
+<path class="thin" d="M50 -60 L150 60"/>
+<path class="thin" d="M50 0 L150 -60"/>
+<path class="thin" d="M50 0 L150 0"/>
+<path class="thin" d="M50 0 L150 60"/>
+<path class="thin" d="M50 60 L150 -60"/>
+<path class="thin" d="M50 60 L150 0"/>
+<path class="thin" d="M50 60 L150 60"/>
+<path class="thin" d="M50 120 L150 -60"/>
+<path class="thin" d="M50 120 L150 0"/>
+<path class="thin" d="M50 120 L150 60"/>
+<circle class="node" cx="-150" cy="-90" r="9"/>
+<circle class="node" cx="-150" cy="-30" r="9"/>
+<circle class="node" cx="-150" cy="30" r="9"/>
+<circle class="node" cx="-150" cy="90" r="9"/>
+<circle class="node" cx="-50" cy="-120" r="9"/>
+<circle class="node" cx="-50" cy="-60" r="9"/>
+<circle class="node" cx="-50" cy="0" r="9"/>
+<circle class="node" cx="-50" cy="60" r="9"/>
+<circle class="node" cx="-50" cy="120" r="9"/>
+<circle class="node" cx="50" cy="-120" r="9"/>
+<circle class="node" cx="50" cy="-60" r="9"/>
+<circle class="node" cx="50" cy="0" r="9"/>
+<circle class="node" cx="50" cy="60" r="9"/>
+<circle class="node" cx="50" cy="120" r="9"/>
+<circle class="node" cx="150" cy="-60" r="9"/>
+<circle class="node" cx="150" cy="0" r="9"/>
+<circle class="node" cx="150" cy="60" r="9"/>
+</g>
+</svg>

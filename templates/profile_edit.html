@@ -1,0 +1,156 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, logo_tile %}
+{% block title %}Company Profile{% endblock %}
+
+{% block app %}
+{% set f = startup.funding %}
+<div class="page-intro">
+  <div>
+    <span class="crumb">Company Profile</span>
+    <h1>{{ startup.name }}</h1>
+    <p>Keep your public profile up to date. Changes go live immediately.</p>
+  </div>
+  <div class="stack" style="gap:6px;flex:1 1 220px;max-width:320px">
+    <span class="text-muted" style="font-size:.85rem">Profile strength: <strong>{{ completeness.percent }}%</strong></span>
+    <div class="progress"><span style="width: {{ completeness.percent }}%"></span></div>
+  </div>
+</div>
+
+{% if startup.status == 'rejected' %}
+<div class="alert-bar danger">{{ icon('alert') }} <span><strong>Changes requested:</strong> {{ startup.rejection_reason or 'Please update your listing.' }} Saving the Basics tab resubmits your listing for review.</span></div>
+{% elif startup.status == 'pending' %}
+<div class="alert-bar info">{{ icon('clock') }} <span>Your listing is under review. You can keep editing while we take a look; bidding opens once it's approved.</span></div>
+{% endif %}
+<div class="card">
+  <div class="tabs" role="tablist" data-tabs="hash" style="padding:0 18px">
+    <button class="tab" role="tab" aria-controls="basics" aria-selected="true">Basics</button>
+    <button class="tab" role="tab" aria-controls="funding">Funding</button>
+    <button class="tab" role="tab" aria-controls="founders">Founders ({{ startup.founders|length }})</button>
+    <button class="tab" role="tab" aria-controls="products">Products ({{ startup.products|length }})</button>
+    <button class="tab" role="tab" aria-controls="gallery">Gallery ({{ startup.gallery|length }})</button>
+    <button class="tab" role="tab" aria-controls="updates">Updates</button>
+  </div>
+
+  <div class="card-body">
+    <!-- Basics -->
+    <section class="tab-panel" id="basics" role="tabpanel">
+      <form data-api-form data-action="{{ url_for('startups.api_update', startup_id=startup.id) }}" data-method="PUT" data-encoding="multipart" data-success="Profile saved.">
+        <div class="row row-wrap" style="align-items:stretch;gap:16px;margin-bottom:18px">
+          <div><span class="label">Logo</span>
+            <label class="dropzone logo-drop mt-1">{% if startup.logo_url %}<img class="preview" src="{{ startup.logo_url }}" alt="Current logo">{% endif %}{{ icon('upload') }}<span>Change logo</span><input type="file" name="logo" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
+          <div style="flex:1;min-width:240px"><span class="label">Cover image</span>
+            <label class="dropzone mt-1"><img class="preview" src="{{ startup.cover_url }}" alt="Current cover">{{ icon('image') }}<span>Change cover</span><input type="file" name="cover" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="name" class="required">Startup name</label><input id="name" name="name" value="{{ startup.name }}" required minlength="2" maxlength="120"></div>
+          <div class="field"><label for="category_id" class="required">Category</label><select id="category_id" name="category_id" required>{% for c in categories %}<option value="{{ c.id }}" {% if c.id == startup.category_id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+          <div class="field span-2"><label for="tagline" class="required">Tagline</label><input id="tagline" name="tagline" value="{{ startup.tagline }}" required minlength="10" maxlength="160"></div>
+          <div class="field span-2"><label for="description" class="required">About</label><textarea id="description" name="description" required minlength="80" maxlength="5000" data-count="#d-count">{{ startup.description }}</textarea><span class="char-count" id="d-count"></span></div>
+          <div class="field"><label for="tags">Focus areas</label><input id="tags" name="tags" value="{{ startup.tags }}" maxlength="255"></div>
+          <div class="field"><label for="founded_year" class="required">Founded</label><input id="founded_year" name="founded_year" type="number" min="1950" max="{{ current_year }}" value="{{ startup.founded_year or '' }}" required></div>
+          <div class="field"><label for="team_size" class="required">Team size</label><select id="team_size" name="team_size" required>{% for t in team_sizes %}<option {% if t == startup.team_size %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+          <div class="field"><label for="city" class="required">City</label><input id="city" name="city" value="{{ startup.city }}" required></div>
+          <div class="field"><label for="state">State</label><input id="state" name="state" value="{{ startup.state }}"></div>
+          <div class="field"><label for="website">Website</label><input id="website" name="website" type="url" value="{{ startup.website or '' }}"></div>
+          <div class="field"><label for="contact_email" class="required">Contact email</label><input id="contact_email" name="contact_email" type="email" value="{{ startup.contact_email or '' }}" required></div>
+          <div class="field"><label for="address">Address</label><input id="address" name="address" value="{{ startup.address or '' }}"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Save changes</button>
+      </form>
+    </section>
+
+    <!-- Funding -->
+    <section class="tab-panel" id="funding" role="tabpanel" hidden>
+      <form data-api-form data-action="{{ url_for('startups.api_update_funding', startup_id=startup.id) }}" data-method="PUT" data-encoding="json" data-success="Funding details saved." style="max-width:720px">
+        <div class="field"><label class="check"><input type="checkbox" name="is_raising" {% if f and f.is_raising %}checked{% endif %}> We are currently looking for funds</label></div>
+        <div class="form-grid">
+          <div class="field"><label for="stage">Stage / round</label><select id="stage" name="stage"><option value="">Select</option>{% for s in stages %}<option {% if f and s == f.stage %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+          <div class="field"><label for="total_raised_inr">Total raised (₹)</label><div class="input-prefix"><span>₹</span><input id="total_raised_inr" name="total_raised_inr" type="number" min="0" value="{{ f.total_raised_inr if f else 0 }}"></div></div>
+          <div class="field"><label for="raising_target_inr">Raise target (₹)</label><div class="input-prefix"><span>₹</span><input id="raising_target_inr" name="raising_target_inr" type="number" min="0" value="{{ f.raising_target_inr if f else 0 }}"></div></div>
+          <div class="field"><label for="min_ticket_inr">Minimum cheque (₹)</label><div class="input-prefix"><span>₹</span><input id="min_ticket_inr" name="min_ticket_inr" type="number" min="0" value="{{ f.min_ticket_inr if f else 0 }}"></div></div>
+          <div class="field span-2"><label for="use_of_funds">Use of funds</label><textarea id="use_of_funds" name="use_of_funds" maxlength="600">{{ f.use_of_funds if f else '' }}</textarea></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Save funding</button>
+      </form>
+    </section>
+
+    <!-- Founders -->
+    <section class="tab-panel" id="founders" role="tabpanel" hidden>
+      <div class="edit-list">
+        {% for p in startup.founders %}
+        <div class="edit-item" data-item>
+          <span class="avatar">{% if p.photo_path %}<img src="{{ url_for('static', filename=p.photo_path) }}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover">{% else %}{{ p.initials }}{% endif %}</span>
+          <div class="grow"><strong>{{ p.name }}</strong><small>{{ p.title }}</small></div>
+          <button class="btn btn-ghost btn-sm" type="button" data-api-delete="{{ url_for('startups.api_delete_founder', startup_id=startup.id, founder_id=p.id) }}" data-item-label="founder">{{ icon('trash', 'icon-sm') }} Remove</button>
+        </div>
+        {% else %}<div class="state">No founders yet. Investors want to know who's building.</div>{% endfor %}
+      </div>
+      <form data-api-form data-action="{{ url_for('startups.api_add_founder', startup_id=startup.id) }}" data-method="POST" data-encoding="multipart" data-success="Founder added." class="form-section" style="margin:0">
+        <h2>{{ icon('user-plus') }} Add a founder or leader</h2>
+        <div class="form-grid mt-2">
+          <div class="field"><label for="f-name" class="required">Name</label><input id="f-name" name="name" required minlength="2"></div>
+          <div class="field"><label for="f-title" class="required">Role</label><input id="f-title" name="title" required minlength="2" placeholder="Co-founder & CEO"></div>
+          <div class="field"><label for="f-li">LinkedIn URL</label><input id="f-li" name="linkedin_url" type="url" placeholder="https://www.linkedin.com/in/…"></div>
+          <div class="field"><label for="f-photo">Photo</label><input id="f-photo" name="photo" type="file" accept="image/png,image/jpeg,image/webp"></div>
+          <div class="field span-2"><label for="f-bio">Short bio</label><textarea id="f-bio" name="bio" maxlength="500" style="min-height:80px"></textarea></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Add founder</button>
+      </form>
+    </section>
+
+    <!-- Products -->
+    <section class="tab-panel" id="products" role="tabpanel" hidden>
+      <div class="edit-list">
+        {% for p in startup.products %}
+        <div class="edit-item" data-item>
+          {% if p.image_path %}<img src="{{ url_for('static', filename=p.image_path) }}" alt="">{% endif %}
+          <div class="grow"><strong>{{ p.name }}</strong><small>{{ p.summary }}</small></div>
+          <button class="btn btn-ghost btn-sm" type="button" data-api-delete="{{ url_for('startups.api_delete_product', startup_id=startup.id, product_id=p.id) }}" data-item-label="product">{{ icon('trash', 'icon-sm') }} Remove</button>
+        </div>
+        {% else %}<div class="state">No products listed yet.</div>{% endfor %}
+      </div>
+      <form data-api-form data-action="{{ url_for('startups.api_add_product', startup_id=startup.id) }}" data-method="POST" data-encoding="multipart" data-success="Product added." class="form-section" style="margin:0">
+        <h2>{{ icon('plus') }} Add a product</h2>
+        <div class="form-grid mt-2">
+          <div class="field"><label for="p-name" class="required">Product name</label><input id="p-name" name="name" required minlength="2"></div>
+          <div class="field"><label for="p-image">Image</label><input id="p-image" name="image" type="file" accept="image/png,image/jpeg,image/webp"></div>
+          <div class="field span-2"><label for="p-summary">Summary</label><input id="p-summary" name="summary" maxlength="400"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Add product</button>
+      </form>
+    </section>
+
+    <!-- Gallery -->
+    <section class="tab-panel" id="gallery" role="tabpanel" hidden>
+      <div class="thumb-grid">
+        {% for g in startup.gallery %}
+        <figure data-item><img src="{{ url_for('static', filename=g.image_path) }}" alt="{{ g.caption }}">
+          <button class="icon-btn" type="button" aria-label="Remove image" data-api-delete="{{ url_for('startups.api_delete_gallery', startup_id=startup.id, image_id=g.id) }}" data-item-label="image">{{ icon('trash', 'icon-sm') }}</button></figure>
+        {% endfor %}
+      </div>
+      <form data-api-form data-action="{{ url_for('startups.api_add_gallery', startup_id=startup.id) }}" data-method="POST" data-encoding="multipart" data-success="Image uploaded." class="row row-wrap" style="align-items:flex-end">
+        <label class="dropzone" style="min-height:110px;flex:1;min-width:240px">{{ icon('upload') }}<span>Choose an image</span><small>PNG, JPG or WebP · max 5 MB</small><input type="file" name="image" accept="image/png,image/jpeg,image/webp" required data-preview></label>
+        <div class="field" style="flex:1;min-width:200px;margin:0"><label for="g-caption">Caption</label><input id="g-caption" name="caption" maxlength="160"></div>
+        <button class="btn btn-primary" type="submit">{{ icon('upload') }} Upload</button>
+      </form>
+    </section>
+
+    <!-- Updates -->
+    <section class="tab-panel" id="updates" role="tabpanel" hidden>
+      <form data-api-form data-action="{{ url_for('startups.api_add_update', startup_id=startup.id) }}" data-method="POST" data-encoding="json" data-success="Update published." style="max-width:720px">
+        <div class="field"><label for="u-title" class="required">Title</label><input id="u-title" name="title" required minlength="4" maxlength="160"></div>
+        <div class="field"><label for="u-body" class="required">Update</label><textarea id="u-body" name="body" required minlength="10" maxlength="3000"></textarea></div>
+        <button class="btn btn-primary" type="submit">Publish update</button>
+      </form>
+      <div class="edit-list mt-3">
+        {% for u in startup.updates %}
+        <div class="edit-item" data-item><div class="grow"><strong>{{ u.title }}</strong><small>{{ u.created_at|ist('%d %b %Y') }}</small></div>
+          <button class="btn btn-ghost btn-sm" type="button" data-api-delete="{{ url_for('startups.api_delete_update', startup_id=startup.id, update_id=u.id) }}" data-item-label="update">{{ icon('trash', 'icon-sm') }}</button></div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/startup.js') }}"></script>{% endblock %}

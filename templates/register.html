@@ -1,0 +1,41 @@
+{% extends "_auth_layout.html" %}
+{% from "_macros.html" import icon, text_field, field_error %}
+{% block title %}Create an account{% endblock %}
+{% block art_title %}Showcase your startup. Meet the right investors.{% endblock %}
+{% block form %}
+<h1 class="mt-2">Create your account</h1>
+{% if not registrations_open %}
+  <div class="state">{{ icon('lock') }}<h3>Registrations are paused</h3><p>Please check back soon.</p></div>
+{% else %}
+<p class="text-muted">Free for founders and investors.</p>
+<form method="post" data-validate novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <fieldset style="border:0;padding:0;margin:0">
+    <legend class="label" style="margin-bottom:8px">I am a…</legend>
+    <div class="role-switch">
+      <div class="role-option"><input type="radio" id="role-founder" name="role" value="startup_owner" {% if values.get('role', 'startup_owner') != 'investor' %}checked{% endif %}>
+        <label for="role-founder"><strong>{{ icon('rocket') }} Founder</strong><span>List and manage a startup</span></label></div>
+      <div class="role-option"><input type="radio" id="role-investor" name="role" value="investor" {% if values.get('role') == 'investor' %}checked{% endif %}>
+        <label for="role-investor"><strong>{{ icon('briefcase') }} Investor</strong><span>Discover and connect</span></label></div>
+    </div>
+    {{ field_error(errors, 'role') }}
+  </fieldset>
+  {{ text_field('name', 'Full name', errors, values, required=True, autocomplete='name') }}
+  {{ text_field('email', 'Work email', errors, values, type='email', required=True, autocomplete='email') }}
+  <div data-investor-only {% if values.get('role') != 'investor' %}hidden{% endif %}>
+    {{ text_field('firm_name', 'Firm or investor name', errors, values, autocomplete='organization', placeholder='e.g. Meru Ventures, or your name for angels') }}
+  </div>
+  <div class="form-grid">
+    <div class="field {% if errors.password %}has-error{% endif %}"><label for="password" class="required">Password</label><input id="password" name="password" type="password" required minlength="10" autocomplete="new-password">{{ field_error(errors, 'password') }}</div>
+    <div class="field {% if errors.confirm_password %}has-error{% endif %}"><label for="confirm_password" class="required">Confirm</label><input id="confirm_password" name="confirm_password" type="password" required data-match="password" autocomplete="new-password">{{ field_error(errors, 'confirm_password') }}</div>
+  </div>
+  <p class="hint text-subtle" style="font-size:.8rem;margin-top:-8px">At least 10 characters, mixing letters with numbers or symbols.</p>
+  <div class="field {% if errors.terms %}has-error{% endif %}"><label class="check"><input type="checkbox" name="terms" value="1" required> <span>I agree to the Terms of Use and Privacy Policy.</span></label>{{ field_error(errors, 'terms') }}</div>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Create account {{ icon('arrow-right') }}</button>
+</form>
+<p class="text-muted mt-3" style="text-align:center">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

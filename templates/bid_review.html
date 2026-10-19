@@ -1,0 +1,54 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, logo_tile %}
+{% block title %}Review Bid{% endblock %}
+{% block extra_css %}{{ super() }}{% if payment_provider == 'razorpay' %}<link rel="preconnect" href="https://checkout.razorpay.com">{% endif %}{% endblock %}
+
+{% block app %}
+<div class="page-intro">
+  <div>
+    <a class="crumb" href="{{ url_for('bidding.manage') }}">Manage Bids</a>
+    <h1>Review &amp; pay</h1>
+    <p>Confirm your bid. Your ranking changes only after the payment provider confirms payment.</p>
+  </div>
+</div>
+
+<div class="card review-card" data-bid-review
+     data-position="{{ position }}" data-amount="{{ amount }}" data-idempotency-key=""
+     data-board-url="{{ url_for('bidding.manage') }}">
+  <div class="card-body">
+    <div class="row" style="gap:14px">{{ logo_tile(startup) }}<div><h2 style="margin:0">{{ startup.name }}</h2><span class="meta">{{ startup.category.name }} · {{ startup.location }}</span></div></div>
+
+    <div class="review-lines">
+      <div><span>Target position</span><strong>#{{ position }}</strong></div>
+      <div><span>Your current position</span><strong>{{ '#' ~ current_position if current_position else 'Not ranked' }}</strong></div>
+      <div><span>Minimum required right now</span><strong>{{ minimum|inr }}</strong></div>
+      <div><span>Ranking period</span><strong>{{ rules.ranking_period_days }} days (until about {{ ranking_until|ist('%d %b %Y') }})</strong></div>
+      {% if current_bid %}<div><span>Replaces your current bid</span><strong>{{ current_bid|inr }}</strong></div>{% endif %}
+      <div class="total"><span>Amount payable</span><strong>{{ amount|inr }}</strong></div>
+    </div>
+
+    {% if payment_provider == 'mock' %}
+    <div class="sandbox-note mb-2">{{ icon('alert') }}<span><strong>Sandbox mode.</strong> No real money moves. You'll be taken to a simulated checkout that sends a signed test webhook to this server.</span></div>
+    {% endif %}
+
+    <ul class="text-muted" style="font-size:.86rem;padding-left:18px;line-height:1.7">
+      <li>The amount is checked again against live bids when you pay. If another startup confirms first, you may land one position lower.</li>
+      <li>Your checkout is held for {{ rules.checkout_ttl_minutes }} minutes. After that, place the bid again.</li>
+      <li>Promoted positions are labelled as paid placements on the public site. Amounts are never shown publicly.</li>
+    </ul>
+
+    <label class="check mt-2"><input type="checkbox" data-accept-terms> <span>I understand that bids are non-refundable once my ranking is confirmed, and I agree to the promoted listing terms.</span></label>
+
+    <div class="row mt-3 row-wrap">
+      <button class="btn btn-primary btn-lg" type="button" data-pay disabled>{{ icon('lock') }} Pay {{ amount|inr }} securely</button>
+      <a class="btn btn-ghost btn-lg" href="{{ url_for('bidding.manage') }}">Back</a>
+    </div>
+    <p class="error-text mt-2" data-review-error role="alert"></p>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if payment_provider == 'razorpay' %}<script src="https://checkout.razorpay.com/v1/checkout.js"></script>{% endif %}
+<script src="{{ url_for('static', filename='js/bidding.js') }}"></script>
+{% endblock %}

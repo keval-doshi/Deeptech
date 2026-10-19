@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}{{ 'Investor Workspace' if profile else 'Investors in Indian Deep Tech' }}{% endblock %}
+{% block description %}Venture funds, angel networks and accelerators backing Indian deep-tech startups.{% endblock %}
+
+{% block content %}
+<section class="page-hero dark" style="background-image:url('{{ url_for('static', filename='images/hero-globe.jpg') }}')">
+  <div class="container">
+    {% if profile %}
+      <p class="eyebrow" style="color:#b7a8ff">Investor workspace</p>
+      <h1>Welcome, {{ profile.firm_name }}</h1>
+      {% if profile.is_verified %}<p class="mb-2"><span class="badge badge-success">{{ icon('shield-check') }} Verified investor</span></p>
+      {% else %}<p class="mb-2"><span class="badge badge-warning">{{ icon('clock') }} Verification pending</span> <span style="font-size:.85rem">Our team reviews new investor profiles. Complete your fund profile to speed this up.</span></p>{% endif %}
+      <p>Track startups you follow, discover companies in your sectors and manage introduction requests.</p>
+    {% else %}
+      <p class="eyebrow" style="color:#b7a8ff">For investors</p>
+      <h1>Investors backing Indian deep tech</h1>
+      <p>Funds, angel networks and accelerators active on DeeptechIndia.in. Join to save startups and request warm introductions.</p>
+      <div class="row mt-2 row-wrap">
+        {% if not current_user.is_authenticated %}<a class="btn btn-primary" href="{{ url_for('auth.register', role='investor') }}">Join as investor {{ icon('arrow-right') }}</a>{% endif %}
+        <a class="btn btn-ghost" href="{{ url_for('funding.index') }}">See startups raising now</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<div class="container section-sm">
+{% if profile %}
+  <div data-investor-workspace>
+    {% if not current_user.is_verified %}
+    <div class="flash flash-info mb-2">{{ icon('mail') }}<span>Verify your email to request introductions.</span>
+      <form method="post" action="{{ url_for('auth.resend_verification') }}" style="margin-left:auto"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.path }}"><button class="btn btn-sm btn-ghost" type="submit">Resend</button></form></div>
+    {% endif %}
+    <div class="tabs" role="tablist" data-tabs="hash">
+      <button class="tab" role="tab" aria-controls="recommended" aria-selected="true">{{ icon('sparkles') }} Recommended</button>
+      <button class="tab" role="tab" aria-controls="saved">{{ icon('bookmark') }} Saved <span class="badge" data-count-saved>0</span></button>
+      <button class="tab" role="tab" aria-controls="intros">{{ icon('send') }} Introductions <span class="badge" data-count-intros>0</span></button>
+      <button class="tab" role="tab" aria-controls="inv-profile">{{ icon('building') }} Fund profile</button>
+      <button class="tab" role="tab" aria-controls="directory">{{ icon('users') }} Investor directory</button>
+    </div>
+    <div class="section-sm">
+      <section id="recommended" role="tabpanel" class="tab-panel"><p class="text-muted">Based on the sectors in your fund profile.</p><div class="startup-grid" data-recommended><div class="skeleton" style="height:280px"></div></div></section>
+      <section id="saved" role="tabpanel" class="tab-panel" hidden><div class="startup-grid" data-saved></div></section>
+      <section id="intros" role="tabpanel" class="tab-panel" hidden><div class="table-wrap"><table class="table"><thead><tr><th>Startup</th><th>Requested</th><th>Message</th><th>Status</th><th>Contact</th></tr></thead><tbody data-intros></tbody></table></div></section>
+      <section id="inv-profile" role="tabpanel" class="tab-panel" hidden>
+        <form class="card" data-investor-form novalidate style="max-width:820px"><div class="card-body">
+          <div class="form-grid">
+            <div class="field"><label for="firm_name" class="required">Firm / investor name</label><input id="firm_name" name="firm_name" required minlength="2" maxlength="120"></div>
+            <div class="field"><label for="investor_type" class="required">Type</label><select id="investor_type" name="investor_type" required>{% for t in investor_types %}<option>{{ t }}</option>{% endfor %}</select></div>
+            <div class="field span-2"><label for="thesis">Investment thesis</label><textarea id="thesis" name="thesis" maxlength="600"></textarea></div>
+            <div class="field"><label for="website">Website</label><input id="website" name="website" type="url"></div>
+            <div class="field"><label for="city">City</label><input id="city" name="city" maxlength="80"></div>
+            <div class="field"><label for="check_min_inr">Minimum cheque (₹)</label><div class="input-prefix"><span>₹</span><input id="check_min_inr" name="check_min_inr" type="number" min="0"></div></div>
+            <div class="field"><label for="check_max_inr">Maximum cheque (₹)</label><div class="input-prefix"><span>₹</span><input id="check_max_inr" name="check_max_inr" type="number" min="0"></div></div>
+            <div class="field span-2"><label for="stages">Stages</label><input id="stages" name="stages" placeholder="Seed, Series A" maxlength="120"></div>
+            <div class="field span-2"><span class="label">Sectors</span>
+              <div class="chip-row" style="margin-top:4px">{% for c in categories %}<label class="chip"><input type="checkbox" name="category_ids" value="{{ c.id }}" style="width:14px;height:14px"> {{ c.name }}</label>{% endfor %}</div></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Save fund profile</button>
+        </div></form>
+      </section>
+      <section id="directory" role="tabpanel" class="tab-panel" hidden></section>
+    </div>
+  </div>
+{% endif %}
+
+  <div data-investor-directory {% if profile %}data-move-into="directory"{% endif %}>
+    <form class="search-panel" data-directory-filters role="search" style="grid-template-columns:minmax(0,2fr) repeat(2,minmax(0,1fr))">
+      <div class="search-input">{{ icon('search') }}<label class="sr-only" for="inv-q">Search investors</label><input id="inv-q" type="search" name="q" placeholder="Search funds, thesis, city…"></div>
+      <select name="type" aria-label="Investor type"><option value="">All investor types</option>{% for t in investor_types %}<option>{{ t }}</option>{% endfor %}</select>
+      <select name="category" aria-label="Sector"><option value="">All sectors</option>{% for c in categories %}<option value="{{ c.slug }}">{{ c.name }}</option>{% endfor %}</select>
+    </form>
+    <div class="investor-grid mt-3" data-directory-results aria-live="polite"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/search.js') }}"></script><script src="{{ url_for('static', filename='js/investors.js') }}"></script>{% endblock %}

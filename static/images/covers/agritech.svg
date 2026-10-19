@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03051a"/><stop offset="0.55" stop-color="#0b1033"/><stop offset="1" stop-color="#140a3d"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="0.50" cy="0.44" r="0.5">
+    <stop offset="0" stop-color="#9ad23a" stop-opacity="0.55"/><stop offset="1" stop-color="#9ad23a" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="horizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2b6cff" stop-opacity="0"/><stop offset="0.5" stop-color="#5aa0ff"/>
+    <stop offset="1" stop-color="#2b6cff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff3c4"/><stop offset="0.5" stop-color="#ff9a3c"/><stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<rect width="800" height="500" fill="url(#glow)"/>
+<g><circle cx="298" cy="190" r="0.6" fill="#fff" opacity="0.35"/><circle cx="539" cy="106" r="0.5" fill="#fff" opacity="0.59"/><circle cx="349" cy="343" r="1.1" fill="#fff" opacity="0.88"/><circle cx="602" cy="351" r="0.5" fill="#fff" opacity="0.45"/><circle cx="705" cy="232" r="1.0" fill="#fff" opacity="0.34"/><circle cx="779" cy="71" r="1.3" fill="#fff" opacity="0.26"/><circle cx="453" cy="215" r="0.7" fill="#fff" opacity="0.84"/><circle cx="157" cy="184" r="0.9" fill="#fff" opacity="0.60"/><circle cx="172" cy="23" r="0.6" fill="#fff" opacity="0.65"/><circle cx="441" cy="314" r="0.9" fill="#fff" opacity="0.42"/><circle cx="639" cy="29" r="0.6" fill="#fff" opacity="0.82"/><circle cx="42" cy="32" r="1.6" fill="#fff" opacity="0.47"/><circle cx="102" cy="242" r="1.4" fill="#fff" opacity="0.38"/><circle cx="455" cy="316" r="1.6" fill="#fff" opacity="0.29"/><circle cx="204" cy="69" r="0.5" fill="#fff" opacity="0.74"/><circle cx="215" cy="102" r="0.9" fill="#fff" opacity="0.86"/><circle cx="620" cy="293" r="1.7" fill="#fff" opacity="0.39"/><circle cx="162" cy="33" r="0.9" fill="#fff" opacity="0.89"/><circle cx="746" cy="310" r="1.7" fill="#fff" opacity="0.68"/><circle cx="404" cy="175" r="1.7" fill="#fff" opacity="0.28"/><circle cx="412" cy="196" r="1.2" fill="#fff" opacity="0.46"/><circle cx="168" cy="91" r="0.5" fill="#fff" opacity="0.28"/><circle cx="135" cy="172" r="1.2" fill="#fff" opacity="0.75"/><circle cx="669" cy="32" r="1.3" fill="#fff" opacity="0.53"/><circle cx="342" cy="342" r="0.8" fill="#fff" opacity="0.28"/><circle cx="638" cy="13" r="1.2" fill="#fff" opacity="0.79"/><circle cx="418" cy="40" r="0.6" fill="#fff" opacity="0.89"/><circle cx="370" cy="290" r="0.6" fill="#fff" opacity="0.84"/><circle cx="277" cy="246" r="1.3" fill="#fff" opacity="0.65"/><circle cx="498" cy="212" r="1.0" fill="#fff" opacity="0.31"/><circle cx="298" cy="152" r="1.7" fill="#fff" opacity="0.63"/><circle cx="33" cy="364" r="1.1" fill="#fff" opacity="0.84"/><circle cx="220" cy="209" r="1.6" fill="#fff" opacity="0.73"/><circle cx="45" cy="209" r="1.2" fill="#fff" opacity="0.59"/><circle cx="116" cy="221" r="1.1" fill="#fff" opacity="0.60"/><circle cx="389" cy="374" r="0.7" fill="#fff" opacity="0.59"/><circle cx="45" cy="178" r="1.6" fill="#fff" opacity="0.66"/><circle cx="544" cy="117" r="0.8" fill="#fff" opacity="0.53"/><circle cx="700" cy="36" r="0.7" fill="#fff" opacity="0.31"/><circle cx="402" cy="344" r="1.3" fill="#fff" opacity="0.56"/><circle cx="519" cy="269" r="1.6" fill="#fff" opacity="0.83"/><circle cx="442" cy="275" r="1.5" fill="#fff" opacity="0.38"/><circle cx="725" cy="244" r="0.9" fill="#fff" opacity="0.90"/><circle cx="153" cy="347" r="1.7" fill="#fff" opacity="0.55"/><circle cx="379" cy="263" r="1.4" fill="#fff" opacity="0.49"/><circle cx="623" cy="175" r="1.3" fill="#fff" opacity="0.48"/><circle cx="341" cy="117" r="1.0" fill="#fff" opacity="0.70"/><circle cx="78" cy="95" r="1.7" fill="#fff" opacity="0.66"/><circle cx="87" cy="79" r="1.7" fill="#fff" opacity="0.34"/><circle cx="777" cy="360" r="0.8" fill="#fff" opacity="0.30"/><circle cx="486" cy="203" r="0.9" fill="#fff" opacity="0.85"/><circle cx="529" cy="237" r="1.4" fill="#fff" opacity="0.45"/><circle cx="174" cy="335" r="1.0" fill="#fff" opacity="0.72"/><circle cx="797" cy="116" r="1.1" fill="#fff" opacity="0.45"/><circle cx="610" cy="174" r="0.7" fill="#fff" opacity="0.42"/><circle cx="291" cy="97" r="1.7" fill="#fff" opacity="0.68"/><circle cx="241" cy="8" r="1.2" fill="#fff" opacity="0.45"/><circle cx="655" cy="281" r="1.3" fill="#fff" opacity="0.54"/><circle cx="657" cy="242" r="1.3" fill="#fff" opacity="0.77"/><circle cx="592" cy="1" r="1.8" fill="#fff" opacity="0.32"/><circle cx="499" cy="326" r="1.5" fill="#fff" opacity="0.42"/><circle cx="790" cy="370" r="1.3" fill="#fff" opacity="0.31"/><circle cx="418" cy="107" r="1.3" fill="#fff" opacity="0.51"/><circle cx="748" cy="89" r="0.8" fill="#fff" opacity="0.53"/><circle cx="681" cy="63" r="0.6" fill="#fff" opacity="0.36"/><circle cx="501" cy="197" r="1.5" fill="#fff" opacity="0.62"/><circle cx="97" cy="164" r="1.3" fill="#fff" opacity="0.60"/><circle cx="407" cy="41" r="0.9" fill="#fff" opacity="0.57"/><circle cx="43" cy="330" r="1.0" fill="#fff" opacity="0.35"/><circle cx="322" cy="291" r="0.9" fill="#fff" opacity="0.80"/></g>
+<ellipse cx="400.0" cy="1020" rx="880" ry="640" fill="#060b2a" stroke="url(#horizon)" stroke-width="3"/>
+<g stroke="#9ad23a" stroke-opacity="0.35" stroke-width="1"><path d="M423 406 L419 331"/><path d="M423 406 L382 300"/><path d="M423 406 L377 304"/><path d="M423 406 L385 419"/><path d="M423 406 L397 324"/><path d="M587 329 L419 331"/><path d="M587 329 L608 277"/><path d="M587 329 L601 370"/><path d="M587 329 L591 369"/><path d="M712 452 L601 370"/><path d="M712 452 L591 369"/><path d="M419 331 L382 300"/><path d="M419 331 L377 304"/><path d="M419 331 L385 419"/><path d="M419 331 L397 324"/><path d="M608 277 L601 370"/><path d="M608 277 L591 369"/><path d="M382 300 L377 304"/><path d="M382 300 L385 419"/><path d="M382 300 L397 324"/><path d="M234 410 L385 419"/><path d="M234 410 L119 296"/><path d="M377 304 L385 419"/><path d="M377 304 L397 324"/><path d="M385 419 L397 324"/><path d="M601 370 L591 369"/><path d="M119 296 L40 297"/></g>
+<g fill="#9ad23a" opacity="0.9"><circle cx="423" cy="406" r="2.5"/><circle cx="587" cy="329" r="3.5"/><circle cx="712" cy="452" r="3.8"/><circle cx="419" cy="331" r="3.3"/><circle cx="608" cy="277" r="2.6"/><circle cx="382" cy="300" r="3.2"/><circle cx="234" cy="410" r="2.8"/><circle cx="377" cy="304" r="2.8"/><circle cx="385" cy="419" r="2.9"/><circle cx="601" cy="370" r="3.8"/><circle cx="119" cy="296" r="3.9"/><circle cx="591" cy="369" r="2.2"/><circle cx="397" cy="324" r="2.6"/><circle cx="40" cy="297" r="2.3"/></g>
+<g transform="translate(400 220) rotate(0) scale(0.95)" fill="none" stroke="#e8edff" stroke-width="5"
+   stroke-linecap="round" stroke-linejoin="round" filter="url(#soft)">
+  <style>
+    .thin { stroke-width: 2; stroke-opacity: .55; stroke: #9ad23a; }
+    .node { fill: #9ad23a; stroke: #fff; stroke-width: 2; }
+    .core { fill: #9ad23a; fill-opacity: .35; stroke: #9ad23a; }
+    .leaf { fill: #9ad23a; fill-opacity: .3; stroke: #9ad23a; }
+    .flame { fill: url(#flame); stroke: none; }
+    .sun { fill: #ffcf4a; fill-opacity: .25; stroke: #ffcf4a; }
+    .pulse { stroke: #9ad23a; stroke-width: 6; }
+    .sweep { fill: #9ad23a; fill-opacity: .35; stroke: none; }
+    .bolt { fill: #9ad23a; fill-opacity: .5; stroke: #9ad23a; }
+  </style>
+  
+    <path d="M-160 120 L160 120"/>
+    <path d="M0 120 C 0 60 -4 10 0 -40"/>
+    <path class="leaf" d="M0 -10 C -20 -70 -80 -90 -130 -80 C -110 -30 -60 -10 0 -10 Z"/>
+    <path class="leaf" d="M0 -40 C 20 -110 80 -130 130 -120 C 110 -70 60 -40 0 -40 Z"/>
+    <path class="thin" d="M60 70 a 40 40 0 0 1 0 50 M80 55 a 60 60 0 0 1 0 80 M100 40 a 80 80 0 0 1 0 110"/>
+    
+</g>
+</svg>

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, logo_tile, flashes %}
+{% block body_class %}app-body{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+{% block flashes %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="app-shell">
+  <nav class="sidebar" aria-label="Dashboard">
+    {% if startup %}
+    <div class="side-startup">{{ logo_tile(startup, 'sm') }}<div><strong>{{ startup.name }}</strong><small>{{ startup.status|capitalize }}{% if current_user.primary_membership %} · {{ current_user.primary_membership.role|capitalize }}{% endif %}</small></div></div>
+    {% endif %}
+    {% if current_user.is_startup_owner and current_user.is_startup_owner_member %}
+      {% set links = [('dashboard', 'dashboard.overview', 'home', 'Dashboard'),
+                      ('bids', 'bidding.manage', 'gavel', 'Manage Bids'),
+                      ('history', 'bidding.history', 'history', 'Bid History'),
+                      ('profile', 'dashboard.company_profile', 'building', 'Company Profile'),
+                      ('team', 'team.team_page', 'users', 'Team'),
+                      ('payments', 'dashboard.payments', 'credit-card', 'Payments'),
+                      ('settings', 'dashboard.settings', 'settings', 'Settings')] %}
+    {% elif current_user.is_startup_owner and current_user.primary_startup %}
+      {% set links = [('dashboard', 'dashboard.overview', 'home', 'Dashboard'),
+                      ('profile', 'dashboard.company_profile', 'building', 'Company Profile'),
+                      ('team', 'team.team_page', 'users', 'Team'),
+                      ('settings', 'dashboard.settings', 'settings', 'Settings')] %}
+    {% elif current_user.is_startup_owner %}
+      {% set links = [('settings', 'dashboard.settings', 'settings', 'Settings')] %}
+    {% elif current_user.is_investor %}
+      {% set links = [('workspace', 'investors.workspace', 'briefcase', 'Investor Workspace'), ('settings', 'dashboard.settings', 'settings', 'Settings')] %}
+    {% else %}
+      {% set links = [('admin', 'admin.console', 'shield-check', 'Admin Console'), ('settings', 'dashboard.settings', 'settings', 'Settings')] %}
+    {% endif %}
+    {% for key, endpoint, ic, label in links %}
+      <a class="side-link" href="{{ url_for(endpoint) }}" {% if active == key %}aria-current="page"{% endif %}>{{ icon(ic) }} {{ label }}</a>
+    {% endfor %}
+    {% if startup and startup.is_public %}
+      <a class="side-link" href="{{ url_for('startups.profile', slug=startup.slug) }}">{{ icon('eye') }} Public profile</a>
+    {% endif %}
+    <div class="help-card">
+      {{ icon('headset') }}
+      <strong>Need Help?</strong>
+      <p>Contact our support team</p>
+      <a class="btn btn-outline btn-sm btn-block" href="mailto:support@deeptechindia.in">Contact Support {{ icon('arrow-right', 'icon-sm') }}</a>
+    </div>
+  </nav>
+
+  <div class="app-main">
+    {{ flashes() }}
+    {% if current_user.is_authenticated and not current_user.is_verified %}
+    <div class="alert-bar warning mt-2">
+      {{ icon('mail') }} <span>Please verify <strong>{{ current_user.email }}</strong> to place bids and request introductions.</span>
+      <form method="post" action="{{ url_for('auth.resend_verification') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="next" value="{{ request.path }}">
+        <button class="btn btn-sm btn-ghost" type="submit">Resend email</button>
+      </form>
+    </div>
+    {% endif %}
+    {% block app %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}List Your Startup{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index') }}">Home</a> / <span>List your startup</span></nav>
+    <h1>List your startup</h1>
+    <p>Free for founders. Our team reviews every listing within two working days before it goes live.</p>
+  </div>
+</section>
+
+<div class="container section-sm">
+  {% if existing %}
+    <div class="state">
+      {{ icon('building') }}
+      <h3>You already manage {{ existing.name }}</h3>
+      <p>Each account manages one startup. Update it from your dashboard.</p>
+      <a class="btn btn-primary" href="{{ url_for('dashboard.company_profile') }}">Edit company profile</a>
+    </div>
+  {% elif current_user.is_admin %}
+    <div class="state">{{ icon('info') }}<h3>Admins can't list startups</h3><p>Sign in with a founder account to create a listing.</p></div>
+  {% else %}
+  {% if not current_user.is_verified %}
+  <div class="flash flash-info mb-2">{{ icon('info') }}<span>You can submit now, but you'll need to verify your email before bidding for promoted positions.</span></div>
+  {% endif %}
+  <form data-api-form data-action="{{ url_for('startups.api_create') }}" data-method="POST" data-encoding="multipart"
+        data-then="redirect" data-success="Startup submitted for review!" data-loading-text="Submitting…" enctype="multipart/form-data"
+        style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:start" class="list-form">
+    <div>
+      <section class="form-section">
+        <h2><span class="step-num">1</span> Company basics</h2>
+        <p>How your startup appears in search results and on your profile.</p>
+        <div class="form-grid">
+          <div class="field span-2"><label for="name" class="required">Startup name</label><input id="name" name="name" required minlength="2" maxlength="120" autocomplete="organization"></div>
+          <div class="field span-2"><label for="tagline" class="required">Tagline</label><input id="tagline" name="tagline" required minlength="10" maxlength="160" data-count="#tagline-count" placeholder="e.g. Making space accessible for a billion dreams."><span class="char-count" id="tagline-count"></span></div>
+          <div class="field"><label for="category_id" class="required">Primary category</label>
+            <select id="category_id" name="category_id" required><option value="">Select a category</option>
+              {% for c in categories %}<option value="{{ c.id }}" data-label="{{ c.name }}">{{ c.name }}</option>{% endfor %}</select></div>
+          <div class="field"><label for="tags">Focus areas</label><input id="tags" name="tags" maxlength="255" placeholder="Launch Vehicles, Propulsion"><span class="hint">Comma-separated, up to 4 shown on cards.</span></div>
+          <div class="field span-2"><label for="description" class="required">About the company</label><textarea id="description" name="description" required minlength="80" maxlength="5000" data-count="#desc-count" placeholder="What problem are you solving, what's your technology, and who are your customers?"></textarea><span class="char-count" id="desc-count"></span></div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2><span class="step-num">2</span> Details &amp; contact</h2>
+        <p>Shown in the facts panel on your profile.</p>
+        <div class="form-grid">
+          <div class="field"><label for="founded_year" class="required">Founded year</label><input id="founded_year" name="founded_year" type="number" min="1950" max="{{ current_year }}" required></div>
+          <div class="field"><label for="team_size" class="required">Team size</label><select id="team_size" name="team_size" required><option value="">Select</option>{% for t in team_sizes %}<option>{{ t }}</option>{% endfor %}</select></div>
+          <div class="field"><label for="city" class="required">City</label><input id="city" name="city" required minlength="2" maxlength="80" autocomplete="address-level2"></div>
+          <div class="field"><label for="state">State</label><input id="state" name="state" maxlength="80" autocomplete="address-level1"></div>
+          <div class="field"><label for="website">Website</label><input id="website" name="website" type="url" placeholder="https://"></div>
+          <div class="field"><label for="contact_email" class="required">Public contact email</label><input id="contact_email" name="contact_email" type="email" required></div>
+          <div class="field span-2"><label for="address">Address</label><input id="address" name="address" maxlength="255" autocomplete="street-address"></div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2><span class="step-num">3</span> Images</h2>
+        <p>PNG, JPG or WebP up to 5 MB. Images are resized and stripped of metadata.</p>
+        <div class="row row-wrap" style="align-items:stretch;gap:16px">
+          <div><span class="label">Logo</span>
+            <label class="dropzone logo-drop mt-1">{{ icon('upload') }}<span>Upload logo</span><small>Square, 512px+</small><input type="file" name="logo" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
+          <div style="flex:1;min-width:240px"><span class="label">Cover image</span>
+            <label class="dropzone mt-1">{{ icon('image') }}<span>Upload a cover image</span><small>Wide, 1600×900 recommended</small><input type="file" name="cover" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2><span class="step-num">4</span> Funding</h2>
+        <p>Let investors know if you're raising. You can change this any time.</p>
+        <div class="field"><label class="check"><input type="checkbox" name="is_raising"> We are currently looking for funds</label></div>
+        <div class="form-grid" data-raising-fields hidden>
+          <div class="field"><label for="stage" class="required">Round</label><select id="stage" name="stage" data-required-when-raising><option value="">Select</option>{% for s in stages %}<option>{{ s }}</option>{% endfor %}</select></div>
+          <div class="field"><label for="raising_target_inr">Raise target (₹)</label><div class="input-prefix"><span>₹</span><input id="raising_target_inr" name="raising_target_inr" type="number" min="0" step="100000" placeholder="5,00,00,000"></div></div>
+        </div>
+        <div class="field" style="max-width:340px"><label for="total_raised_inr">Total raised to date (₹)</label><div class="input-prefix"><span>₹</span><input id="total_raised_inr" name="total_raised_inr" type="number" min="0" step="100000"></div></div>
+      </section>
+
+      <section class="form-section">
+        <label class="check"><input type="checkbox" name="confirm_accuracy" required> <span>I confirm I'm authorised to represent this company and that the information is accurate. I agree to the listing guidelines.</span></label>
+        <div class="row mt-2"><button class="btn btn-primary btn-lg" type="submit">Submit for review {{ icon('arrow-right') }}</button><span class="text-muted" style="font-size:.86rem">You can add founders, products and gallery images after submitting.</span></div>
+      </section>
+    </div>
+
+    <aside style="position:sticky;top:calc(var(--header-h) + 16px)">
+      <span class="label">Live preview</span>
+      <div class="startup-card mt-1" data-live-preview>
+        <div class="thumb" style="background-image:url('{{ url_for('static', filename='images/photos/spacetech/01.jpg') }}')"></div>
+        <div class="body">
+          <span class="logo-tile sm" style="background:var(--primary)" data-p-logo>S</span>
+          <h3 data-p-name>Your startup</h3>
+          <div class="row row-wrap" style="gap:8px"><span class="badge" data-p-category>Category</span><span class="meta">{{ icon('map-pin') }} <span data-p-city>City</span></span></div>
+          <p data-p-tagline>Your one-line tagline appears here.</p>
+        </div>
+      </div>
+      <div class="card mt-2"><div class="card-body" style="font-size:.88rem">
+        <strong style="color:var(--ink)">What happens next?</strong>
+        <ol class="text-muted" style="padding-left:18px;margin:8px 0 0;line-height:1.8">
+          <li>We review your listing (1–2 days)</li><li>Your profile goes live in the directory</li><li>Add founders, products and photos</li><li>Optionally bid for a promoted position</li>
+        </ol>
+      </div></div>
+    </aside>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}<style>@media (max-width: 960px) { .list-form { grid-template-columns: 1fr !important; } .list-form aside { position: static !important; } }</style>{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/startup.js') }}"></script>{% endblock %}

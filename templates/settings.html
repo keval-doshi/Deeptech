@@ -1,0 +1,57 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, field_error %}
+{% block title %}Account Settings{% endblock %}
+
+{% block app %}
+<div class="page-intro"><div><span class="crumb">Settings</span><h1>Account settings</h1><p>{{ current_user.email }} · {{ {'startup_owner': 'Startup account', 'investor': 'Investor account', 'admin': 'Administrator'}[current_user.role] }}</p></div></div>
+
+<div class="app-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))">
+  <form class="card" method="post" data-validate novalidate>
+    <div class="card-head"><h2><span class="head-icon">{{ icon('user') }}</span> Profile</h2></div>
+    <div class="card-body">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="profile">
+      <div class="field {% if errors.name %}has-error{% endif %}"><label for="name" class="required">Full name</label><input id="name" name="name" value="{{ current_user.name }}" required minlength="2" maxlength="120" autocomplete="name">{{ field_error(errors, 'name') }}</div>
+      <div class="field"><label for="email">Email</label><input id="email" value="{{ current_user.email }}" disabled>
+        <span class="hint">{% if current_user.is_verified %}{{ icon('check', 'icon-sm') }} Verified{% else %}Not verified yet{% endif %}</span></div>
+      <button class="btn btn-primary" type="submit">Save profile</button>
+    </div>
+  </form>
+
+  <form class="card" method="post" data-validate novalidate>
+    <div class="card-head"><h2><span class="head-icon">{{ icon('lock') }}</span> Change password</h2></div>
+    <div class="card-body">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="action" value="password">
+      <div class="field {% if errors.current_password %}has-error{% endif %}"><label for="current_password" class="required">Current password</label><input id="current_password" name="current_password" type="password" required autocomplete="current-password">{{ field_error(errors, 'current_password') }}</div>
+      <div class="field {% if errors.password %}has-error{% endif %}"><label for="password" class="required">New password</label><input id="password" name="password" type="password" required minlength="10" autocomplete="new-password">{{ field_error(errors, 'password') }}</div>
+      <div class="field {% if errors.confirm_password %}has-error{% endif %}"><label for="confirm_password" class="required">Confirm new password</label><input id="confirm_password" name="confirm_password" type="password" required data-match="password" autocomplete="new-password">{{ field_error(errors, 'confirm_password') }}</div>
+      <button class="btn btn-primary" type="submit">Update password</button>
+    </div>
+  </form>
+
+  <div class="card">
+    <div class="card-head"><h2><span class="head-icon">{{ icon('file-text') }}</span> Your data</h2></div>
+    <div class="card-body">
+      <p class="text-muted" style="font-size:.9rem">Download a copy of everything we hold about you: your account, startup or investor profile, introductions, bids, payments, notifications and activity log (JSON).</p>
+      <a class="btn btn-ghost" href="{{ url_for('dashboard.export_data') }}" download>{{ icon('download', 'icon-sm') }} Download my data</a>
+    </div>
+  </div>
+
+  <form class="card danger-zone" method="post" action="{{ url_for('dashboard.delete_account') }}" novalidate
+        data-confirm="This permanently deletes your account and personal data. This cannot be undone." data-confirm-title="Delete your account?" data-confirm-text="Delete my account" data-danger>
+    <div class="card-head"><h2><span class="head-icon">{{ icon('trash') }}</span> Delete account</h2></div>
+    <div class="card-body">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      {% if errors.delete_form %}<div class="flash flash-error mb-2" role="alert">{{ icon('alert') }}<span>{{ errors.delete_form }}</span></div>{% endif %}
+      <ul class="text-muted" style="font-size:.86rem;padding-left:18px;line-height:1.7;margin-top:0">
+        <li>Your name, email, password and notifications are erased and you're signed out.</li>
+        {% if startup %}<li>If you're the only member of {{ startup.name }}, its listing is removed. If it has payment records, it's unlisted instead and the records are kept for tax purposes.</li>
+        <li>If you have teammates, {{ startup.name }} stays with them.</li>{% endif %}
+        {% if current_user.is_investor %}<li>Your fund profile and introduction requests are removed.</li>{% endif %}
+      </ul>
+      <div class="field {% if errors.delete_password %}has-error{% endif %}"><label for="delete_password" class="required">Your password</label><input id="delete_password" name="delete_password" type="password" required autocomplete="current-password">{{ field_error(errors, 'delete_password') }}</div>
+      <div class="field {% if errors.delete_confirm %}has-error{% endif %}"><label for="delete_confirm" class="required">Type DELETE to confirm</label><input id="delete_confirm" name="delete_confirm" required autocomplete="off" placeholder="DELETE">{{ field_error(errors, 'delete_confirm') }}</div>
+      <button class="btn btn-danger" type="submit">{{ icon('trash', 'icon-sm') }} Delete my account</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

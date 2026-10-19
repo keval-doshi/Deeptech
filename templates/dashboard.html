@@ -1,0 +1,102 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, logo_tile, status %}
+{% block title %}Dashboard{% endblock %}
+
+{% block app %}
+{% set pending_intros = intros|selectattr('status', 'equalto', 'pending')|list|length %}
+<section class="dash-hero" aria-labelledby="dash-title">
+  <div class="dash-hero-top">
+    <div class="dash-id">
+      {{ logo_tile(startup, 'lg') }}
+      <div>
+        <span class="crumb">Dashboard</span>
+        <h1 id="dash-title">Welcome back, {{ current_user.name.split()[0] }}</h1>
+        <p>Here's how {{ startup.name }} is doing on DeeptechIndia.in.</p>
+      </div>
+    </div>
+    <div class="dash-hero-actions">
+      {% if startup.is_public %}<a class="btn btn-glass btn-sm" href="{{ url_for('startups.profile', slug=startup.slug) }}" target="_blank" rel="noopener">{{ icon('external', 'icon-sm') }} Public profile</a>{% endif %}
+      {% if current_user.is_startup_owner_member %}<a class="btn btn-primary btn-sm" href="{{ url_for('bidding.manage') }}">{{ icon('gavel', 'icon-sm') }} Manage bids</a>
+      {% else %}<span class="badge badge-dark">Editor access</span>{% endif %}
+    </div>
+  </div>
+  <div class="dash-stats">
+    <div><span>Promoted rank</span><strong>{% if position %}<span class="hs-crown {{ 'c' ~ position if position <= 3 }}">{{ icon('crown') }}</span>#{{ position }}{% else %}<span class="hs-dim">Unranked</span>{% endif %}</strong></div>
+    <div><span>Current bid</span><strong>{{ current_bid|inr if current_bid else '—' }}</strong></div>
+    <div><span>Profile views · 30d</span><strong>{{ "{:,}".format(stats.views) }}<small class="{{ 'up' if stats.change_pct >= 0 else 'down' }}">{{ '▲' if stats.change_pct >= 0 else '▼' }} {{ stats.change_pct|abs }}%</small></strong></div>
+    <div><span>Pending introductions</span><strong>{{ pending_intros }}</strong></div>
+  </div>
+</section>
+
+{% if startup.status == 'pending' %}
+<div class="alert-bar info">{{ icon('clock') }} <span>Your listing is <strong>under review</strong>. You can keep editing your profile while we take a look.</span></div>
+{% elif startup.status == 'rejected' %}
+<div class="alert-bar danger">{{ icon('alert') }} <span style="flex:1 1 260px">Your listing needs changes: {{ startup.rejection_reason }}</span><a class="btn btn-sm btn-ghost" href="{{ url_for('dashboard.company_profile') }}">Update profile</a></div>
+{% endif %}
+
+<div class="bids-layout">
+  <div class="stack" style="gap:20px;min-width:0">
+    <section class="panel" aria-labelledby="views-title">
+      <div class="panel-head">
+        <div><h2 id="views-title">Profile views</h2><p class="panel-sub">Daily visits to your public profile, last 30 days</p></div>
+        <span class="trend {{ 'up' if stats.change_pct >= 0 else 'down' }}">{{ '▲' if stats.change_pct >= 0 else '▼' }} {{ stats.change_pct|abs }}% vs previous 30 days</span>
+      </div>
+      {% set peak = (stats.series|map(attribute='views')|max) or 1 %}
+      <div class="views-chart" role="img" aria-label="Daily profile views for the last 30 days">
+        {% for d in stats.series %}<span style="height: {{ (d.views / peak * 100)|round(1) }}%" title="{{ d.day }}: {{ d.views }} views"></span>{% endfor %}
+      </div>
+      <div class="views-axis"><span>30 days ago</span><span>Today</span></div>
+    </section>
+
+    <section class="panel" id="introductions" aria-labelledby="intros-title">
+      <div class="panel-head"><div><h2 id="intros-title">Introduction requests</h2><p class="panel-sub">Investors who want to talk to your team</p></div>
+        {% if pending_intros %}<span class="badge badge-primary">{{ pending_intros }} new</span>{% endif %}</div>
+      {% for intro in intros %}
+      <div class="intro-row" data-intro="{{ intro.id }}">
+        {% if intro.investor.logo_url %}<span class="logo-tile sm"><img src="{{ intro.investor.logo_url }}" alt="{{ intro.investor.firm_name }} logo"></span>{% else %}<span class="logo-tile sm" style="background:var(--gradient);border:0">{{ intro.investor.initials }}</span>{% endif %}
+        <div style="flex:1;min-width:0">
+          <div class="row" style="justify-content:space-between;flex-wrap:wrap"><strong>{{ intro.investor.firm_name }} <span class="badge">{{ intro.investor.investor_type }}</span>{% if intro.investor.is_verified %} <span class="badge badge-success">{{ icon('shield-check') }} Verified investor</span>{% else %} <span class="badge badge-warning">Unverified</span>{% endif %}</strong>{{ status(intro.status) }}</div>
+          <p>{{ intro.message }}</p>
+          {% if intro.status == 'pending' %}
+          <div class="row">
+            <button class="btn btn-sm btn-primary" type="button" data-intro-respond="accepted">{{ icon('check', 'icon-sm') }} Accept</button>
+            <button class="btn btn-sm btn-ghost" type="button" data-intro-respond="declined">Decline</button>
+          </div>
+          {% elif intro.status == 'accepted' %}
+          <span class="meta">{{ icon('mail') }} <a href="mailto:{{ intro.investor.user.email }}">{{ intro.investor.user.email }}</a></span>
+          {% endif %}
+        </div>
+      </div>
+      {% else %}
+      <div class="empty-mini">{{ icon('send') }}<div><strong>No requests yet</strong><span>Mark your startup as raising to appear on the Looking for Funds page.</span></div></div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <aside class="bids-side">
+    <section class="panel" aria-labelledby="strength-title">
+      <div class="panel-head"><h2 id="strength-title">Profile strength</h2></div>
+      <div class="strength">
+        <div class="ring" style="--p: {{ completeness.percent }}" role="img" aria-label="Profile {{ completeness.percent }}% complete"><span>{{ completeness.percent }}<small>%</small></span></div>
+        <div>
+          {% if completeness.missing %}
+          <p class="text-muted" style="font-size:.86rem;margin:0 0 8px">Add these to stand out to investors:</p>
+          <div class="tag-list">{% for m in completeness.missing %}<span class="badge badge-warning">{{ m }}</span>{% endfor %}</div>
+          {% else %}<p class="text-muted mb-0" style="font-size:.9rem">Your profile is complete. Nice work!</p>{% endif %}
+        </div>
+      </div>
+      <a class="btn btn-outline btn-block mt-2" href="{{ url_for('dashboard.company_profile') }}">Edit company profile</a>
+    </section>
+    <section class="panel" aria-labelledby="recent-title">
+      <div class="panel-head"><h2 id="recent-title">Recent activity</h2></div>
+      <ul class="timeline">
+        {% for n in notifications %}
+        <li class="tl-item"><span class="tl-dot"></span><div class="tl-body"><div class="tl-top"><a href="{{ n.link or '#' }}"><strong>{{ n.title }}</strong></a></div><span class="tl-time">{{ n.created_at|ist }}</span></div></li>
+        {% else %}<li class="text-muted">No activity yet.</li>{% endfor %}
+      </ul>
+    </section>
+  </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>{% endblock %}

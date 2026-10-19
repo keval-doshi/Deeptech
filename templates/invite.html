@@ -1,0 +1,36 @@
+{% extends "_auth_layout.html" %}
+{% from "_macros.html" import icon, logo_tile %}
+{% block title %}Team invitation{% endblock %}
+{% block art_title %}Build together.{% endblock %}
+{% block art_text %}Manage your startup's profile, investor introductions and promoted ranking as a team.{% endblock %}
+{% block form %}
+{% if not invite %}
+  <div class="state mt-2">{{ icon('alert') }}
+    <h3>{{ 'This invitation has expired' if reason == 'expired' else 'This invitation link is not valid' }}</h3>
+    <p>Ask the startup's owner to send you a new invitation.</p>
+    <a class="btn btn-primary" href="{{ url_for('startups.index') }}">Go to homepage</a>
+  </div>
+{% else %}
+  <div class="row mt-2" style="gap:14px">{{ logo_tile(invite.startup) }}
+    <div><p class="eyebrow mb-0">Team invitation</p><h1 style="font-size:1.6rem;margin:4px 0 0">{{ invite.startup.name }}</h1></div></div>
+  <p class="text-muted mt-2">{{ invite.invited_by.name if invite.invited_by else 'The team' }} invited <strong>{{ invite.email }}</strong> to join as
+    <strong>{{ invite.role }}</strong>. {{ 'Owners can manage everything, including bids, payments and the team.' if invite.role == 'owner' else 'Editors can update the company profile and respond to investors.' }}</p>
+  {% if problem %}
+    <div class="flash flash-error mt-2" role="alert">{{ icon('alert') }}<span>{{ problem }}</span></div>
+    {% if current_user.is_authenticated %}
+    <form method="post" action="{{ url_for('auth.logout') }}" class="mt-2"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-ghost btn-block" type="submit">Sign out and use another account</button></form>
+    {% endif %}
+  {% elif current_user.is_authenticated %}
+    <form method="post" class="mt-3">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-primary btn-lg btn-block" type="submit">{{ icon('check') }} Accept and join {{ invite.startup.name }}</button>
+    </form>
+  {% else %}
+    <div class="stack mt-3" style="gap:10px">
+      <a class="btn btn-primary btn-lg btn-block" href="{{ url_for('auth.register', role='startup_owner', email=invite.email, next=request.path) }}">Create an account to join</a>
+      <a class="btn btn-ghost btn-lg btn-block" href="{{ url_for('auth.login', next=request.path) }}">I already have an account: sign in</a>
+    </div>
+    <p class="text-subtle mt-2" style="font-size:.82rem">Use {{ invite.email }} so we can match your invitation.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

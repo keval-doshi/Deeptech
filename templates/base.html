@@ -1,0 +1,155 @@
+{% from "_macros.html" import icon, flashes %}
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Discover India's Deep-Tech Innovators{% endblock %} | {{ site_name }}</title>
+  <meta name="description" content="{% block description %}A curated platform to explore groundbreaking Indian deep-tech startups solving real-world problems with deep technology.{% endblock %}">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="theme-color" content="#5b3df5">
+  <meta property="og:site_name" content="{{ site_name }}">
+  <meta property="og:title" content="{{ self.title() }}">
+  <meta property="og:description" content="{{ self.description() }}">
+  <meta property="og:type" content="website">
+  {% block meta %}{% endblock %}
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}"
+      data-auth="{{ 'true' if current_user.is_authenticated else 'false' }}"
+      data-icons="{{ url_for('static', filename='images/icons.svg') }}"
+      data-login-url="{{ url_for('auth.login') }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('startups.index') }}" aria-label="{{ site_name }} home">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>DeeptechIndia<em>.in</em></span>
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Main">
+        <a href="{{ url_for('funding.index') }}" {% if request.endpoint == 'funding.index' %}aria-current="page"{% endif %}>Looking for Funds</a>
+        <a href="{{ url_for('investors.workspace') }}" {% if request.endpoint == 'investors.workspace' %}aria-current="page"{% endif %}>Investors</a>
+        <div class="nav-mobile-extra">
+          <a href="{{ url_for('startups.index', _anchor='search') }}" data-search-link>{{ icon('search') }} Search startups</a>
+          {% if not current_user.is_authenticated %}
+          <a class="btn btn-outline" href="{{ url_for('auth.register', role='startup_owner') }}">List Your Startup</a>
+          {% endif %}
+        </div>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn hide-sm" href="{{ url_for('startups.index', _anchor='search') }}" aria-label="Search startups" data-search-link>{{ icon('search') }}</a>
+        {% if current_user.is_authenticated %}
+          <div class="nav-dropdown">
+            <button type="button" class="icon-btn" aria-label="Notifications{% if unread_notifications %} ({{ unread_notifications }} unread){% endif %}" aria-expanded="false" aria-controls="notif-menu" data-dropdown data-notifications>
+              {{ icon('bell') }}
+              {% if unread_notifications %}<span class="dot" data-unread aria-hidden="true"></span>{% endif %}
+            </button>
+            <div class="dropdown-panel right notif-panel" id="notif-menu">
+              <div class="notif-head"><strong>Notifications</strong><button class="btn-link btn-sm" type="button" data-mark-read>Mark all read</button></div>
+              <div data-notif-list><div class="state" style="border:0">Loading…</div></div>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <button type="button" class="user-chip" aria-expanded="false" aria-controls="user-menu" data-dropdown>
+              <span class="avatar">{{ current_user.initials }}</span>
+              <span class="who">
+                <strong>{{ current_user.primary_startup.name if current_user.primary_startup else current_user.name }}</strong>
+                <small>{{ {'startup_owner': 'Startup Account', 'investor': 'Investor Account', 'admin': 'Administrator'}[current_user.role] }}</small>
+              </span>
+              {{ icon('chevron-down', 'icon-sm') }}
+            </button>
+            <div class="dropdown-panel right" id="user-menu">
+              {% if current_user.is_admin %}
+                <a class="dropdown-item" href="{{ url_for('admin.console') }}">{{ icon('shield-check') }} Admin console</a>
+              {% elif current_user.is_investor %}
+                <a class="dropdown-item" href="{{ url_for('investors.workspace') }}">{{ icon('briefcase') }} Investor workspace</a>
+              {% else %}
+                <a class="dropdown-item" href="{{ url_for('dashboard.overview') }}">{{ icon('home') }} Dashboard</a>
+                {% if current_user.is_startup_owner_member %}
+                <a class="dropdown-item" href="{{ url_for('bidding.manage') }}">{{ icon('gavel') }} Manage bids</a>
+                {% endif %}
+                {% if current_user.primary_startup %}
+                <a class="dropdown-item" href="{{ url_for('dashboard.company_profile') }}">{{ icon('building') }} Company profile</a>
+                {% endif %}
+              {% endif %}
+              <a class="dropdown-item" href="{{ url_for('dashboard.settings') }}">{{ icon('settings') }} Account settings</a>
+              <div class="dropdown-sep"></div>
+              <form method="post" action="{{ url_for('auth.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="dropdown-item" type="submit">{{ icon('log-out') }} Sign out</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <a class="btn btn-outline btn-list" href="{{ url_for('auth.register', role='startup_owner') }}">List Your Startup</a>
+          <a class="btn btn-primary btn-signin" href="{{ url_for('auth.login') }}">Sign In</a>
+        {% endif %}
+        <button class="icon-btn nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav" data-nav-toggle>{{ icon('menu') }}</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    {% block flashes %}<div class="container">{{ flashes() }}</div>{% endblock %}
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block footer %}
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="{{ url_for('startups.index') }}"><span class="brand-mark" aria-hidden="true"><span></span></span><span>DeeptechIndia<em>.in</em></span></a>
+          <p class="mt-2">A curated platform to discover Indian deep-tech startups building for global impact.</p>
+        </div>
+        <div>
+          <h4>Discover</h4>
+          <a href="{{ url_for('startups.index', _anchor='startups') }}">All startups</a>
+          <a href="{{ url_for('funding.index') }}">Looking for funds</a>
+        </div>
+        <div>
+          <h4>For founders</h4>
+          <a href="{{ url_for('auth.register', role='startup_owner') }}">List your startup</a>
+          <a href="{{ url_for('dashboard.overview') }}">Startup dashboard</a>
+          <a href="{{ url_for('bidding.manage') }}">Promoted ranking</a>
+        </div>
+        <div>
+          <h4>For investors</h4>
+          <a href="{{ url_for('investors.workspace') }}">Investor workspace</a>
+          <a href="{{ url_for('auth.register', role='investor') }}">Join as investor</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© {{ current_year }} {{ site_name }}. Promoted positions are paid placements and are labelled as such.</span>
+        <span><a href="{{ url_for('startups.credits') }}" style="display:inline;padding:0">Image credits</a> · Made in India</span>
+      </div>
+    </div>
+  </footer>
+  {% endblock %}
+
+  <div class="toast-stack" aria-live="polite" aria-atomic="false" data-toasts></div>
+
+  <div class="modal-backdrop" data-confirm-modal role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal">
+      <div class="modal-head"><h2 id="confirm-title" data-confirm-title>Are you sure?</h2></div>
+      <div class="modal-body"><p class="text-muted mb-0" data-confirm-message></p></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" type="button" data-confirm-cancel>Cancel</button>
+        <button class="btn btn-primary" type="button" data-confirm-ok>Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

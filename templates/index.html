@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, flashes %}
+{% block title %}Discover India's Deep-Tech Innovators{% endblock %}
+{% block flashes %}{% endblock %}
+
+{% block content %}
+<section class="hero hero-light" aria-labelledby="hero-title">
+  <div class="hero-media" role="img" aria-label="India's map glowing with tech connections, with the Ashoka Chakra, India Gate, a rocket launch, a satellite and solar panels"></div>
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      {{ flashes() }}
+      <p class="eyebrow">Indian deep-tech startups. Global impact.</p>
+      <h1 id="hero-title">Discover India's<br><span class="text-gradient">Deep-Tech</span> Innovators</h1>
+      <p class="lead">A curated platform to explore groundbreaking Indian startups solving real-world problems with deep technology.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="#startups">Explore Startups {{ icon('arrow-right') }}</a>
+        <button class="btn btn-glass btn-lg" type="button" data-open-modal="how-it-works">{{ icon('play', 'icon-lg') }} How it works</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm home-listing" id="startups" data-listing data-endpoint="{{ url_for('startups.api_list') }}"
+         data-per-page="12" data-view="rows" data-infinite="true" data-sync-url="true" data-global-filters="true" aria-labelledby="featured-title">
+  <div class="container">
+    <form class="search-panel" id="search" data-listing-filters role="search" aria-label="Search startups">
+      <div class="search-input">
+        {{ icon('search') }}
+        <label class="sr-only" for="home-q">Search</label>
+        <input id="home-q" type="search" name="q" placeholder="Search startups, technology, founders, location…" autocomplete="off">
+      </div>
+      <label class="sr-only" for="home-category">Category</label>
+      <select id="home-category" name="category">
+        <option value="">All Categories</option>
+        {% for c in nav_categories %}<option value="{{ c.slug }}">{{ c.name }}</option>{% endfor %}
+      </select>
+      <label class="sr-only" for="home-location">Location</label>
+      <select id="home-location" name="location">
+        <option value="">All Locations</option>
+        {% for city in locations %}<option value="{{ city }}">{{ city }}</option>{% endfor %}
+      </select>
+      <label class="sr-only" for="home-funding">Funding status</label>
+      <select id="home-funding" name="funding">
+        <option value="">Funding Status</option>
+        <option value="raising">Looking for funds</option>
+        <option value="not_raising">Not raising</option>
+      </select>
+      <button class="btn btn-primary" type="submit">Search {{ icon('arrow-right') }}</button>
+      <input type="hidden" name="tab" value="trending">
+    </form>
+
+    <div class="chip-row" role="group" aria-label="Filter by category">
+      <button class="chip active" type="button" data-set-filter="category" data-value="">All</button>
+      {% for c in nav_categories %}
+      <button class="chip" type="button" data-set-filter="category" data-value="{{ c.slug }}">{{ icon(c.icon, 'icon-sm') }} {{ c.name if c.slug != 'ai' else 'AI' }}</button>
+      {% endfor %}
+    </div>
+
+    <div class="board-layout">
+    <div class="board-main">
+    <div class="list-toolbar mt-3">
+      <div class="row row-wrap">
+        <h2 id="featured-title">Featured Startups</h2>
+        <div class="tabs pills" role="tablist" aria-label="Featured lists">
+          <button class="tab" role="tab" aria-selected="true" data-set-filter="tab" data-value="trending">Trending</button>
+          <button class="tab" role="tab" aria-selected="false" data-set-filter="tab" data-value="recent">Recently Added</button>
+          <button class="tab" role="tab" aria-selected="false" data-set-filter="tab" data-value="funded">Most Funded</button>
+          <button class="tab" role="tab" aria-selected="false" data-set-filter="tab" data-value="picks">Investors' Picks</button>
+        </div>
+      </div>
+      <div class="sort-control">
+        <label for="home-sort">Sort by:</label>
+        <select id="home-sort" name="sort" data-filter-control>
+          <option value="promoted">Promoted first</option>
+          <option value="trending">Trending</option>
+          <option value="recent">Newest</option>
+          <option value="funded">Most funded</option>
+          <option value="name">Name (A–Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="leaderboard" data-listing-results aria-live="polite"></div>
+    <div class="list-more">
+      <span data-listing-summary></span>
+      <button class="btn btn-ghost" type="button" data-listing-more hidden>Load more startups {{ icon('chevron-down', 'icon-sm') }}</button>
+      <span data-listing-sentinel aria-hidden="true"></span>
+    </div>
+    <p class="text-subtle mt-2" style="font-size:.8rem">{{ icon('info', 'icon-sm') }} Startups marked “Promoted” hold a paid ranking position. Placement does not imply endorsement.</p>
+    </div>
+
+    <aside class="board-side" aria-label="Today's ranking">
+      <div class="side-card">
+        <div class="side-head"><h3><span class="live-pip"></span> Today's ranking</h3><a href="#startups" data-set-filter="category" data-value="" data-scroll-to-list>See all {{ icon('chevron-right', 'icon-sm') }}</a></div>
+        {% for position, s in todays_ranking %}
+        <a class="side-rank" href="{{ url_for('startups.profile', slug=s.slug) }}">
+          <span class="side-pos">#{{ position }}</span>
+          {% if s.logo_url %}<img src="{{ s.logo_url }}" alt="">{% else %}<span class="side-initials" style="background: {{ s.category.color }}">{{ s.initials }}</span>{% endif %}
+          <span class="side-name">{{ s.name }}<small>{{ s.category.name }}</small></span>
+          {{ icon('crown', 'side-crown') }}
+        </a>
+        {% else %}
+        <p class="text-muted" style="font-size:.86rem;margin:0">No promoted startups yet.</p>
+        {% endfor %}
+      </div>
+      <div class="side-card">
+        <div class="side-head"><h3>Raising now</h3><a href="{{ url_for('funding.index') }}">View {{ icon('chevron-right', 'icon-sm') }}</a></div>
+        <p class="text-muted" style="font-size:.86rem;margin:0 0 12px">{{ stats.raising }} startups are looking for funds.</p>
+        <a class="btn btn-outline btn-block btn-sm" href="{{ url_for('funding.index') }}">Looking for Funds {{ icon('arrow-right', 'icon-sm') }}</a>
+      </div>
+    </aside>
+    </div>
+  </div>
+
+  <template data-activity-template>
+    <div class="activity-strip" role="region" aria-label="Latest activity">
+      <h3><span class="live-pip"></span> Latest activity</h3>
+      <div class="activity-items">
+        {% for a in activity %}
+        <a class="activity-item" href="{{ url_for('startups.profile', slug=a.startup.slug) }}">
+          {% if a.startup.logo_url %}<img src="{{ a.startup.logo_url }}" alt="">{% else %}<span class="side-initials" style="background: {{ a.startup.category.color }}">{{ a.startup.initials }}</span>{% endif %}
+          <span><strong>{{ a.startup.name }}</strong><small>{{ a.text }} · {{ a.at|timeago }}</small></span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </template>
+</section>
+
+<section class="section pt-0">
+  <div class="container cta-band">
+    <div class="cta-card founders">
+      <h3>Building deep tech in India?</h3>
+      <p>List your startup for free, showcase founders and products, and connect with investors looking for frontier technology.</p>
+      <div><a class="btn btn-primary" href="{{ url_for('auth.register', role='startup_owner') }}">List Your Startup {{ icon('arrow-right') }}</a></div>
+    </div>
+    <div class="cta-card investors">
+      <h3>Investing in frontier tech?</h3>
+      <p>Save startups, track sectors and request warm introductions to founders who are actively raising.</p>
+      <div><a class="btn btn-ghost" href="{{ url_for('auth.register', role='investor') }}">Join as Investor {{ icon('arrow-right') }}</a></div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" id="how-it-works" role="dialog" aria-modal="true" aria-labelledby="hiw-title">
+  <div class="modal wide">
+    <div class="modal-head"><h2 id="hiw-title">How DeeptechIndia.in works</h2><button class="icon-btn" type="button" data-close-modal aria-label="Close">{{ icon('x') }}</button></div>
+    <div class="modal-body">
+      <div class="category-grid">
+        <div class="category-tile"><span class="cat-icon" style="background:var(--primary-50);color:var(--primary)">{{ icon('search') }}</span><h3>Discover</h3><p>Search verified Indian deep-tech startups by sector, location and funding stage.</p></div>
+        <div class="category-tile"><span class="cat-icon" style="background:var(--blue-50);color:var(--blue)">{{ icon('building') }}</span><h3>Showcase</h3><p>Founders list their company, team, products and funding needs for free.</p></div>
+        <div class="category-tile"><span class="cat-icon" style="background:var(--success-50);color:var(--success)">{{ icon('send') }}</span><h3>Connect</h3><p>Investors request introductions; contact details are shared only when founders accept.</p></div>
+      </div>
+      <p class="text-muted mt-2 mb-0" style="font-size:.88rem">Startups can also bid privately for a promoted position in Featured Startups. Bid amounts are never shown publicly.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/search.js') }}"></script>{% endblock %}

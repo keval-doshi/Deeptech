@@ -1,0 +1,45 @@
+{% macro icon(name, cls="") -%}
+<svg class="icon {{ cls }}" aria-hidden="true" focusable="false"><use href="{{ url_for('static', filename='images/icons.svg') }}#{{ name }}"></use></svg>
+{%- endmacro %}
+
+{% macro logo_tile(startup, size="") -%}
+<span class="logo-tile {{ size }}" {% if not startup.logo_url %}style="background: {{ startup.category.color }}"{% endif %}>
+  {%- if startup.logo_url -%}<img src="{{ startup.logo_url }}" alt="{{ startup.name }} logo" loading="lazy">
+  {%- else -%}<span aria-hidden="true">{{ startup.initials }}</span>{%- endif -%}
+</span>
+{%- endmacro %}
+
+{% macro status(value, label=None) -%}
+<span class="status status-{{ value }}">{{ (label or value).replace('_', ' ') }}</span>
+{%- endmacro %}
+
+{% macro field_error(errors, name) -%}
+{% if errors and errors.get(name) %}<span class="error-text" id="{{ name }}-error">{{ errors[name] }}</span>{% endif %}
+{%- endmacro %}
+
+{% macro text_field(name, label, errors={}, values={}, type="text", required=False, autocomplete=None, placeholder="", hint=None) -%}
+<div class="field {% if errors.get(name) %}has-error{% endif %}">
+  <label for="{{ name }}" {% if required %}class="required"{% endif %}>{{ label }}</label>
+  <input id="{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ values.get(name, '') if type != 'password' else '' }}"
+         {% if required %}required{% endif %} {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+         placeholder="{{ placeholder }}" {% if errors.get(name) %}aria-invalid="true" aria-describedby="{{ name }}-error"{% endif %}>
+  {% if hint %}<span class="hint">{{ hint }}</span>{% endif %}
+  {{ field_error(errors, name) }}
+</div>
+{%- endmacro %}
+
+{% macro flashes() -%}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-stack" role="status">
+    {% for category, message in messages %}
+      <div class="flash flash-{{ category if category in ('success', 'error', 'info', 'dev') else 'info' }}">
+        {{ icon('check' if category == 'success' else ('alert' if category == 'error' else 'info')) }}
+        <span>{{ message }}</span>
+        <button type="button" data-dismiss aria-label="Dismiss">{{ icon('x', 'icon-sm') }}</button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+{%- endmacro %}

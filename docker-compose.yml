@@ -1,0 +1,39 @@
+# Production-like stack: PostgreSQL + Redis + the app behind Gunicorn.
+# Put nginx/Caddy (HTTPS) in front of port 8000 in real deployments.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: deeptechindia
+      POSTGRES_USER: deeptech
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deeptech -d deeptechindia"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+
+  web:
+    build: .
+    env_file: .env
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql://deeptech:${POSTGRES_PASSWORD}@db:5432/deeptechindia
+      RATELIMIT_STORAGE_URI: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    volumes:
+      - uploads:/app/static/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,44 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Bid status{% endblock %}
+
+{% block app %}
+<div class="card review-card" style="margin:24px auto;text-align:center" data-bid-result data-bid-id="{{ bid.id }}"
+     data-initial-status="{{ bid.status }}">
+  <div class="card-body" style="padding:36px 28px">
+    <div data-result-view="pending" {% if bid.status != 'pending_payment' %}hidden{% endif %}>
+      <div class="result-icon pending"><span class="spinner" style="width:34px;height:34px"></span></div>
+      <h1 style="font-size:1.6rem">Confirming your payment…</h1>
+      <p class="text-muted">We're waiting for the payment provider to confirm. This usually takes a few seconds. You can leave this page; we'll notify you.</p>
+    </div>
+    <div data-result-view="active" {% if bid.status != 'active' %}hidden{% endif %}>
+      <div class="result-icon success">{{ icon('check') }}</div>
+      <h1 style="font-size:1.6rem">Payment confirmed</h1>
+      <p class="text-muted" data-active-text>Your ranking has been updated.</p>
+    </div>
+    <div data-result-view="failed" {% if bid.status not in ('failed',) %}hidden{% endif %}>
+      <div class="result-icon failed">{{ icon('x') }}</div>
+      <h1 style="font-size:1.6rem">Payment failed</h1>
+      <p class="text-muted">Your ranking did not change and you were not charged. You can try again.</p>
+    </div>
+    <div data-result-view="closed" {% if bid.status not in ('cancelled', 'expired', 'superseded') %}hidden{% endif %}>
+      <div class="result-icon pending">{{ icon('clock') }}</div>
+      <h1 style="font-size:1.6rem">Bid not completed</h1>
+      <p class="text-muted">This bid was {{ bid.status }}. Your ranking did not change.</p>
+    </div>
+
+    <div class="review-lines" style="text-align:left">
+      <div><span>Receipt</span><strong class="mono" data-receipt>{{ bid.latest_payment.receipt if bid.latest_payment else '—' }}</strong></div>
+      <div><span>Target position</span><strong>#{{ bid.target_position }}</strong></div>
+      <div><span>Amount</span><strong>{{ bid.amount_rupees|inr }}</strong></div>
+      <div><span>Status</span><strong data-status-text>{{ bid.status.replace('_', ' ') }}</strong></div>
+    </div>
+    <div class="row" style="justify-content:center;flex-wrap:wrap">
+      <a class="btn btn-primary" href="{{ url_for('bidding.manage') }}">Back to Manage Bids</a>
+      <a class="btn btn-ghost" href="{{ url_for('bidding.history') }}">Bid history</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/bidding.js') }}"></script>{% endblock %}

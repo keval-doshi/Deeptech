@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, flashes %}
+{% block flashes %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <div class="auth-art">
+    <div>
+      <p class="eyebrow" style="color:#b7a8ff">DeeptechIndia.in</p>
+      <h2>{% block art_title %}India's frontier technology, in one place.{% endblock %}</h2>
+      <p>{% block art_text %}Discover startups building launch vehicles, chips, cures and clean energy, and the investors backing them.{% endblock %}</p>
+    </div>
+  </div>
+  <div class="auth-form-wrap">
+    <div class="auth-card">
+      {{ flashes() }}
+      {% block form %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

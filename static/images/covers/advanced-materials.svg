@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#03051a"/><stop offset="0.55" stop-color="#0b1033"/><stop offset="1" stop-color="#140a3d"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="0.50" cy="0.44" r="0.5">
+    <stop offset="0" stop-color="#f59e0b" stop-opacity="0.55"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="horizon" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#2b6cff" stop-opacity="0"/><stop offset="0.5" stop-color="#5aa0ff"/>
+    <stop offset="1" stop-color="#2b6cff" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#fff3c4"/><stop offset="0.5" stop-color="#ff9a3c"/><stop offset="1" stop-color="#ff4d4d" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<rect width="800" height="500" fill="url(#bg)"/>
+<rect width="800" height="500" fill="url(#glow)"/>
+<g><circle cx="121" cy="69" r="1.5" fill="#fff" opacity="0.51"/><circle cx="46" cy="57" r="1.5" fill="#fff" opacity="0.68"/><circle cx="196" cy="221" r="1.2" fill="#fff" opacity="0.38"/><circle cx="40" cy="281" r="0.9" fill="#fff" opacity="0.82"/><circle cx="25" cy="235" r="0.8" fill="#fff" opacity="0.60"/><circle cx="506" cy="217" r="1.8" fill="#fff" opacity="0.75"/><circle cx="520" cy="276" r="1.3" fill="#fff" opacity="0.47"/><circle cx="9" cy="93" r="1.5" fill="#fff" opacity="0.51"/><circle cx="411" cy="166" r="0.8" fill="#fff" opacity="0.27"/><circle cx="583" cy="259" r="1.0" fill="#fff" opacity="0.40"/><circle cx="213" cy="274" r="1.4" fill="#fff" opacity="0.47"/><circle cx="53" cy="23" r="1.1" fill="#fff" opacity="0.45"/><circle cx="553" cy="330" r="1.4" fill="#fff" opacity="0.47"/><circle cx="467" cy="177" r="1.2" fill="#fff" opacity="0.31"/><circle cx="5" cy="16" r="1.6" fill="#fff" opacity="0.85"/><circle cx="476" cy="259" r="1.5" fill="#fff" opacity="0.27"/><circle cx="663" cy="197" r="1.4" fill="#fff" opacity="0.60"/><circle cx="107" cy="60" r="1.1" fill="#fff" opacity="0.76"/><circle cx="348" cy="257" r="1.6" fill="#fff" opacity="0.79"/><circle cx="128" cy="178" r="0.9" fill="#fff" opacity="0.42"/><circle cx="160" cy="212" r="0.5" fill="#fff" opacity="0.88"/><circle cx="233" cy="344" r="0.7" fill="#fff" opacity="0.54"/><circle cx="83" cy="77" r="1.3" fill="#fff" opacity="0.33"/><circle cx="14" cy="106" r="1.1" fill="#fff" opacity="0.86"/><circle cx="783" cy="286" r="1.0" fill="#fff" opacity="0.70"/><circle cx="58" cy="245" r="1.1" fill="#fff" opacity="0.45"/><circle cx="81" cy="207" r="0.9" fill="#fff" opacity="0.44"/><circle cx="91" cy="275" r="1.4" fill="#fff" opacity="0.40"/><circle cx="129" cy="39" r="0.5" fill="#fff" opacity="0.87"/><circle cx="642" cy="165" r="0.7" fill="#fff" opacity="0.82"/><circle cx="272" cy="372" r="0.9" fill="#fff" opacity="0.90"/><circle cx="247" cy="31" r="1.4" fill="#fff" opacity="0.57"/><circle cx="77" cy="137" r="1.3" fill="#fff" opacity="0.30"/><circle cx="396" cy="166" r="1.5" fill="#fff" opacity="0.50"/><circle cx="779" cy="362" r="1.8" fill="#fff" opacity="0.77"/><circle cx="127" cy="65" r="1.7" fill="#fff" opacity="0.74"/><circle cx="330" cy="240" r="1.2" fill="#fff" opacity="0.65"/><circle cx="741" cy="158" r="0.6" fill="#fff" opacity="0.89"/><circle cx="317" cy="208" r="1.2" fill="#fff" opacity="0.68"/><circle cx="372" cy="48" r="0.8" fill="#fff" opacity="0.88"/><circle cx="419" cy="337" r="1.5" fill="#fff" opacity="0.54"/><circle cx="65" cy="260" r="0.8" fill="#fff" opacity="0.51"/><circle cx="487" cy="327" r="1.6" fill="#fff" opacity="0.79"/><circle cx="494" cy="257" r="0.6" fill="#fff" opacity="0.43"/><circle cx="673" cy="292" r="0.9" fill="#fff" opacity="0.67"/><circle cx="39" cy="67" r="1.7" fill="#fff" opacity="0.30"/><circle cx="201" cy="307" r="0.9" fill="#fff" opacity="0.61"/><circle cx="68" cy="329" r="1.2" fill="#fff" opacity="0.44"/><circle cx="363" cy="183" r="1.7" fill="#fff" opacity="0.79"/><circle cx="408" cy="294" r="0.8" fill="#fff" opacity="0.35"/><circle cx="450" cy="60" r="1.4" fill="#fff" opacity="0.81"/><circle cx="765" cy="233" r="1.4" fill="#fff" opacity="0.62"/><circle cx="627" cy="136" r="0.6" fill="#fff" opacity="0.46"/><circle cx="446" cy="147" r="1.8" fill="#fff" opacity="0.86"/><circle cx="734" cy="183" r="1.3" fill="#fff" opacity="0.34"/><circle cx="233" cy="197" r="0.7" fill="#fff" opacity="0.40"/><circle cx="6" cy="73" r="1.1" fill="#fff" opacity="0.61"/><circle cx="582" cy="256" r="1.4" fill="#fff" opacity="0.66"/><circle cx="360" cy="98" r="1.6" fill="#fff" opacity="0.44"/><circle cx="210" cy="199" r="0.7" fill="#fff" opacity="0.77"/><circle cx="596" cy="323" r="1.7" fill="#fff" opacity="0.74"/><circle cx="64" cy="2" r="1.4" fill="#fff" opacity="0.87"/><circle cx="541" cy="58" r="1.8" fill="#fff" opacity="0.44"/><circle cx="75" cy="16" r="0.8" fill="#fff" opacity="0.51"/><circle cx="434" cy="311" r="1.4" fill="#fff" opacity="0.82"/><circle cx="416" cy="252" r="1.8" fill="#fff" opacity="0.46"/><circle cx="421" cy="137" r="1.8" fill="#fff" opacity="0.33"/><circle cx="797" cy="52" r="1.0" fill="#fff" opacity="0.49"/><circle cx="540" cy="355" r="1.1" fill="#fff" opacity="0.76"/><circle cx="392" cy="213" r="1.0" fill="#fff" opacity="0.77"/></g>
+<ellipse cx="400.0" cy="1020" rx="880" ry="640" fill="#060b2a" stroke="url(#horizon)" stroke-width="3"/>
+<g stroke="#f59e0b" stroke-opacity="0.35" stroke-width="1"><path d="M539 285 L532 444"/><path d="M539 285 L499 425"/><path d="M539 285 L544 409"/><path d="M532 444 L499 425"/><path d="M532 444 L544 409"/><path d="M532 444 L397 441"/><path d="M232 287 L211 445"/><path d="M232 287 L163 334"/><path d="M232 287 L368 308"/><path d="M211 445 L163 334"/><path d="M211 445 L288 455"/><path d="M211 445 L95 409"/><path d="M211 445 L107 409"/><path d="M499 425 L544 409"/><path d="M499 425 L397 441"/><path d="M163 334 L95 409"/><path d="M163 334 L107 409"/><path d="M718 435 L716 290"/><path d="M544 409 L397 441"/><path d="M288 455 L368 308"/><path d="M288 455 L397 441"/><path d="M368 308 L397 441"/><path d="M95 409 L107 409"/></g>
+<g fill="#f59e0b" opacity="0.9"><circle cx="539" cy="285" r="3.6"/><circle cx="532" cy="444" r="3.8"/><circle cx="232" cy="287" r="3.8"/><circle cx="211" cy="445" r="2.3"/><circle cx="499" cy="425" r="2.6"/><circle cx="163" cy="334" r="2.7"/><circle cx="718" cy="435" r="2.2"/><circle cx="544" cy="409" r="2.6"/><circle cx="288" cy="455" r="3.2"/><circle cx="368" cy="308" r="2.9"/><circle cx="95" cy="409" r="2.3"/><circle cx="397" cy="441" r="2.3"/><circle cx="716" cy="290" r="2.7"/><circle cx="107" cy="409" r="4.0"/></g>
+<g transform="translate(400 220) rotate(0) scale(0.95)" fill="none" stroke="#e8edff" stroke-width="5"
+   stroke-linecap="round" stroke-linejoin="round" filter="url(#soft)">
+  <style>
+    .thin { stroke-width: 2; stroke-opacity: .55; stroke: #f59e0b; }
+    .node { fill: #f59e0b; stroke: #fff; stroke-width: 2; }
+    .core { fill: #f59e0b; fill-opacity: .35; stroke: #f59e0b; }
+    .leaf { fill: #f59e0b; fill-opacity: .3; stroke: #f59e0b; }
+    .flame { fill: url(#flame); stroke: none; }
+    .sun { fill: #ffcf4a; fill-opacity: .25; stroke: #ffcf4a; }
+    .pulse { stroke: #f59e0b; stroke-width: 6; }
+    .sweep { fill: #f59e0b; fill-opacity: .35; stroke: none; }
+    .bolt { fill: #f59e0b; fill-opacity: .5; stroke: #f59e0b; }
+  </style>
+  <polygon points="-80.0,-138.6 -100.0,-103.9 -140.0,-103.9 -160.0,-138.6 -140.0,-173.2 -100.0,-173.2"/>
+<circle class="node" cx="-80.0" cy="-138.6" r="5"/>
+<polygon points="-20.0,-103.9 -40.0,-69.3 -80.0,-69.3 -100.0,-103.9 -80.0,-138.6 -40.0,-138.6"/>
+<circle class="node" cx="-20.0" cy="-103.9" r="5"/>
+<polygon points="40.0,-138.6 20.0,-103.9 -20.0,-103.9 -40.0,-138.6 -20.0,-173.2 20.0,-173.2"/>
+<circle class="node" cx="40.0" cy="-138.6" r="5"/>
+<polygon points="100.0,-103.9 80.0,-69.3 40.0,-69.3 20.0,-103.9 40.0,-138.6 80.0,-138.6"/>
+<circle class="node" cx="100.0" cy="-103.9" r="5"/>
+<polygon points="160.0,-138.6 140.0,-103.9 100.0,-103.9 80.0,-138.6 100.0,-173.2 140.0,-173.2"/>
+<circle class="node" cx="160.0" cy="-138.6" r="5"/>
+<polygon points="-80.0,-69.3 -100.0,-34.6 -140.0,-34.6 -160.0,-69.3 -140.0,-103.9 -100.0,-103.9"/>
+<circle class="node" cx="-80.0" cy="-69.3" r="5"/>
+<polygon points="-20.0,-34.6 -40.0,0.0 -80.0,0.0 -100.0,-34.6 -80.0,-69.3 -40.0,-69.3"/>
+<circle class="node" cx="-20.0" cy="-34.6" r="5"/>
+<polygon points="40.0,-69.3 20.0,-34.6 -20.0,-34.6 -40.0,-69.3 -20.0,-103.9 20.0,-103.9"/>
+<circle class="node" cx="40.0" cy="-69.3" r="5"/>
+<polygon points="100.0,-34.6 80.0,0.0 40.0,0.0 20.0,-34.6 40.0,-69.3 80.0,-69.3"/>
+<circle class="node" cx="100.0" cy="-34.6" r="5"/>
+<polygon points="160.0,-69.3 140.0,-34.6 100.0,-34.6 80.0,-69.3 100.0,-103.9 140.0,-103.9"/>
+<circle class="node" cx="160.0" cy="-69.3" r="5"/>
+<polygon points="-80.0,0.0 -100.0,34.6 -140.0,34.6 -160.0,0.0 -140.0,-34.6 -100.0,-34.6"/>
+<circle class="node" cx="-80.0" cy="0.0" r="5"/>
+<polygon points="-20.0,34.6 -40.0,69.3 -80.0,69.3 -100.0,34.6 -80.0,0.0 -40.0,-0.0"/>
+<circle class="node" cx="-20.0" cy="34.6" r="5"/>
+<polygon points="40.0,0.0 20.0,34.6 -20.0,34.6 -40.0,0.0 -20.0,-34.6 20.0,-34.6"/>
+<circle class="node" cx="40.0" cy="0.0" r="5"/>
+<polygon points="100.0,34.6 80.0,69.3 40.0,69.3 20.0,34.6 40.0,0.0 80.0,-0.0"/>
+<circle class="node" cx="100.0" cy="34.6" r="5"/>
+<polygon points="160.0,0.0 140.0,34.6 100.0,34.6 80.0,0.0 100.0,-34.6 140.0,-34.6"/>
+<circle class="node" cx="160.0" cy="0.0" r="5"/>
+<polygon points="-80.0,69.3 -100.0,103.9 -140.0,103.9 -160.0,69.3 -140.0,34.6 -100.0,34.6"/>
+<circle class="node" cx="-80.0" cy="69.3" r="5"/>
+<polygon points="-20.0,103.9 -40.0,138.6 -80.0,138.6 -100.0,103.9 -80.0,69.3 -40.0,69.3"/>
+<circle class="node" cx="-20.0" cy="103.9" r="5"/>
+<polygon points="40.0,69.3 20.0,103.9 -20.0,103.9 -40.0,69.3 -20.0,34.6 20.0,34.6"/>
+<circle class="node" cx="40.0" cy="69.3" r="5"/>
+<polygon points="100.0,103.9 80.0,138.6 40.0,138.6 20.0,103.9 40.0,69.3 80.0,69.3"/>
+<circle class="node" cx="100.0" cy="103.9" r="5"/>
+<polygon points="160.0,69.3 140.0,103.9 100.0,103.9 80.0,69.3 100.0,34.6 140.0,34.6"/>
+<circle class="node" cx="160.0" cy="69.3" r="5"/>
+<polygon points="-80.0,138.6 -100.0,173.2 -140.0,173.2 -160.0,138.6 -140.0,103.9 -100.0,103.9"/>
+<circle class="node" cx="-80.0" cy="138.6" r="5"/>
+<polygon points="40.0,138.6 20.0,173.2 -20.0,173.2 -40.0,138.6 -20.0,103.9 20.0,103.9"/>
+<circle class="node" cx="40.0" cy="138.6" r="5"/>
+<polygon points="160.0,138.6 140.0,173.2 100.0,173.2 80.0,138.6 100.0,103.9 140.0,103.9"/>
+<circle class="node" cx="160.0" cy="138.6" r="5"/>
+</g>
+</svg>

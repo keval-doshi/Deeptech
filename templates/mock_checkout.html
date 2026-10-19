@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Sandbox checkout{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="container section" style="max-width:520px">
+  <div class="card"><div class="card-body" style="padding:28px">
+    <div class="sandbox-note mb-2">
+      {{ icon('alert') }}<span><strong>Sandbox payment simulator.</strong> This page exists only in development (PAYMENT_PROVIDER=mock). In production, Razorpay's hosted checkout opens instead.</span>
+    </div>
+    <p class="eyebrow">DeeptechIndia.in · Test checkout</p>
+    <h1 style="font-size:1.6rem">{{ payment.amount_paise|paise }}</h1>
+    <p class="text-muted">Ranking bid for position #{{ payment.bid.target_position }} · {{ startup.name }}<br><span class="mono">Order {{ payment.provider_order_id }} · Receipt {{ payment.receipt }}</span></p>
+    <p class="text-muted" style="font-size:.88rem">Choosing an outcome sends a <strong>signed webhook</strong> through the same verification and processing code used for real payments.</p>
+    <form method="post" class="stack" style="gap:10px">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn-success btn-lg" name="outcome" value="success">{{ icon('check') }} Simulate successful payment</button>
+      <button class="btn btn-danger btn-lg" name="outcome" value="failure">{{ icon('x') }} Simulate failed payment</button>
+      <button class="btn btn-ghost btn-lg" name="outcome" value="cancel">Cancel and return</button>
+    </form>
+  </div></div>
+</div>
+{% endblock %}

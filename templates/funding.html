@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Deep-Tech Startups Looking for Funds{% endblock %}
+{% block description %}{{ summary.raising_count }} Indian deep-tech startups are actively raising. Filter by stage and sector.{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index') }}">Home</a> / <span>Looking for Funds</span></nav>
+    <h1>Startups looking for funds</h1>
+    <p>Founders who are actively raising. Investors can request a warm introduction directly from each profile.</p>
+    <div class="kpi-grid mt-3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('wallet', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.raising_count }}</strong><span class="text-muted">startups raising</span></div></div>
+      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('trending-up', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.total_target }}</strong><span class="text-muted">combined target</span></div></div>
+      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('briefcase', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.by_stage|selectattr('count')|list|length }}</strong><span class="text-muted">stages represented</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-sm" data-listing data-endpoint="{{ url_for('funding.api_list') }}" data-per-page="9" data-view="grid" data-sync-url="true">
+  <div class="container">
+    <form class="search-panel" data-listing-filters role="search">
+      <div class="search-input">{{ icon('search') }}<label class="sr-only" for="fund-q">Search</label><input id="fund-q" type="search" name="q" placeholder="Search raising startups…"></div>
+      <select name="category" aria-label="Category"><option value="">All categories</option>{% for c in nav_categories %}<option value="{{ c.slug }}">{{ c.name }}</option>{% endfor %}</select>
+      <select name="location" aria-label="Location"><option value="">All locations</option>{% for city in locations %}<option value="{{ city }}">{{ city }}</option>{% endfor %}</select>
+      <select name="sort" aria-label="Sort"><option value="promoted">Promoted first</option><option value="funded">Most funded</option><option value="recent">Newest</option><option value="name">Name (A–Z)</option></select>
+      <span></span>
+    </form>
+    <div class="chip-row" role="group" aria-label="Funding stage">
+      <button class="chip active" type="button" data-set-filter="stage" data-value="">All stages</button>
+      {% for s in summary.by_stage %}
+      <button class="chip" type="button" data-set-filter="stage" data-value="{{ s.stage }}">{{ s.stage }} <span class="text-subtle">{{ s.count }}</span></button>
+      {% endfor %}
+    </div>
+    <div class="list-toolbar mt-3"><span class="text-muted" data-listing-summary></span></div>
+    <div class="startup-grid" data-listing-results aria-live="polite"></div>
+    <div class="list-footer"><nav class="pagination" data-listing-pagination aria-label="Pagination"></nav></div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/search.js') }}"></script>{% endblock %}

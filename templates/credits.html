@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Image credits{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1>Image credits</h1>
+  <p>Demo photography from Wikimedia Commons used with the sample data, under the licences listed. Founder portraits are placeholders from randomuser.me; startup and investor logos are original demo marks.</p>
+</div></section>
+<div class="container section-sm">
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>File</th><th>Title</th><th>Author</th><th>Licence</th></tr></thead>
+    <tbody>
+    {% for file, c in items %}
+      <tr><td><img src="{{ url_for('static', filename='images/photos/' ~ file) }}" alt="" style="width:96px;height:60px;object-fit:cover;border-radius:6px" loading="lazy"></td>
+        <td><a href="{{ c.source }}" target="_blank" rel="noopener noreferrer">{{ c.title.replace('File:', '') }}</a></td>
+        <td>{{ c.author or 'Unknown' }}</td><td>{{ c.license }}</td></tr>
+    {% else %}<tr><td colspan="4" class="text-muted">No credited images.</td></tr>{% endfor %}
+    </tbody>
+  </table></div>
+</div>
+{% endblock %}

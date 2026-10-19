@@ -1,0 +1,19 @@
+{% extends "_auth_layout.html" %}
+{% from "_macros.html" import icon, text_field %}
+{% block title %}Sign in{% endblock %}
+{% block form %}
+<h1 class="mt-2">Welcome back</h1>
+<p class="text-muted">Sign in to manage your startup, track bids or follow investments.</p>
+{% if errors.form %}<div class="flash flash-error mb-2" role="alert">{{ icon('alert') }}<span>{{ errors.form }}</span></div>{% endif %}
+<form method="post" data-validate novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  {{ text_field('email', 'Email', errors, values, type='email', required=True, autocomplete='email') }}
+  <div class="field">
+    <div class="row" style="justify-content:space-between"><label for="password" class="required">Password</label><a href="{{ url_for('auth.forgot_password') }}" style="font-size:.85rem">Forgot password?</a></div>
+    <input id="password" name="password" type="password" required autocomplete="current-password">
+  </div>
+  <label class="check mb-2"><input type="checkbox" name="remember" value="1"> Keep me signed in for 14 days</label>
+  <button class="btn btn-primary btn-lg btn-block" type="submit">Sign in {{ icon('arrow-right') }}</button>
+</form>
+<p class="text-muted mt-3" style="text-align:center">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+{% endblock %}

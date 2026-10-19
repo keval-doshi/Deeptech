@@ -1,0 +1,178 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, logo_tile, status %}
+{% set active = 'admin' %}
+{% block title %}Admin Console{% endblock %}
+
+{% macro csrf() %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endmacro %}
+
+{% block app %}
+<div class="page-intro"><div><span class="crumb">Admin</span><h1>Admin console</h1><p>Approvals, bidding rules, payments and audit trail.</p></div>
+  <form method="post" action="{{ url_for('admin.recompute') }}">{{ csrf() }}<button class="btn btn-ghost" data-confirm="Rebuild the public ranking from confirmed bids now?">{{ icon('refresh') }} Rebuild ranking</button></form>
+</div>
+
+<div class="kpi-grid mb-2" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+  <div class="card kpi"><span class="stat-icon">{{ icon('users') }}</span><div><strong>{{ stats.users }}</strong><span>Users</span></div></div>
+  <div class="card kpi"><span class="stat-icon">{{ icon('rocket') }}</span><div><strong>{{ stats.startups }}</strong><span>Live startups</span></div></div>
+  <div class="card kpi"><span class="stat-icon">{{ icon('clock') }}</span><div><strong>{{ stats.pending }}</strong><span>Awaiting review</span></div></div>
+  <div class="card kpi"><span class="stat-icon">{{ icon('gavel') }}</span><div><strong>{{ stats.active_bids }}</strong><span>Active bids</span></div></div>
+  <div class="card kpi"><span class="stat-icon">{{ icon('wallet') }}</span><div><strong>{{ stats.revenue|inr }}</strong><span>Confirmed revenue</span></div></div>
+</div>
+
+<div class="card">
+  <div class="tabs" role="tablist" data-tabs="hash" style="padding:0 16px">
+    <button class="tab" role="tab" aria-controls="approvals">Approvals {% if pending %}<span class="badge badge-warning">{{ pending|length }}</span>{% endif %}</button>
+    <button class="tab" role="tab" aria-controls="startups">Startups</button>
+    <button class="tab" role="tab" aria-controls="investors">Investors {% if stats.unverified_investors %}<span class="badge badge-warning">{{ stats.unverified_investors }}</span>{% endif %}</button>
+    <button class="tab" role="tab" aria-controls="ranking">Ranking</button>
+    <button class="tab" role="tab" aria-controls="rules">Bidding rules</button>
+    <button class="tab" role="tab" aria-controls="payments">Payments</button>
+    <button class="tab" role="tab" aria-controls="webhooks">Webhooks</button>
+    <button class="tab" role="tab" aria-controls="users">Users</button>
+    <button class="tab" role="tab" aria-controls="audit">Audit log</button>
+    <button class="tab" role="tab" aria-controls="settings">Settings</button>
+  </div>
+  <div class="card-body">
+
+    <section id="approvals" class="tab-panel" role="tabpanel">
+      {% for s in pending %}
+      <div class="edit-item" style="align-items:flex-start">
+        {{ logo_tile(s, 'sm') }}
+        <div class="grow">
+          <strong><a href="{{ url_for('startups.profile', slug=s.slug) }}" target="_blank">{{ s.name }}</a></strong>
+          <small>{{ s.category.name }} · {{ s.location }} · submitted {{ s.created_at|ist }}</small>
+          <p class="text-muted mb-0 mt-1" style="font-size:.86rem">{{ s.tagline }}</p>
+        </div>
+        <div class="stack" style="gap:6px;align-items:flex-end">
+          <form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}">{{ csrf() }}<input type="hidden" name="action" value="approve"><button class="btn btn-sm btn-success">{{ icon('check', 'icon-sm') }} Approve</button></form>
+          <form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}" class="inline-form">{{ csrf() }}<input type="hidden" name="action" value="reject">
+            <input type="text" name="reason" placeholder="Reason for rejection" maxlength="300" aria-label="Rejection reason"><button class="btn btn-sm btn-ghost" data-confirm="Reject this listing? The founder will see your reason." data-danger>Reject</button></form>
+        </div>
+      </div>
+      {% else %}<div class="state">{{ icon('check') }}<h3>All caught up</h3><p>No listings awaiting review.</p></div>{% endfor %}
+    </section>
+
+    <section id="startups" class="tab-panel" role="tabpanel" hidden>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Startup</th><th>Category</th><th>Status</th><th>Verified</th><th>Investors' pick</th><th></th></tr></thead>
+        <tbody>
+        {% for s in startups %}
+          <tr>
+            <td><a href="{{ url_for('startups.profile', slug=s.slug) }}" target="_blank">{{ s.name }}</a></td>
+            <td>{{ s.category.name }}</td>
+            <td>{{ status(s.status) }}</td>
+            <td><form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}">{{ csrf() }}<input type="hidden" name="action" value="{{ 'unverify' if s.is_verified else 'verify' }}"><button class="btn btn-sm {{ 'btn-soft' if s.is_verified else 'btn-ghost' }}">{{ 'Verified' if s.is_verified else 'Verify' }}</button></form></td>
+            <td><form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}">{{ csrf() }}<input type="hidden" name="action" value="{{ 'unpick' if s.investor_pick else 'pick' }}"><button class="btn btn-sm {{ 'btn-soft' if s.investor_pick else 'btn-ghost' }}">{{ icon('star', 'icon-sm') }} {{ 'Picked' if s.investor_pick else 'Pick' }}</button></form></td>
+            <td>{% if s.status == 'published' %}<form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}">{{ csrf() }}<input type="hidden" name="action" value="unpublish"><button class="btn btn-sm btn-ghost" data-confirm="Unpublish {{ s.name }}? It will leave the directory and paid ranking." data-danger>Unpublish</button></form>
+                {% else %}<form method="post" action="{{ url_for('admin.startup_action', startup_id=s.id) }}">{{ csrf() }}<input type="hidden" name="action" value="approve"><button class="btn btn-sm btn-ghost">Publish</button></form>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="investors" class="tab-panel" role="tabpanel" hidden>
+      <p class="text-muted">Verified investors get a badge founders see on introduction requests. Check the firm's website and the person's role before verifying.</p>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Investor</th><th>Account</th><th>Type</th><th>Thesis</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for i in investors %}
+          <tr>
+            <td><strong>{{ i.firm_name }}</strong>{% if i.website %}<br><a href="{{ i.website }}" target="_blank" rel="noopener noreferrer nofollow" style="font-size:.8rem">{{ i.website.split('//')[-1] }}</a>{% endif %}</td>
+            <td>{{ i.user.name }}<br><small class="text-muted">{{ i.user.email }}{% if not i.user.is_verified %} · email unverified{% endif %}</small></td>
+            <td>{{ i.investor_type }}{% if i.city %}<br><small class="text-muted">{{ i.city }}</small>{% endif %}</td>
+            <td style="max-width:280px;white-space:normal"><small class="text-muted">{{ i.thesis or '—' }}</small></td>
+            <td>{{ i.created_at|ist('%d %b %Y') }}</td>
+            <td>{{ status('published', 'verified') if i.is_verified else status('pending', 'unverified') }}</td>
+            <td><form method="post" action="{{ url_for('admin.investor_action', investor_id=i.id) }}">{{ csrf() }}<input type="hidden" name="action" value="{{ 'unverify' if i.is_verified else 'verify' }}">
+              <button class="btn btn-sm {{ 'btn-ghost' if i.is_verified else 'btn-success' }}" {% if i.is_verified %}data-confirm="Remove verification from {{ i.firm_name }}?" data-danger{% endif %}>{{ 'Unverify' if i.is_verified else 'Verify' }}</button></form></td>
+          </tr>
+        {% else %}<tr><td colspan="7" class="text-muted">No investors yet.</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="ranking" class="tab-panel" role="tabpanel" hidden>
+      <p class="text-muted">Admin-only view. Amounts are never exposed on public pages or APIs.</p>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Position</th><th>Startup</th><th class="num">Amount</th><th>Confirmed</th><th>Expires</th></tr></thead>
+        <tbody>{% for r in ranking %}<tr><td><strong>#{{ r.position }}</strong></td><td>{{ r.startup.name }}</td><td class="num">{{ r.bid.amount_paise|paise }}</td><td>{{ r.bid.paid_at|ist }}</td><td>{{ r.bid.expires_at|ist }}</td></tr>
+        {% else %}<tr><td colspan="5" class="text-muted">No paid positions.</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </section>
+
+    <section id="rules" class="tab-panel" role="tabpanel" hidden>
+      <form method="post" action="{{ url_for('admin.update_rules') }}" style="max-width:860px" data-validate novalidate>
+        {{ csrf() }}
+        <div class="rules-grid">
+          <div class="field"><label for="r-open" class="required">Opening bid (₹)</label><input id="r-open" type="number" name="opening_bid" min="1" value="{{ rules.opening_bid_paise // 100 }}" required></div>
+          <div class="field"><label for="r-inc" class="required">Increment (₹)</label><input id="r-inc" type="number" name="increment" min="1" value="{{ rules.increment_paise // 100 }}" required></div>
+          <div class="field"><label for="r-max" class="required">Maximum bid (₹)</label><input id="r-max" type="number" name="max_bid" min="1" value="{{ rules.max_bid_paise // 100 }}" required></div>
+          <div class="field"><label for="r-pos" class="required">Paid positions</label><input id="r-pos" type="number" name="max_positions" min="1" max="50" value="{{ rules.max_positions }}" required></div>
+          <div class="field"><label for="r-days" class="required">Ranking period (days)</label><input id="r-days" type="number" name="ranking_period_days" min="1" max="365" value="{{ rules.ranking_period_days }}" required></div>
+          <div class="field"><label for="r-ttl" class="required">Checkout window (minutes)</label><input id="r-ttl" type="number" name="checkout_ttl_minutes" min="5" max="120" value="{{ rules.checkout_ttl_minutes }}" required></div>
+        </div>
+        <label class="check mb-2"><input type="checkbox" name="bidding_enabled" {% if rules.bidding_enabled %}checked{% endif %}> Bidding enabled</label>
+        <button class="btn btn-primary" data-confirm="Apply these bidding rules? The ranking will be rebuilt immediately.">Save rules</button>
+        <p class="text-subtle mt-2" style="font-size:.82rem">Last updated {{ rules.updated_at|ist }}. Every change is recorded in the audit log.</p>
+      </form>
+    </section>
+
+    <section id="payments" class="tab-panel" role="tabpanel" hidden>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Created</th><th>Receipt</th><th>Startup</th><th>Provider / order</th><th class="num">Amount</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for p in payments %}
+          <tr><td>{{ p.created_at|ist }}</td><td class="mono">{{ p.receipt }}</td><td>{{ p.startup.name }}</td>
+            <td class="mono">{{ p.provider }} · {{ p.provider_order_id }}</td><td class="num">{{ p.amount_paise|paise }}</td>
+            <td>{{ status(p.status) }}{% if p.failure_reason %}<br><small class="text-muted">{{ p.failure_reason }}</small>{% endif %}</td>
+            <td>{% if p.status == 'created' %}<form method="post" action="{{ url_for('admin.reconcile', payment_id=p.id) }}">{{ csrf() }}<button class="btn btn-sm btn-ghost">Reconcile</button></form>{% endif %}</td></tr>
+        {% else %}<tr><td colspan="7" class="text-muted">No payments yet.</td></tr>{% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="webhooks" class="tab-panel" role="tabpanel" hidden>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>Received</th><th>Provider</th><th>Event</th><th>Event id</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody>{% for w in webhooks %}<tr><td>{{ w.received_at|ist }}</td><td>{{ w.provider }}</td><td>{{ w.event_type }}</td><td class="mono">{{ w.event_id }}</td><td>{{ status(w.status) }}</td><td class="text-muted">{{ w.error or '' }}</td></tr>
+        {% else %}<tr><td colspan="6" class="text-muted">No webhook events yet.</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </section>
+
+    <section id="users" class="tab-panel" role="tabpanel" hidden>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>User</th><th>Role</th><th>Verified</th><th>Joined</th><th>Last login</th><th></th></tr></thead>
+        <tbody>
+        {% for u in users %}
+          <tr><td><strong>{{ u.name }}</strong><br><small class="text-muted">{{ u.email }}</small></td>
+            <td>{% if u.id != current_user.id %}<form method="post" action="{{ url_for('admin.update_user', user_id=u.id) }}" class="inline-form">{{ csrf() }}<input type="hidden" name="action" value="set_role">
+                <select name="role" aria-label="Role for {{ u.email }}">{% for r in roles %}<option value="{{ r }}" {% if r == u.role %}selected{% endif %}>{{ r.replace('_', ' ') }}</option>{% endfor %}</select>
+                <button class="btn btn-sm btn-ghost" data-confirm="Change this user's role?">Set</button></form>{% else %}{{ u.role }}{% endif %}</td>
+            <td>{{ 'Yes' if u.is_verified else 'No' }}</td><td>{{ u.created_at|ist('%d %b %Y') }}</td><td>{{ u.last_login_at|ist }}</td>
+            <td>{% if u.id != current_user.id %}<form method="post" action="{{ url_for('admin.update_user', user_id=u.id) }}">{{ csrf() }}<input type="hidden" name="action" value="toggle_active">
+                <button class="btn btn-sm {{ 'btn-ghost' if u.active else 'btn-soft' }}" data-confirm="{{ 'Deactivate' if u.active else 'Reactivate' }} {{ u.email }}?" {% if u.active %}data-danger{% endif %}>{{ 'Deactivate' if u.active else 'Reactivate' }}</button></form>{% endif %}</td></tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="audit" class="tab-panel" role="tabpanel" hidden>
+      <div class="table-wrap"><table class="table">
+        <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Entity</th><th>Details</th><th>IP</th></tr></thead>
+        <tbody>{% for l in logs %}<tr><td>{{ l.created_at|ist }}</td><td>{{ l.actor.email if l.actor else 'system' }}</td><td><span class="badge">{{ l.action }}</span></td>
+          <td>{{ l.entity_type }} {{ l.entity_id or '' }}</td><td class="mono" style="max-width:360px;word-break:break-all">{{ l.data }}</td><td class="mono">{{ l.ip_address or '' }}</td></tr>
+        {% else %}<tr><td colspan="6" class="text-muted">No entries.</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </section>
+
+    <section id="settings" class="tab-panel" role="tabpanel" hidden>
+      <form method="post" action="{{ url_for('admin.update_settings') }}" class="stack" style="max-width:520px">
+        {{ csrf() }}
+        <label class="check"><input type="checkbox" name="listings_require_approval" {% if settings.listings_require_approval %}checked{% endif %}> New listings require admin approval</label>
+        <label class="check"><input type="checkbox" name="allow_new_registrations" {% if settings.allow_new_registrations %}checked{% endif %}> Allow new registrations</label>
+        <div><button class="btn btn-primary">Save settings</button></div>
+      </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

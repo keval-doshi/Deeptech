@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, logo_tile %}
+{% block title %}{{ startup.name }}: {{ startup.tagline }}{% endblock %}
+{% block description %}{{ startup.name }} is a {{ startup.category.name }} startup from {{ startup.location }}. {{ startup.tagline }}{% endblock %}
+{% block meta %}<meta property="og:image" content="{{ startup.cover_url }}">{% endblock %}
+
+{% block content %}
+{% set funding = startup.funding %}
+{% if not startup.is_public %}
+<div class="container"><div class="alert-bar warning mt-2">
+  {{ icon('info') }} This profile is <strong>{{ startup.status }}</strong> and only visible to your team{% if startup.rejection_reason %}: {{ startup.rejection_reason }}{% endif %}.
+</div></div>
+{% endif %}
+
+<section class="profile-hero" style="background-image: url('{{ startup.cover_url }}'); background-position: center; background-size: cover;">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index', _anchor='startups') }}">{{ icon('arrow-left', 'icon-sm') }} Back to Startups</a></nav>
+    <div class="profile-head">
+      {{ logo_tile(startup, 'lg') }}
+      <div>
+        <h1>{{ startup.name }}{% if startup.is_verified %}<svg class="icon verified" role="img" aria-label="Verified startup"><use href="{{ url_for('static', filename='images/icons.svg') }}#verified"></use></svg>{% endif %}</h1>
+        <p class="tagline">{{ startup.tagline }}</p>
+        <div class="row row-wrap" style="gap:8px">
+          <a class="badge badge-primary" href="{{ url_for('startups.index', category=startup.category.slug, _anchor='startups') }}">{{ icon(startup.category.icon) }} {{ startup.category.name }}</a>
+          {% for t in startup.tag_list[:4] %}<span class="badge">{{ icon('tag') }} {{ t }}</span>{% endfor %}
+          {% if rank %}<span class="badge badge-dark" title="Paid placement">{{ icon('crown') }} Promoted #{{ rank }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="profile-actions">
+      {% if startup.website %}<a class="btn btn-ghost" href="{{ startup.website }}" target="_blank" rel="noopener noreferrer nofollow">Visit Website {{ icon('external', 'icon-sm') }}</a>{% endif %}
+      {% if current_user.is_authenticated and current_user.is_investor %}
+        <button class="btn btn-primary" type="button" data-open-modal="intro-modal" {% if intro_status %}disabled{% endif %}>{{ icon('send') }} {{ 'Introduction ' ~ intro_status if intro_status else 'Request Introduction' }}</button>
+      {% elif startup.contact_email %}
+        <a class="btn btn-primary" href="mailto:{{ startup.contact_email }}?subject={{ ('Hello from DeeptechIndia.in')|urlencode }}">{{ icon('mail') }} Contact</a>
+      {% endif %}
+      <button class="btn btn-ghost save-btn" type="button" data-save-startup="{{ startup.id }}" aria-pressed="{{ 'true' if saved else 'false' }}" data-saved-text="Following" data-unsaved-text="Follow">{{ icon('user-plus') }} <span data-save-label>{{ 'Following' if saved else 'Follow' }}</span></button>
+      {% if can_manage %}<a class="btn btn-soft" href="{{ url_for('dashboard.company_profile') }}">{{ icon('edit') }} Edit profile</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="tabs" role="tablist" aria-label="Profile sections" data-profile-tabs style="margin-top:8px">
+    {% for key, label in [('overview', 'Overview'), ('founders', 'Founders'), ('products', 'Products'), ('gallery', 'Gallery'), ('funding', 'Funding'), ('updates', 'Updates')] %}
+    <button class="tab" role="tab" id="tab-{{ key }}" aria-selected="{{ 'true' if key == 'overview' else 'false' }}" data-show="{{ key }}">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  <div class="profile-layout section-sm" data-profile-sections>
+    <div class="stack" style="gap:28px">
+      <section data-section="overview funding" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="text-muted" style="white-space:pre-line">{{ startup.description }}</p>
+        <div class="facts">
+          <dl>
+            <dt>Founded</dt><dd>{{ startup.founded_year or '—' }}</dd>
+            <dt>Location</dt><dd>{{ startup.location }}</dd>
+            <dt>Team size</dt><dd>{{ startup.team_size or '—' }}</dd>
+          </dl>
+          <dl>
+            <dt>Website</dt><dd>{% if startup.website %}<a href="{{ startup.website }}" target="_blank" rel="noopener noreferrer nofollow">{{ startup.website.split('//')[-1] }}</a>{% else %}—{% endif %}</dd>
+            <dt>Email</dt><dd>{% if startup.contact_email %}<a href="mailto:{{ startup.contact_email }}">{{ startup.contact_email }}</a>{% else %}—{% endif %}</dd>
+            <dt>Address</dt><dd>{{ startup.address or '—' }}</dd>
+          </dl>
+        </div>
+      </section>
+
+      <section data-section="overview founders" aria-labelledby="founders-title">
+        <div class="section-head" style="margin-bottom:14px"><h2 id="founders-title">Founders ({{ startup.founders|length }})</h2></div>
+        {% if startup.founders %}
+        <div class="founder-grid">
+          {% for f in startup.founders %}
+          <div class="founder-card">
+            <span class="avatar">{% if f.photo_path %}<img src="{{ url_for('static', filename=f.photo_path) }}" alt="">{% else %}{{ f.initials }}{% endif %}</span>
+            <div>
+              <strong>{{ f.name }}</strong>
+              <small>{{ f.title }}</small>
+              {% if f.linkedin_url %}<a class="li" href="{{ f.linkedin_url }}" target="_blank" rel="noopener noreferrer nofollow" aria-label="{{ f.name }} on LinkedIn">{{ icon('linkedin', 'icon-lg') }}</a>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}<div class="state">No founders listed yet.</div>{% endif %}
+      </section>
+
+      <section data-section="overview products" aria-labelledby="products-title">
+        <div class="section-head" style="margin-bottom:14px"><h2 id="products-title">Products &amp; Solutions</h2></div>
+        {% if startup.products %}
+        <div class="product-grid">
+          {% for p in startup.products %}
+          <article class="product-card">
+            <div class="img" style="background-image:url('{{ url_for('static', filename=p.image_path) if p.image_path else startup.cover_url }}')" role="img" aria-label="{{ p.name }}"></div>
+            <div class="body"><div><strong>{{ p.name }}</strong>{% if p.summary %}<p>{{ p.summary }}</p>{% endif %}</div>{{ icon('arrow-right', 'icon-sm') }}</div>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}<div class="state">No products listed yet.</div>{% endif %}
+      </section>
+
+      <section data-section="overview gallery" aria-labelledby="gallery-title">
+        <div class="section-head" style="margin-bottom:14px"><h2 id="gallery-title">Gallery</h2></div>
+        {% if startup.gallery %}
+        <div class="gallery-strip">
+          <button class="gallery-nav prev" type="button" data-gallery-scroll="-1" aria-label="Scroll gallery left">{{ icon('chevron-left') }}</button>
+          <div class="gallery-track" data-gallery>
+            {% for g in startup.gallery %}
+            <button type="button" data-lightbox="{{ url_for('static', filename=g.image_path) }}" data-caption="{{ g.caption }}" aria-label="Open image: {{ g.caption or 'gallery image ' ~ loop.index }}">
+              <img src="{{ url_for('static', filename=g.image_path) }}" alt="{{ g.caption }}" loading="lazy">
+            </button>
+            {% endfor %}
+          </div>
+          <button class="gallery-nav next" type="button" data-gallery-scroll="1" aria-label="Scroll gallery right">{{ icon('chevron-right') }}</button>
+        </div>
+        {% else %}<div class="state">No images yet.</div>{% endif %}
+      </section>
+
+      <section data-section="updates" aria-labelledby="updates-title">
+        <h2 id="updates-title">Updates</h2>
+        {% for u in startup.updates %}
+        <article class="update-item"><time datetime="{{ u.created_at.isoformat() }}">{{ u.created_at|ist('%d %b %Y') }}</time><h3 class="mt-1">{{ u.title }}</h3><p class="text-muted mb-0">{{ u.body }}</p></article>
+        {% else %}<div class="state">No updates published yet.</div>{% endfor %}
+      </section>
+
+      {% if similar %}
+      <section data-section="overview" aria-labelledby="similar-title">
+        <div class="section-head" style="margin-bottom:14px"><h2 id="similar-title">Similar Startups</h2>
+          <a class="card-link" href="{{ url_for('startups.index', category=startup.category.slug, _anchor='startups') }}">View all {{ icon('arrow-right', 'icon-sm') }}</a></div>
+        <div class="similar-grid">
+          {% for s in similar %}
+          <a class="similar-card" href="{{ url_for('startups.profile', slug=s.slug) }}">
+            {{ logo_tile(s, 'sm') }}
+            <div><strong>{{ s.name }}{% if s.is_verified %}<svg class="icon verified" style="width:15px;height:15px" aria-label="Verified" role="img"><use href="{{ url_for('static', filename='images/icons.svg') }}#verified"></use></svg>{% endif %}</strong>
+              <span class="meta">{{ s.category.name }}</span><br><span class="meta">{{ icon('map-pin') }} {{ s.location }}</span></div>
+          </a>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+    </div>
+
+    <aside class="stack" data-section="overview funding">
+      {% if funding and funding.is_raising %}
+      <div class="card funds-card"><div class="card-body">
+        <h3 class="row" style="margin-bottom:8px"><span class="head-icon">{{ icon('wallet') }}</span> Looking for Funds</h3>
+        <p class="text-muted" style="font-size:.9rem">This startup is currently looking for investment opportunities.</p>
+        {% if current_user.is_authenticated and current_user.is_investor %}
+          <button class="btn btn-primary btn-block" type="button" data-open-modal="intro-modal" {% if intro_status %}disabled{% endif %}>{{ 'Introduction ' ~ intro_status if intro_status else 'Connect with the Team' }} {{ icon('arrow-right', 'icon-sm') }}</button>
+        {% elif not current_user.is_authenticated %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('auth.register', role='investor') }}">Connect as an investor {{ icon('arrow-right', 'icon-sm') }}</a>
+        {% endif %}
+        <div class="funds-figures">
+          <div><span>Funding Stage</span><strong>{{ funding.stage or '—' }}</strong></div>
+          <div><span>Total Funding</span><strong>{{ funding.total_raised_inr|inr_short }}</strong></div>
+          <div><span>Raising</span><strong>{{ funding.raising_target_inr|inr_short }}</strong></div>
+          <div><span>Min. cheque</span><strong>{{ funding.min_ticket_inr|inr_short }}</strong></div>
+        </div>
+        {% if funding.use_of_funds %}<p class="text-muted mt-2 mb-0" style="font-size:.86rem"><strong style="color:var(--ink)">Use of funds:</strong> {{ funding.use_of_funds }}</p>{% endif %}
+      </div></div>
+      {% else %}
+      <div class="card"><div class="card-body">
+        <h3 class="row" style="margin-bottom:8px"><span class="head-icon">{{ icon('briefcase') }}</span> Funding</h3>
+        <p class="text-muted" style="font-size:.9rem">Not actively raising right now.</p>
+        <div class="funds-figures">
+          <div><span>Stage</span><strong>{{ funding.stage if funding and funding.stage else '—' }}</strong></div>
+          <div><span>Total Funding</span><strong>{{ (funding.total_raised_inr if funding else 0)|inr_short }}</strong></div>
+        </div>
+      </div></div>
+      {% endif %}
+      <div class="card"><div class="card-body">
+        <h3 style="font-size:1rem">Share this profile</h3>
+        <div class="row"><input type="text" readonly value="{{ request.url }}" aria-label="Profile link" data-share-url><button class="btn btn-ghost" type="button" data-copy-link>Copy</button></div>
+      </div></div>
+    </aside>
+  </div>
+</div>
+
+<div class="modal-backdrop lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="modal">
+    <div class="modal-head"><h2 data-lightbox-caption></h2><button class="icon-btn" type="button" data-close-modal aria-label="Close">{{ icon('x') }}</button></div>
+    <div class="modal-body"><img src="" alt="" data-lightbox-img></div>
+    <div class="modal-foot" style="justify-content:space-between">
+      <button class="icon-btn" type="button" data-lightbox-step="-1" aria-label="Previous image">{{ icon('chevron-left') }}</button>
+      <button class="icon-btn" type="button" data-lightbox-step="1" aria-label="Next image">{{ icon('chevron-right') }}</button>
+    </div>
+  </div>
+</div>
+
+{% if current_user.is_authenticated and current_user.is_investor and not intro_status %}
+<div class="modal-backdrop" id="intro-modal" role="dialog" aria-modal="true" aria-labelledby="intro-title">
+  <form class="modal" data-intro-form data-startup-id="{{ startup.id }}" novalidate>
+    <div class="modal-head"><h2 id="intro-title">Request an introduction</h2><button class="icon-btn" type="button" data-close-modal aria-label="Close">{{ icon('x') }}</button></div>
+    <div class="modal-body">
+      <p class="text-muted" style="font-size:.9rem">Your message goes to the {{ startup.name }} team. Your email is shared only if they accept.</p>
+      <div class="field">
+        <label for="intro-message" class="required">Message</label>
+        <textarea id="intro-message" name="message" minlength="20" maxlength="1000" required data-count="#intro-count" placeholder="Introduce your fund, why this startup fits your thesis, and what you'd like to discuss."></textarea>
+        <span class="char-count" id="intro-count"></span>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" type="button" data-close-modal>Cancel</button><button class="btn btn-primary" type="submit">{{ icon('send') }} Send request</button></div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/startup.js') }}"></script>{% endblock %}

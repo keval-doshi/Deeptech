@@ -1,0 +1,41 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Bid History{% endblock %}
+
+{% block app %}
+<div class="page-intro">
+  <div>
+    <span class="crumb">Bid History</span>
+    <h1>Bid history</h1>
+    <p>Every bid {{ startup.name }} has placed, with its payment status. Only your own bids are shown.</p>
+  </div>
+</div>
+
+<div class="card" data-bid-history>
+  <div class="card-head">
+    <h2><span class="head-icon">{{ icon('history') }}</span> All bids</h2>
+    <div class="row">
+      <span class="text-muted" style="font-size:.88rem">Total paid: <strong data-paid-total>—</strong></span>
+      <label class="sr-only" for="history-status">Filter by status</label>
+      <select id="history-status" style="width:auto" data-history-status>
+        <option value="">All statuses</option>
+        <option value="active">Active</option>
+        <option value="pending_payment">Pending payment</option>
+        <option value="superseded">Superseded</option>
+        <option value="failed">Failed</option>
+        <option value="cancelled">Cancelled</option>
+        <option value="expired">Expired</option>
+      </select>
+    </div>
+  </div>
+  <div style="padding:16px">
+    <div class="table-wrap"><table class="table">
+      <thead><tr><th>Placed</th><th>Target</th><th>Achieved</th><th class="num">Amount</th><th>Payment</th><th>Ranking until</th><th>Status</th><th></th></tr></thead>
+      <tbody data-history-rows><tr><td colspan="8"><div class="skeleton" style="height:28px"></div></td></tr></tbody>
+    </table></div>
+    <div class="list-footer"><nav class="pagination" data-history-pages aria-label="Pagination"></nav><span data-history-summary></span></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/bidding.js') }}"></script>{% endblock %}

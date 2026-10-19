@@ -1,0 +1,97 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Team{% endblock %}
+
+{% block app %}
+<div class="page-intro">
+  <div>
+    <span class="crumb">Team</span>
+    <h1>Team members</h1>
+    <p>People who can manage {{ startup.name }} on DeeptechIndia.in.</p>
+  </div>
+</div>
+
+<div class="app-grid">
+  <div class="col">
+    <div class="card" data-team>
+      <div class="card-head"><h2><span class="head-icon">{{ icon('users') }}</span> Members ({{ members|length }})</h2></div>
+      <div class="card-body">
+        <div class="edit-list" style="margin:0">
+          {% for m in members %}
+          <div class="edit-item team-row" data-item data-member="{{ m.id }}">
+            <span class="avatar">{{ m.user.initials }}</span>
+            <div class="grow">
+              <strong>{{ m.user.name }}{% if m.user_id == current_user.id %} <span class="badge">You</span>{% endif %}</strong>
+              <small>{{ m.user.email }} · joined {{ m.created_at|ist('%d %b %Y') }}</small>
+            </div>
+            {% if is_owner and m.user_id != current_user.id %}
+              <label class="sr-only" for="role-{{ m.id }}">Role for {{ m.user.name }}</label>
+              <select id="role-{{ m.id }}" class="role-select" data-role-select="{{ m.id }}" data-current="{{ m.role }}">
+                <option value="owner" {% if m.role == 'owner' %}selected{% endif %}>Owner</option>
+                <option value="editor" {% if m.role == 'editor' %}selected{% endif %}>Editor</option>
+              </select>
+              <button class="btn btn-ghost btn-sm" type="button" data-api-delete="{{ url_for('team.api_remove', member_id=m.id) }}" data-item-label="{{ m.user.name }} from the team" aria-label="Remove {{ m.user.name }}">{{ icon('trash', 'icon-sm') }}</button>
+            {% else %}
+              <span class="badge {{ 'badge-primary' if m.role == 'owner' else '' }}">{{ m.role|capitalize }}</span>
+              {% if m.user_id == current_user.id and members|length > 1 %}
+              <button class="btn btn-ghost btn-sm" type="button" data-leave="{{ url_for('team.api_remove', member_id=m.id) }}">Leave</button>
+              {% endif %}
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if is_owner %}
+    <div class="card">
+      <div class="card-head"><h2><span class="head-icon">{{ icon('user-plus') }}</span> Invite someone</h2></div>
+      <div class="card-body">
+        <form data-invite-form novalidate>
+          <div class="form-grid">
+            <div class="field"><label for="invite-email" class="required">Email</label><input id="invite-email" name="email" type="email" required placeholder="cofounder@yourstartup.in" autocomplete="off"></div>
+            <div class="field"><label for="invite-role" class="required">Role</label>
+              <select id="invite-role" name="role"><option value="editor">Editor: edit profile &amp; reply to investors</option><option value="owner">Owner: everything incl. bids &amp; payments</option></select></div>
+          </div>
+          <button class="btn btn-primary" type="submit">{{ icon('send') }} Send invitation</button>
+          <p class="error-text mt-1" data-invite-error role="alert"></p>
+          <div class="flash flash-dev mt-1 hidden" data-invite-dev></div>
+        </form>
+      </div>
+    </div>
+
+    {% if invites %}
+    <div class="card">
+      <div class="card-head"><h2><span class="head-icon">{{ icon('clock') }}</span> Pending invitations</h2></div>
+      <div class="card-body">
+        <div class="edit-list" style="margin:0">
+          {% for i in invites %}
+          <div class="edit-item" data-item>
+            <div class="grow"><strong>{{ i.email }}</strong><small>{{ i.role|capitalize }} · expires {{ i.expires_at|ist('%d %b %Y') }}</small></div>
+            <button class="btn btn-ghost btn-sm" type="button" data-api-delete="{{ url_for('team.api_revoke', invite_id=i.id) }}" data-item-label="this invitation">Revoke</button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+
+  <div class="col">
+    <div class="info-card">
+      <span class="head-icon">{{ icon('shield-check') }}</span>
+      <div>
+        <h3>Roles</h3>
+        <ol style="list-style:none;padding:0">
+          <li><strong>Owner:</strong> everything, including bids, payments and managing the team.</li>
+          <li class="mt-1"><strong>Editor:</strong> edit the company profile and respond to investor introductions. Can't see payments or place bids.</li>
+        </ol>
+        <p class="text-muted mt-1 mb-0" style="font-size:.82rem">Every startup keeps at least one owner. Invitations expire after 7 days.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/startup.js') }}"></script><script src="{{ url_for('static', filename='js/team.js') }}"></script>{% endblock %}

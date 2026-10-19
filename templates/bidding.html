@@ -1,0 +1,77 @@
+{% extends "dashboard_base.html" %}
+{% from "_macros.html" import icon, logo_tile %}
+{% block title %}Manage Bids{% endblock %}
+
+{% block app %}
+<div data-bid-board data-review-url="{{ url_for('bidding.review') }}">
+
+  <section class="dash-hero" aria-labelledby="bids-title">
+    <div class="dash-hero-top">
+      <div class="dash-id">
+        {{ logo_tile(startup, 'lg') }}
+        <div>
+          <span class="crumb">Promoted ranking</span>
+          <h1 id="bids-title">{{ startup.name }}{% if startup.is_verified %}<svg class="icon verified" role="img" aria-label="Verified"><use href="{{ url_for('static', filename='images/icons.svg') }}#verified"></use></svg>{% endif %}</h1>
+          <p>{{ startup.category.name }} · {{ startup.location }}</p>
+        </div>
+      </div>
+      <div class="dash-hero-actions">
+        {% if startup.is_public %}<a class="btn btn-glass btn-sm" href="{{ url_for('startups.profile', slug=startup.slug) }}" target="_blank" rel="noopener">{{ icon('external', 'icon-sm') }} Public profile</a>{% endif %}
+        <button class="btn btn-glass btn-sm" type="button" data-refresh aria-label="Refresh positions">{{ icon('refresh', 'icon-sm') }} Refresh</button>
+      </div>
+    </div>
+    <div class="dash-stats">
+      <div><span>Current rank</span><strong data-current-position>—</strong></div>
+      <div><span>Your bid</span><strong data-current-bid>—</strong></div>
+      <div><span>Ranking ends in</span><strong data-days-left>—</strong></div>
+      <div><span>Profile views · 30d</span><strong data-views>—</strong></div>
+    </div>
+  </section>
+
+  <div class="alert-bar warning hidden" data-lock-banner role="status">
+    {{ icon('lock') }} <span data-lock-text style="flex:1 1 280px"></span>
+    <a class="btn btn-sm btn-ghost" href="#" data-lock-action hidden></a>
+  </div>
+  <div class="alert-bar warning hidden" data-pending-banner>
+    {{ icon('clock') }} <span data-pending-text style="flex:1 1 280px"></span>
+    <button class="btn btn-sm btn-primary" type="button" data-resume-pending>Complete payment</button>
+    <button class="btn btn-sm btn-ghost" type="button" data-cancel-pending>Cancel</button>
+  </div>
+
+  <ol class="steps" aria-label="How bidding works">
+    <li><b>1</b><span><strong>Pick a spot</strong>See what each position takes</span></li>
+    <li><b>2</b><span><strong>Enter your bid</strong>At or above the minimum</span></li>
+    <li><b>3</b><span><strong>Pay securely</strong>Hosted checkout, no card data here</span></li>
+    <li><b>4</b><span><strong>Go live</strong>Rank updates once payment confirms</span></li>
+  </ol>
+
+  <div class="bids-layout">
+    <section class="panel" aria-labelledby="positions-title">
+      <div class="panel-head">
+        <div>
+          <h2 id="positions-title">Positions</h2>
+          <p class="panel-sub" data-rules-text>Loading rules…</p>
+        </div>
+        <span class="live-dot"><span data-updated>Updating…</span></span>
+      </div>
+      <div class="pr-list" role="list" data-board-rows>
+        {% for i in range(5) %}<div class="skeleton" style="height:76px;border-radius:14px"></div>{% endfor %}
+      </div>
+      <p class="panel-foot">{{ icon('lock', 'icon-sm') }} Amounts are private. Competitors never see who you are, and the public site shows positions only.</p>
+    </section>
+
+    <aside class="bids-side">
+      <section class="panel" aria-labelledby="ladder-title">
+        <div class="panel-head"><h2 id="ladder-title">Bid ladder</h2></div>
+        <div class="ladder" data-ladder><div class="skeleton" style="height:120px"></div></div>
+      </section>
+      <section class="panel" aria-labelledby="activity-title">
+        <div class="panel-head"><h2 id="activity-title">Your activity</h2><a class="card-link" href="{{ url_for('bidding.history') }}">All bids {{ icon('arrow-right', 'icon-sm') }}</a></div>
+        <ul class="timeline" data-recent><li class="skeleton" style="height:90px"></li></ul>
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}<script src="{{ url_for('static', filename='js/bidding.js') }}"></script>{% endblock %}

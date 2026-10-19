@@ -1,0 +1,650 @@
+{
+ "spacetech/01.jpg": {
+  "title": "File:Rocket wings.jpg",
+  "author": "Gomathi Jayasankar",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Rocket_wings.jpg"
+ },
+ "spacetech/02.jpg": {
+  "title": "File:Nasa--methalox-rocket-engine-test-fiiring.jpg",
+  "author": "NASA",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Nasa--methalox-rocket-engine-test-fiiring.jpg"
+ },
+ "spacetech/03.jpg": {
+  "title": "File:Euclid Spacecraft in Cleanroom (PIA25783).jpg",
+  "author": "NASA Jet Propulsion Laboratory",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Euclid_Spacecraft_in_Cleanroom_(PIA25783).jpg"
+ },
+ "spacetech/04.jpg": {
+  "title": "File:Dragon 2 hover test (24159153709).jpg",
+  "author": "SpaceX Photos",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Dragon_2_hover_test_(24159153709).jpg"
+ },
+ "spacetech/05.jpg": {
+  "title": "File:Rocket Model Display.jpg",
+  "author": "Aliva Sahoo",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Rocket_Model_Display.jpg"
+ },
+ "spacetech/06.jpg": {
+  "title": "File:A trio of CubeSats is ejected into Earth orbit from a small satellite orbital deployer (iss072e352045).jpg",
+  "author": "NASA Johnson Space Center",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:A_trio_of_CubeSats_is_ejected_into_Earth_orbit_from_a_small_satellite_orbital_deployer_(iss072e352045).jpg"
+ },
+ "spacetech/07.jpg": {
+  "title": "File:BSX2022 20220905 150825, Scaled models of ISRO's Launch Vehicles and Satellites.jpg",
+  "author": "Gareeb Scientist",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:BSX2022_20220905_150825,_Scaled_models_of_ISRO%27s_Launch_Vehicles_and_Satellites.jpg"
+ },
+ "spacetech/08.jpg": {
+  "title": "File:NISAR satellite orbit (SVS5615 - 2415).jpg",
+  "author": "NASA's Scientific Visualization Studio - Science and Technology Corporation/Kel Elkins",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:NISAR_satellite_orbit_(SVS5615_-_2415).jpg"
+ },
+ "robotics/01.jpg": {
+  "title": "File:Braccio robotico con Arduino 01.jpg",
+  "author": "Nicolò Bertuccioli",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Braccio_robotico_con_Arduino_01.jpg"
+ },
+ "robotics/02.jpg": {
+  "title": "File:Ocado warehouse bots.jpg",
+  "author": "Techwords",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Ocado_warehouse_bots.jpg"
+ },
+ "robotics/03.jpg": {
+  "title": "File:STS-114 Steve Robinson on Canadarm2.jpg",
+  "author": "NASA",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:STS-114_Steve_Robinson_on_Canadarm2.jpg"
+ },
+ "robotics/04.jpg": {
+  "title": "File:UBTECH Alpha 1PRO Humanoid Robot - hack4no 2016.jpg",
+  "author": "Kartverket",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:UBTECH_Alpha_1PRO_Humanoid_Robot_-_hack4no_2016.jpg"
+ },
+ "robotics/05.jpg": {
+  "title": "File:Humanoid Robot at International Exhibitions.jpg",
+  "author": "Om Umekar",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Humanoid_Robot_at_International_Exhibitions.jpg"
+ },
+ "robotics/06.jpg": {
+  "title": "File:Automated Storage and Retrieval System.jpg",
+  "author": "QmcBeQ3G7DZCmY84uPgT",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Automated_Storage_and_Retrieval_System.jpg"
+ },
+ "robotics/07.jpg": {
+  "title": "File:Almacén Automático Mini Load.jpg",
+  "author": "Ingenieria-logistica",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Almac%C3%A9n_Autom%C3%A1tico_Mini_Load.jpg"
+ },
+ "ai/01.jpg": {
+  "title": "File:BalticServers data center.jpg",
+  "author": "BalticServers.com",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg"
+ },
+ "ai/02.jpg": {
+  "title": "File:Tesla NVIDIA GPU cluster (3707257190).jpg",
+  "author": "ChrisDag",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tesla_NVIDIA_GPU_cluster_(3707257190).jpg"
+ },
+ "ai/03.jpg": {
+  "title": "File:Starfive VisionFive2 Single Board Computer.jpg",
+  "author": "Teeks99",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Starfive_VisionFive2_Single_Board_Computer.jpg"
+ },
+ "ai/04.jpg": {
+  "title": "File:CSIRO ScienceImage 11313 The CSIRO GPU cluster at the data centre.jpg",
+  "author": "division, CSIRO",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_11313_The_CSIRO_GPU_cluster_at_the_data_centre.jpg"
+ },
+ "ai/05.jpg": {
+  "title": "File:139 Server Room 01.jpg",
+  "author": "Indrajit Das",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:139_Server_Room_01.jpg"
+ },
+ "ai/06.jpg": {
+  "title": "File:PDC server room.jpg",
+  "author": "Esquilo",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:PDC_server_room.jpg"
+ },
+ "ai/07.jpg": {
+  "title": "File:Virginia Tech - data center.jpg",
+  "author": "Christopher Bowns",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Virginia_Tech_-_data_center.jpg"
+ },
+ "ai/08.jpg": {
+  "title": "File:Server Room (22397102849).jpg",
+  "author": "Carl Lender from Sunrise, USA",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Server_Room_(22397102849).jpg"
+ },
+ "biotech/01.jpg": {
+  "title": "File:Well cell culture plates.jpg",
+  "author": "Diane A. Reid (Photographer)",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Well_cell_culture_plates.jpg"
+ },
+ "biotech/02.jpg": {
+  "title": "File:Biotechnology Research (3617772958).jpg",
+  "author": "Idaho National Laboratory",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Biotechnology_Research_(3617772958).jpg"
+ },
+ "biotech/03.jpg": {
+  "title": "File:Pipette gallery.jpg",
+  "author": "User:Squidonius, myself, and User:Beliason (assumed).",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pipette_gallery.jpg"
+ },
+ "biotech/04.jpg": {
+  "title": "File:ABI PRISM 3100 Genetic Analyzer 2.jpg",
+  "author": "Mark Pellegrini",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:ABI_PRISM_3100_Genetic_Analyzer_2.jpg"
+ },
+ "biotech/05.jpg": {
+  "title": "File:DNBSEQ-G50.jpg",
+  "author": "RPSkokie",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:DNBSEQ-G50.jpg"
+ },
+ "biotech/06.jpg": {
+  "title": "File:Pipette de laboratoire sur fond blanc au Bénin 04.jpg",
+  "author": "Adoscam",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pipette_de_laboratoire_sur_fond_blanc_au_B%C3%A9nin_04.jpg"
+ },
+ "biotech/07.jpg": {
+  "title": "File:Pipette de laboratoire sur fond blanc au Bénin 01.jpg",
+  "author": "Adoscam",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pipette_de_laboratoire_sur_fond_blanc_au_B%C3%A9nin_01.jpg"
+ },
+ "semiconductors/01.jpg": {
+  "title": "File:Multicrystalline silicon wafer with thin film iridescence.jpg",
+  "author": "Radiotrefoil",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Multicrystalline_silicon_wafer_with_thin_film_iridescence.jpg"
+ },
+ "semiconductors/02.jpg": {
+  "title": "File:Semiconductor clean room.jpg",
+  "author": "Aileen Devlin/Jefferson Lab from Newport News, USA",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Semiconductor_clean_room.jpg"
+ },
+ "semiconductors/03.jpg": {
+  "title": "File:Wafer 20110212.jpg",
+  "author": "Sangitiana Fararano",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Wafer_20110212.jpg"
+ },
+ "semiconductors/04.jpg": {
+  "title": "File:EPROM Microchip SuperMacro.jpg",
+  "author": "Zephyris",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:EPROM_Microchip_SuperMacro.jpg"
+ },
+ "semiconductors/05.jpg": {
+  "title": "File:Clean room.jpg",
+  "author": "Uploaded by Duk 08:45, 16 Feb 2005 (UTC)",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Clean_room.jpg"
+ },
+ "semiconductors/06.jpg": {
+  "title": "File:Silicon wafer researcher.jpg",
+  "author": "U.S. Department of Energy",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Silicon_wafer_researcher.jpg"
+ },
+ "semiconductors/07.jpg": {
+  "title": "File:MDT SCN-IP000.03 Zennio circuit board back.jpg",
+  "author": "Phiarc",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:MDT_SCN-IP000.03_Zennio_circuit_board_back.jpg"
+ },
+ "semiconductors/08.jpg": {
+  "title": "File:RS 42471-12 PCB solder side.jpg",
+  "author": "Mister rf",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:RS_42471-12_PCB_solder_side.jpg"
+ },
+ "semiconductors/09.jpg": {
+  "title": "File:RS 42471-12 PCB 02.jpg",
+  "author": "Mister rf",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:RS_42471-12_PCB_02.jpg"
+ },
+ "climatetech/01.jpg": {
+  "title": "File:Boundary Dam capture unit CO2 compressor.jpg",
+  "author": "Implicit Matrix",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Boundary_Dam_capture_unit_CO2_compressor.jpg"
+ },
+ "climatetech/02.jpg": {
+  "title": "File:Aerial view of path and trees, Monsanto Forest Park, Lisbon, Portugal julesvernex2.jpg",
+  "author": "Jules Verne Times Two",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Aerial_view_of_path_and_trees,_Monsanto_Forest_Park,_Lisbon,_Portugal_julesvernex2.jpg"
+ },
+ "climatetech/03.jpg": {
+  "title": "File:Mangrove Islet.jpg",
+  "author": "Armusaofficial",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Mangrove_Islet.jpg"
+ },
+ "climatetech/04.jpg": {
+  "title": "File:Farm Weather Monitoring Station - Davis Instruments (46833704315).jpg",
+  "author": "Tony Webster from Minneapolis, Minnesota, United States",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Farm_Weather_Monitoring_Station_-_Davis_Instruments_(46833704315).jpg"
+ },
+ "climatetech/05.jpg": {
+  "title": "File:Red Trail Energy ethanol CO2 capture plant Richardton ND1.jpg",
+  "author": "Acroterion",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Red_Trail_Energy_ethanol_CO2_capture_plant_Richardton_ND1.jpg"
+ },
+ "climatetech/06.jpg": {
+  "title": "File:Mangrove ciudad del carmen2020.jpg",
+  "author": "Cvmontuy",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Mangrove_ciudad_del_carmen2020.jpg"
+ },
+ "climatetech/07.jpg": {
+  "title": "File:Monitoring and observation.jpg",
+  "author": "André Künzelmann",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Monitoring_and_observation.jpg"
+ },
+ "clean-energy/01.jpg": {
+  "title": "File:Power County Wind Farm 002.jpg",
+  "author": "ENERGY.GOV",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Power_County_Wind_Farm_002.jpg"
+ },
+ "clean-energy/02.jpg": {
+  "title": "File:Ground mounted solar panels.gk.jpg",
+  "author": "Grendelkhan",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Ground_mounted_solar_panels.gk.jpg"
+ },
+ "clean-energy/03.jpg": {
+  "title": "File:Tesvolt battery energy storage system Rheineck.jpg",
+  "author": "Kecko from Eastern Switzerland",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tesvolt_battery_energy_storage_system_Rheineck.jpg"
+ },
+ "clean-energy/04.jpg": {
+  "title": "File:AMP Energy Bhadla Solar Power Plant - 53700156579.jpg",
+  "author": "Sarvajanik Puralekh",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53700156579.jpg"
+ },
+ "clean-energy/05.jpg": {
+  "title": "File:AMP Energy Bhadla Solar Power Plant - 53699816551.jpg",
+  "author": "Sarvajanik Puralekh",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:AMP_Energy_Bhadla_Solar_Power_Plant_-_53699816551.jpg"
+ },
+ "clean-energy/06.jpg": {
+  "title": "File:Roscoe Wind Farm in West Texas.jpg",
+  "author": "Matthew T Rader",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Roscoe_Wind_Farm_in_West_Texas.jpg"
+ },
+ "clean-energy/07.jpg": {
+  "title": "File:Photovoltaic Panels at the Travers Solar Farm.jpg",
+  "author": "Kkiefuik\n\n This photo was taken with Canon EOS Rebel T5i",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Photovoltaic_Panels_at_the_Travers_Solar_Farm.jpg"
+ },
+ "clean-energy/08.jpg": {
+  "title": "File:Wind Turbines and Power Lines, East Sussex, England - April 2009.jpg",
+  "author": "Diliff",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Wind_Turbines_and_Power_Lines,_East_Sussex,_England_-_April_2009.jpg"
+ },
+ "agritech/01.jpg": {
+  "title": "File:Ploughing paddy field with oxen, Umaria district, MP, India.jpg",
+  "author": "Yann (talk)",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Ploughing_paddy_field_with_oxen,_Umaria_district,_MP,_India.jpg"
+ },
+ "agritech/02.jpg": {
+  "title": "File:Greenhouse farming.jpg",
+  "author": "Ummigarba",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Greenhouse_farming.jpg"
+ },
+ "agritech/03.jpg": {
+  "title": "File:Agriculture in India tractor farming Punjab preparing field for a wheat crop without burning previous crop stalk.jpg",
+  "author": "CIAT",
+  "license": "CC BY-SA 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Agriculture_in_India_tractor_farming_Punjab_preparing_field_for_a_wheat_crop_without_burning_previous_crop_stalk.jpg"
+ },
+ "agritech/04.jpg": {
+  "title": "File:Paddy Field Stubble Balamuri Coorg Feb24 A7C 09450.jpg",
+  "author": "This Photo was taken by Timothy A. Gonsalves.  Feel free to use my photos, but please mention me as the author.  I would",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Paddy_Field_Stubble_Balamuri_Coorg_Feb24_A7C_09450.jpg"
+ },
+ "agritech/05.jpg": {
+  "title": "File:Farmer working in the field with their tractor.jpg",
+  "author": "Gillsaab1998",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Farmer_working_in_the_field_with_their_tractor.jpg"
+ },
+ "agritech/06.jpg": {
+  "title": "File:Greenhouse Farming.jpg",
+  "author": "Coolbrizzy",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Greenhouse_Farming.jpg"
+ },
+ "agritech/07.jpg": {
+  "title": "File:A farmer coming to field with bullock cart,India.JPG",
+  "author": "Harvinder Chandigarh",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:A_farmer_coming_to_field_with_bullock_cart,India.JPG"
+ },
+ "agritech/08.jpg": {
+  "title": "File:Tractor ploughing field at Chinawal.jpg",
+  "author": "abhiriksh",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Tractor_ploughing_field_at_Chinawal.jpg"
+ },
+ "quantum/01.jpg": {
+  "title": "File:Dilution refrigerator at BBN Technologies, 2009.jpg",
+  "author": "Daderot",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Dilution_refrigerator_at_BBN_Technologies,_2009.jpg"
+ },
+ "quantum/02.jpg": {
+  "title": "File:Laser Optics - Idaho National Laboratory.jpg",
+  "author": "Idaho National Laboratory",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Laser_Optics_-_Idaho_National_Laboratory.jpg"
+ },
+ "quantum/03.jpg": {
+  "title": "File:Military laser experiment.jpg",
+  "author": "US Air Force",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Military_laser_experiment.jpg"
+ },
+ "quantum/04.jpg": {
+  "title": "File:Optical table - Up view.jpg",
+  "author": "Giorgio Brida from Torino, Italy",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Optical_table_-_Up_view.jpg"
+ },
+ "quantum/05.jpg": {
+  "title": "File:Quantum-computer-Chalmers 2017.jpg",
+  "author": "Anita Fors (Chalmers)",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Quantum-computer-Chalmers_2017.jpg"
+ },
+ "quantum/06.jpg": {
+  "title": "File:Full wafer of Intel quantum computers.jpg",
+  "author": "Steve Jurvetson from Menlo Park, USA",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Full_wafer_of_Intel_quantum_computers.jpg"
+ },
+ "quantum/07.jpg": {
+  "title": "File:Laser with amplifier.JPG",
+  "author": "Tourbillon",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Laser_with_amplifier.JPG"
+ },
+ "medtech/01.jpg": {
+  "title": "File:Operating room Saudi Hospital.jpg",
+  "author": "Yazan.shawahneh",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Operating_room_Saudi_Hospital.jpg"
+ },
+ "medtech/02.jpg": {
+  "title": "File:Hospital Patient Monitor (17239884329).jpg",
+  "author": "Tony Webster from San Francisco, California",
+  "license": "CC BY 2.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Hospital_Patient_Monitor_(17239884329).jpg"
+ },
+ "medtech/03.jpg": {
+  "title": "File:A medical ultrasound linear array probe, scan head, transducer.jpg",
+  "author": "Harrison Keely",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:A_medical_ultrasound_linear_array_probe,_scan_head,_transducer.jpg"
+ },
+ "medtech/04.jpg": {
+  "title": "File:NABL Accredited Clinical Pathology Laboratory in Kharghar Navi Mumbai Diagnostic Services.jpg",
+  "author": "Goleisureintl",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:NABL_Accredited_Clinical_Pathology_Laboratory_in_Kharghar_Navi_Mumbai_Diagnostic_Services.jpg"
+ },
+ "medtech/05.jpg": {
+  "title": "File:Color Doppler ultrasound noise artifact abdomen.jpg",
+  "author": "Goleisureintl",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Color_Doppler_ultrasound_noise_artifact_abdomen.jpg"
+ },
+ "medtech/06.jpg": {
+  "title": "File:Wishard Hospital infant operating room, c. 1916.jpg",
+  "author": "Author unknown, digitized by the Indiana State Archives",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Wishard_Hospital_infant_operating_room,_c._1916.jpg"
+ },
+ "defence/01.jpg": {
+  "title": "File:105 Polish Air Force MiG-29A Fulcrum ILA Berlin 2016 10.jpg",
+  "author": "Julian Herzog (Website)",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:105_Polish_Air_Force_MiG-29A_Fulcrum_ILA_Berlin_2016_10.jpg"
+ },
+ "defence/02.jpg": {
+  "title": "File:1S32 radar at the National Museum of Military History, Bulgaria.jpg",
+  "author": "Photographer: Mosbatho",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:1S32_radar_at_the_National_Museum_of_Military_History,_Bulgaria.jpg"
+ },
+ "defence/03.jpg": {
+  "title": "File:KA2724 - Antonov An-32RE - India Air Force - Serial 0609 - VGHS.jpg",
+  "author": "Md Shaifuzzaman Ayon",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:KA2724_-_Antonov_An-32RE_-_India_Air_Force_-_Serial_0609_-_VGHS.jpg"
+ },
+ "defence/04.jpg": {
+  "title": "File:Bistatic Radar Passive Receiver System Display at Military Academy Ground 20140531a.jpg",
+  "author": "玄史生",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Bistatic_Radar_Passive_Receiver_System_Display_at_Military_Academy_Ground_20140531a.jpg"
+ },
+ "defence/05.jpg": {
+  "title": "File:Two U.S. Air Force C-130 Hercules aircraft parked under a Indian sunset at Air Force Station Agra.JPG",
+  "author": "U.S. Air Force",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Two_U.S._Air_Force_C-130_Hercules_aircraft_parked_under_a_Indian_sunset_at_Air_Force_Station_Agra.JPG"
+ },
+ "defence/06.jpg": {
+  "title": "File:Airmen from the India air force walk past a C-17 Globemaster III at the Aero India 09 air show.JPG",
+  "author": "U.S. Air Force",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Airmen_from_the_India_air_force_walk_past_a_C-17_Globemaster_III_at_the_Aero_India_09_air_show.JPG"
+ },
+ "ev-mobility/01.jpg": {
+  "title": "File:Electric Car recharging.jpg",
+  "author": "original: Michael Movchinedited by Felix Müller",
+  "license": "CC BY-SA 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Electric_Car_recharging.jpg"
+ },
+ "ev-mobility/02.jpg": {
+  "title": "File:Car2Go Charging Station Stuttgart 2013 01.jpg",
+  "author": "Julian Herzog (Website)",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Car2Go_Charging_Station_Stuttgart_2013_01.jpg"
+ },
+ "ev-mobility/03.jpg": {
+  "title": "File:Electric vehicle charging stations in Stuttgart 1X7A6287.jpg",
+  "author": "Alexander Migl",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Electric_vehicle_charging_stations_in_Stuttgart_1X7A6287.jpg"
+ },
+ "ev-mobility/04.jpg": {
+  "title": "File:Seattle (WA, USA), Pine Street, E-Scooter -- 2022 -- 1489.jpg",
+  "author": "Dietmar Rabich",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Seattle_(WA,_USA),_Pine_Street,_E-Scooter_--_2022_--_1489.jpg"
+ },
+ "ev-mobility/05.jpg": {
+  "title": "File:18650 and 21700 lithium ion battery cell.jpg",
+  "author": "Sevenethics",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:18650_and_21700_lithium_ion_battery_cell.jpg"
+ },
+ "ev-mobility/06.jpg": {
+  "title": "File:2016-11-20 01 Mini Crosser X-CAB mobility electric scooter - Norway.jpg",
+  "author": "Gordon Leggett",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:2016-11-20_01_Mini_Crosser_X-CAB_mobility_electric_scooter_-_Norway.jpg"
+ },
+ "advanced-materials/01.jpg": {
+  "title": "File:Carbon fiber pieces for Shell Eco-marathon prototype wheels Proto INSA Club.jpg",
+  "author": "Proto INSA Club",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Carbon_fiber_pieces_for_Shell_Eco-marathon_prototype_wheels_Proto_INSA_Club.jpg"
+ },
+ "advanced-materials/02.jpg": {
+  "title": "File:UV Cured Powder Coating on Carbon Fiber .jpg",
+  "author": "Speedoflight1",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:UV_Cured_Powder_Coating_on_Carbon_Fiber_.jpg"
+ },
+ "advanced-materials/03.jpg": {
+  "title": "File:NASA astronaut Jonny Kim removes research hardware from inside the Materials Science Laboratory (iss073e0222456).jpg",
+  "author": "NASA Johnson Space Center",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:NASA_astronaut_Jonny_Kim_removes_research_hardware_from_inside_the_Materials_Science_Laboratory_(iss073e0222456).jpg"
+ },
+ "advanced-materials/04.jpg": {
+  "title": "File:Iss071e522123 (8-21-2024) --- A metal specimen 3D printed on the ground for ESA’s Metal 3D Printer investigation.jpg",
+  "author": "NASA Johnson Space Center",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:Iss071e522123_(8-21-2024)_---_A_metal_specimen_3D_printed_on_the_ground_for_ESA%E2%80%99s_Metal_3D_Printer_investigation.jpg"
+ },
+ "advanced-materials/05.jpg": {
+  "title": "File:397716main MSRR-15.jpg",
+  "author": "NASA",
+  "license": "Public domain",
+  "source": "https://commons.wikimedia.org/wiki/File:397716main_MSRR-15.jpg"
+ },
+ "advanced-materials/06.jpg": {
+  "title": "File:Carbon fiber chasi of Shell Eco-marathon prototype - Proto INSA Club - Phoenix.jpg",
+  "author": "Proto INSA Club",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Carbon_fiber_chasi_of_Shell_Eco-marathon_prototype_-_Proto_INSA_Club_-_Phoenix.jpg"
+ },
+ "iot/01.jpg": {
+  "title": "File:002 2013 04 13 Kabel und Draehte.jpg",
+  "author": "Friedrich Haag",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:002_2013_04_13_Kabel_und_Draehte.jpg"
+ },
+ "iot/02.jpg": {
+  "title": "File:Aclara I-210+ single phase smart electricity meter.jpg",
+  "author": "277volts",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Aclara_I-210%2B_single_phase_smart_electricity_meter.jpg"
+ },
+ "iot/03.jpg": {
+  "title": "File:Arduino Uno board.jpg",
+  "author": "JrawX",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Arduino_Uno_board.jpg"
+ },
+ "iot/04.jpg": {
+  "title": "File:Kampen, Molenbrug. 28-02-2022. (actm.) 01.jpg",
+  "author": "Agnes Monkelbaan",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Kampen,_Molenbrug._28-02-2022._(actm.)_01.jpg"
+ },
+ "iot/05.jpg": {
+  "title": "File:Arduino UNO RTC.jpg",
+  "author": "Mark Wilson",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Arduino_UNO_RTC.jpg"
+ },
+ "iot/06.jpg": {
+  "title": "File:CSIRO ScienceImage 3719 CSIROs Fleck wireless sensor network technology.jpg",
+  "author": "Stephan Brosnan, CSIRO",
+  "license": "CC BY 3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:CSIRO_ScienceImage_3719_CSIROs_Fleck_wireless_sensor_network_technology.jpg"
+ },
+ "iot/07.jpg": {
+  "title": "File:Aclara kV2c FITZALL 3-phase smart electricity meter.jpg",
+  "author": "277volts",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Aclara_kV2c_FITZALL_3-phase_smart_electricity_meter.jpg"
+ },
+ "iot/08.jpg": {
+  "title": "File:Pune Junction railway station and metro station in the evening.jpg",
+  "author": "DesiBoy101",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Pune_Junction_railway_station_and_metro_station_in_the_evening.jpg"
+ },
+ "drones/01.jpg": {
+  "title": "File:MSPO 2026 - multirotor military drone.jpg",
+  "author": "Krzysztof Popławski",
+  "license": "CC BY 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:MSPO_2026_-_multirotor_military_drone.jpg"
+ },
+ "drones/02.jpg": {
+  "title": "File:Quadcopter camera drone in flight.jpg",
+  "author": "Josh Sorenson",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Quadcopter_camera_drone_in_flight.jpg"
+ },
+ "drones/03.jpg": {
+  "title": "File:XAG drone, Agritechnica 2023, Hanover (P1160326).jpg",
+  "author": "MB-one",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:XAG_drone,_Agritechnica_2023,_Hanover_(P1160326).jpg"
+ },
+ "drones/04.jpg": {
+  "title": "File:Drone Camera 02.jpg",
+  "author": "Snehrashmi",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Drone_Camera_02.jpg"
+ },
+ "drones/05.jpg": {
+  "title": "File:LANDRS Science Drone Hex1 Frame Render.jpg",
+  "author": "MBorrageiro",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:LANDRS_Science_Drone_Hex1_Frame_Render.jpg"
+ },
+ "drones/06.jpg": {
+  "title": "File:Remote controlled flying machine with four helicopter blades.jpg",
+  "author": "Tomwsulcer",
+  "license": "CC0",
+  "source": "https://commons.wikimedia.org/wiki/File:Remote_controlled_flying_machine_with_four_helicopter_blades.jpg"
+ },
+ "drones/07.jpg": {
+  "title": "File:Autonomous Quadcopter Project 01.jpg",
+  "author": "Mais Jamal, Youshaa Murhij, Zain Alabiden Ali",
+  "license": "CC BY-SA 4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Autonomous_Quadcopter_Project_01.jpg"
+ }
+}
