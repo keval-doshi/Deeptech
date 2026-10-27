@@ -10,14 +10,13 @@
     <div class="hero-copy">
       {{ flashes() }}
       <p class="eyebrow">Indian deep-tech startups. Global impact.</p>
-      <h1 id="hero-title">Discover India's<br><span class="text-gradient">Deep-Tech</span> Innovators</h1>
+      <h1 id="hero-title">Discover India's<br>Deep-Tech Innovators</h1>
       <p class="lead">A curated platform to explore groundbreaking Indian startups solving real-world problems with deep technology.</p>
       <div class="hero-actions">
         <a class="btn btn-primary btn-lg" href="#startups">Explore Startups {{ icon('arrow-right') }}</a>
         <button class="btn btn-glass btn-lg" type="button" data-open-modal="how-it-works">{{ icon('play', 'icon-lg') }} How it works</button>
       </div>
     </div>
-    <div class="hero-art" aria-hidden="true"></div>
   </div>
 </section>
 
@@ -59,7 +58,7 @@
 
     <div class="board-layout">
     <div class="board-main">
-    <div class="list-toolbar mt-3">
+    <div class="list-toolbar">
       <div class="row row-wrap">
         <h2 id="featured-title">Featured Startups</h2>
         <div class="tabs pills" role="tablist" aria-label="Featured lists">
@@ -87,7 +86,7 @@
       <button class="btn btn-ghost" type="button" data-listing-more hidden>Load more startups {{ icon('chevron-down', 'icon-sm') }}</button>
       <span data-listing-sentinel aria-hidden="true"></span>
     </div>
-    <p class="text-subtle mt-2" style="font-size:.8rem">{{ icon('info', 'icon-sm') }} Startups marked “Promoted” hold a paid ranking position. Placement does not imply endorsement.</p>
+    <p class="text-subtle text-xs mt-2">{{ icon('info', 'icon-sm') }} Startups marked “Promoted” hold a paid ranking position. Placement does not imply endorsement.</p>
     </div>
 
     <aside class="board-side" aria-label="Today's ranking">
@@ -102,13 +101,13 @@
           {{ icon('crown', 'side-crown') }}
         </a>
         {% else %}
-        <p class="text-muted" style="font-size:.86rem;margin:0">No promoted startups yet.</p>
+        <p class="text-muted text-sm m-0">No promoted startups yet.</p>
         {% endfor %}
         </div>
       </div>
       <div class="side-card side-raising">
         <div class="side-head"><h3>Raising now</h3><a href="{{ url_for('funding.index') }}">View {{ icon('chevron-right', 'icon-sm') }}</a></div>
-        <p class="text-muted" style="font-size:.86rem;margin:0 0 12px">{{ stats.raising }} startups are looking for funds.</p>
+        <p class="text-muted text-sm m-0 mb-2">{{ stats.raising }} startups are looking for funds.</p>
         <a class="btn btn-outline btn-block btn-sm" href="{{ url_for('funding.index') }}">Looking for Funds {{ icon('arrow-right', 'icon-sm') }}</a>
       </div>
     </aside>
@@ -150,11 +149,11 @@
     <div class="modal-head"><h2 id="hiw-title">How DeeptechIndia.in works</h2><button class="icon-btn" type="button" data-close-modal aria-label="Close">{{ icon('x') }}</button></div>
     <div class="modal-body">
       <div class="category-grid">
-        <div class="category-tile"><span class="cat-icon" style="background:var(--primary-50);color:var(--primary)">{{ icon('search') }}</span><h3>Discover</h3><p>Search verified Indian deep-tech startups by sector, location and funding stage.</p></div>
-        <div class="category-tile"><span class="cat-icon" style="background:var(--blue-50);color:var(--blue)">{{ icon('building') }}</span><h3>Showcase</h3><p>Founders list their company, team, products and funding needs for free.</p></div>
-        <div class="category-tile"><span class="cat-icon" style="background:var(--success-50);color:var(--success)">{{ icon('send') }}</span><h3>Connect</h3><p>Investors request introductions; contact details are shared only when founders accept.</p></div>
+        <div class="category-tile"><span class="cat-icon tone-primary">{{ icon('search') }}</span><h3>Discover</h3><p>Search verified Indian deep-tech startups by sector, location and funding stage.</p></div>
+        <div class="category-tile"><span class="cat-icon tone-blue">{{ icon('building') }}</span><h3>Showcase</h3><p>Founders list their company, team, products and funding needs for free.</p></div>
+        <div class="category-tile"><span class="cat-icon tone-success">{{ icon('send') }}</span><h3>Connect</h3><p>Investors request introductions; contact details are shared only when founders accept.</p></div>
       </div>
-      <p class="text-muted mt-2 mb-0" style="font-size:.88rem">Startups can also bid privately for a promoted position in Featured Startups. Bid amounts are never shown publicly.</p>
+      <p class="text-muted text-sm mt-2 mb-0">Startups can also bid privately for a promoted position in Featured Startups. Bid amounts are never shown publicly.</p>
     </div>
   </div>
 </div>

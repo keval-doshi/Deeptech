@@ -38,7 +38,7 @@ def hexmark(a, b):
 
 
 def leaf(a, b):
-    return f'''<path d="M60 196 C 50 110 110 52 206 50 C 208 146 150 206 60 196 Z" fill="url(#g)"/>
+    return '''<path d="M60 196 C 50 110 110 52 206 50 C 208 146 150 206 60 196 Z" fill="url(#g)"/>
 <path d="M60 196 C 100 150 140 110 190 66" stroke="#fff" stroke-width="12" fill="none" stroke-linecap="round"/>'''
 
 
@@ -66,7 +66,7 @@ def bars(a, b):
 
 
 def wave(a, b):
-    return f'''<rect x="28" y="28" width="200" height="200" rx="56" fill="url(#g)"/>
+    return '''<rect x="28" y="28" width="200" height="200" rx="56" fill="url(#g)"/>
 <path d="M52 140 L92 140 L112 86 L144 186 L166 118 L180 140 L204 140" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>'''
 
 
@@ -77,7 +77,7 @@ def rotor(a, b):
 
 
 def bolt(a, b):
-    return f'''<circle cx="128" cy="128" r="100" fill="url(#g)"/>
+    return '''<circle cx="128" cy="128" r="100" fill="url(#g)"/>
 <path d="M142 44 L76 140 L122 140 L110 212 L182 112 L134 112 Z" fill="#fff"/>'''
 
 

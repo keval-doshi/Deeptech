@@ -27,7 +27,7 @@
   {% endif %}
   <form data-api-form data-action="{{ url_for('startups.api_create') }}" data-method="POST" data-encoding="multipart"
         data-then="redirect" data-success="Startup submitted for review!" data-loading-text="Submitting…" enctype="multipart/form-data"
-        style="display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:start" class="list-form">
+        class="list-form">
     <div>
       <section class="form-section">
         <h2><span class="step-num">1</span> Company basics</h2>
@@ -60,10 +60,10 @@
       <section class="form-section">
         <h2><span class="step-num">3</span> Images</h2>
         <p>PNG, JPG or WebP up to 5 MB. Images are resized and stripped of metadata.</p>
-        <div class="row row-wrap" style="align-items:stretch;gap:16px">
+        <div class="row row-wrap items-stretch gap-md">
           <div><span class="label">Logo</span>
             <label class="dropzone logo-drop mt-1">{{ icon('upload') }}<span>Upload logo</span><small>Square, 512px+</small><input type="file" name="logo" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
-          <div style="flex:1;min-width:240px"><span class="label">Cover image</span>
+          <div class="flex-grow"><span class="label">Cover image</span>
             <label class="dropzone mt-1">{{ icon('image') }}<span>Upload a cover image</span><small>Wide, 1600×900 recommended</small><input type="file" name="cover" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
         </div>
       </section>
@@ -76,29 +76,29 @@
           <div class="field"><label for="stage" class="required">Round</label><select id="stage" name="stage" data-required-when-raising><option value="">Select</option>{% for s in stages %}<option>{{ s }}</option>{% endfor %}</select></div>
           <div class="field"><label for="raising_target_inr">Raise target (₹)</label><div class="input-prefix"><span>₹</span><input id="raising_target_inr" name="raising_target_inr" type="number" min="0" step="100000" placeholder="5,00,00,000"></div></div>
         </div>
-        <div class="field" style="max-width:340px"><label for="total_raised_inr">Total raised to date (₹)</label><div class="input-prefix"><span>₹</span><input id="total_raised_inr" name="total_raised_inr" type="number" min="0" step="100000"></div></div>
+        <div class="field mw-xs"><label for="total_raised_inr">Total raised to date (₹)</label><div class="input-prefix"><span>₹</span><input id="total_raised_inr" name="total_raised_inr" type="number" min="0" step="100000"></div></div>
       </section>
 
       <section class="form-section">
         <label class="check"><input type="checkbox" name="confirm_accuracy" required> <span>I confirm I'm authorised to represent this company and that the information is accurate. I agree to the listing guidelines.</span></label>
-        <div class="row mt-2"><button class="btn btn-primary btn-lg" type="submit">Submit for review {{ icon('arrow-right') }}</button><span class="text-muted" style="font-size:.86rem">You can add founders, products and gallery images after submitting.</span></div>
+        <div class="row mt-2"><button class="btn btn-primary btn-lg" type="submit">Submit for review {{ icon('arrow-right') }}</button><span class="text-muted text-sm">You can add founders, products and gallery images after submitting.</span></div>
       </section>
     </div>
 
-    <aside style="position:sticky;top:calc(var(--header-h) + 16px)">
+    <aside>
       <span class="label">Live preview</span>
       <div class="startup-card mt-1" data-live-preview>
-        <div class="thumb" style="background-image:url('{{ url_for('static', filename='images/photos/spacetech/01.jpg') }}')"></div>
+        <div class="thumb"></div>
         <div class="body">
-          <span class="logo-tile sm" style="background:var(--primary)" data-p-logo>S</span>
+          <span class="logo-tile sm brand-fill" data-p-logo>S</span>
           <h3 data-p-name>Your startup</h3>
-          <div class="row row-wrap" style="gap:8px"><span class="badge" data-p-category>Category</span><span class="meta">{{ icon('map-pin') }} <span data-p-city>City</span></span></div>
+          <div class="row row-wrap gap-sm"><span class="badge" data-p-category>Category</span><span class="meta">{{ icon('map-pin') }} <span data-p-city>City</span></span></div>
           <p data-p-tagline>Your one-line tagline appears here.</p>
         </div>
       </div>
-      <div class="card mt-2"><div class="card-body" style="font-size:.88rem">
-        <strong style="color:var(--ink)">What happens next?</strong>
-        <ol class="text-muted" style="padding-left:18px;margin:8px 0 0;line-height:1.8">
+      <div class="card mt-2"><div class="card-body text-sm">
+        <strong class="text-ink">What happens next?</strong>
+        <ol class="text-muted list-compact m-0 mt-1">
           <li>We review your listing (1–2 days)</li><li>Your profile goes live in the directory</li><li>Add founders, products and photos</li><li>Optionally bid for a promoted position</li>
         </ol>
       </div></div>
@@ -108,5 +108,4 @@
 </div>
 {% endblock %}
 
-{% block extra_css %}<style>@media (max-width: 960px) { .list-form { grid-template-columns: 1fr !important; } .list-form aside { position: static !important; } }</style>{% endblock %}
 {% block scripts %}<script src="{{ url_for('static', filename='js/startup.js') }}"></script>{% endblock %}

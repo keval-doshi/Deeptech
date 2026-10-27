@@ -9,10 +9,10 @@
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index') }}">Home</a> / <span>Looking for Funds</span></nav>
     <h1>Startups looking for funds</h1>
     <p>Founders who are actively raising. Investors can request a warm introduction directly from each profile.</p>
-    <div class="kpi-grid mt-3" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
-      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('wallet', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.raising_count }}</strong><span class="text-muted">startups raising</span></div></div>
-      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('trending-up', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.total_target }}</strong><span class="text-muted">combined target</span></div></div>
-      <div class="card kpi" style="display:flex;gap:14px;align-items:center;padding:16px"><span class="stat-icon">{{ icon('briefcase', 'icon-lg') }}</span><div><strong style="font-size:1.4rem;font-family:var(--font-display);display:block">{{ summary.by_stage|selectattr('count')|list|length }}</strong><span class="text-muted">stages represented</span></div></div>
+    <div class="kpi-grid fluid mt-3">
+      <div class="card kpi"><span class="stat-icon">{{ icon('wallet', 'icon-lg') }}</span><div><strong>{{ summary.raising_count }}</strong><span class="text-muted">startups raising</span></div></div>
+      <div class="card kpi"><span class="stat-icon">{{ icon('trending-up', 'icon-lg') }}</span><div><strong>{{ summary.total_target }}</strong><span class="text-muted">combined target</span></div></div>
+      <div class="card kpi"><span class="stat-icon">{{ icon('briefcase', 'icon-lg') }}</span><div><strong>{{ summary.by_stage|selectattr('count')|list|length }}</strong><span class="text-muted">stages represented</span></div></div>
     </div>
   </div>
 </section>

@@ -31,11 +31,11 @@
 {% if startup.status == 'pending' %}
 <div class="alert-bar info">{{ icon('clock') }} <span>Your listing is <strong>under review</strong>. You can keep editing your profile while we take a look.</span></div>
 {% elif startup.status == 'rejected' %}
-<div class="alert-bar danger">{{ icon('alert') }} <span style="flex:1 1 260px">Your listing needs changes: {{ startup.rejection_reason }}</span><a class="btn btn-sm btn-ghost" href="{{ url_for('dashboard.company_profile') }}">Update profile</a></div>
+<div class="alert-bar danger">{{ icon('alert') }} <span class="flex-grow">Your listing needs changes: {{ startup.rejection_reason }}</span><a class="btn btn-sm btn-ghost" href="{{ url_for('dashboard.company_profile') }}">Update profile</a></div>
 {% endif %}
 
 <div class="bids-layout">
-  <div class="stack" style="gap:20px;min-width:0">
+  <div class="stack gap-lg">
     <section class="panel" aria-labelledby="views-title">
       <div class="panel-head">
         <div><h2 id="views-title">Profile views</h2><p class="panel-sub">Daily visits to your public profile, last 30 days</p></div>
@@ -53,9 +53,9 @@
         {% if pending_intros %}<span class="badge badge-primary">{{ pending_intros }} new</span>{% endif %}</div>
       {% for intro in intros %}
       <div class="intro-row" data-intro="{{ intro.id }}">
-        {% if intro.investor.logo_url %}<span class="logo-tile sm"><img src="{{ intro.investor.logo_url }}" alt="{{ intro.investor.firm_name }} logo"></span>{% else %}<span class="logo-tile sm" style="background:var(--gradient);border:0">{{ intro.investor.initials }}</span>{% endif %}
-        <div style="flex:1;min-width:0">
-          <div class="row" style="justify-content:space-between;flex-wrap:wrap"><strong>{{ intro.investor.firm_name }} <span class="badge">{{ intro.investor.investor_type }}</span>{% if intro.investor.is_verified %} <span class="badge badge-success">{{ icon('shield-check') }} Verified investor</span>{% else %} <span class="badge badge-warning">Unverified</span>{% endif %}</strong>{{ status(intro.status) }}</div>
+        {% if intro.investor.logo_url %}<span class="logo-tile sm"><img src="{{ intro.investor.logo_url }}" alt="{{ intro.investor.firm_name }} logo"></span>{% else %}<span class="logo-tile sm brand-fill">{{ intro.investor.initials }}</span>{% endif %}
+        <div class="flex-fill">
+          <div class="row row-wrap justify-between"><strong>{{ intro.investor.firm_name }} <span class="badge">{{ intro.investor.investor_type }}</span>{% if intro.investor.is_verified %} <span class="badge badge-success">{{ icon('shield-check') }} Verified investor</span>{% else %} <span class="badge badge-warning">Unverified</span>{% endif %}</strong>{{ status(intro.status) }}</div>
           <p>{{ intro.message }}</p>
           {% if intro.status == 'pending' %}
           <div class="row">
@@ -80,9 +80,9 @@
         <div class="ring" style="--p: {{ completeness.percent }}" role="img" aria-label="Profile {{ completeness.percent }}% complete"><span>{{ completeness.percent }}<small>%</small></span></div>
         <div>
           {% if completeness.missing %}
-          <p class="text-muted" style="font-size:.86rem;margin:0 0 8px">Add these to stand out to investors:</p>
+          <p class="text-muted text-sm m-0 mb-1">Add these to stand out to investors:</p>
           <div class="tag-list">{% for m in completeness.missing %}<span class="badge badge-warning">{{ m }}</span>{% endfor %}</div>
-          {% else %}<p class="text-muted mb-0" style="font-size:.9rem">Your profile is complete. Nice work!</p>{% endif %}
+          {% else %}<p class="text-muted text-md mb-0">Your profile is complete. Nice work!</p>{% endif %}
         </div>
       </div>
       <a class="btn btn-outline btn-block mt-2" href="{{ url_for('dashboard.company_profile') }}">Edit company profile</a>

@@ -13,23 +13,23 @@
     const load = async () => {
       controller?.abort();
       controller = new AbortController();
-      results.innerHTML = Array.from({ length: 3 }, () => '<div class="skeleton" style="height:190px;border-radius:16px"></div>').join('');
+      results.innerHTML = Array.from({ length: 3 }, () => '<div class="skeleton sk-investor"></div>').join('');
       try {
         const data = await api(`/api/investors?${new URLSearchParams(new FormData(form))}`, { signal: controller.signal });
         results.innerHTML = data.items.length ? data.items.map((i) => `
           <article class="card investor-card">
-            <div class="top">${i.logo_url ? `<span class="logo-tile sm" style="background:#fff;border:1px solid var(--border)"><img src="${escape(i.logo_url)}" alt=""></span>` : `<span class="logo-tile sm">${escape(i.initials)}</span>`}
-              <div><strong style="color:var(--ink);display:flex;gap:6px;align-items:center">${escape(i.firm_name)}${i.is_verified ? icon('verified', 'verified') : ''}</strong>
+            <div class="top">${i.logo_url ? `<span class="logo-tile sm plain"><img src="${escape(i.logo_url)}" alt=""></span>` : `<span class="logo-tile sm">${escape(i.initials)}</span>`}
+              <div><strong>${escape(i.firm_name)}${i.is_verified ? icon('verified', 'verified') : ''}</strong>
               <span class="meta">${escape(i.investor_type)}${i.city ? ' · ' + escape(i.city) : ''}</span></div></div>
             <p>${escape(i.thesis)}</p>
             ${i.cheque_size ? `<span class="meta">${icon('wallet')} Cheque ${escape(i.cheque_size)}</span>` : ''}
             ${i.stages.length ? `<span class="meta">${icon('trending-up')} ${i.stages.map(escape).join(', ')}</span>` : ''}
             <div class="tag-list">${i.categories.map((c) => `<span class="badge badge-primary">${escape(c)}</span>`).join('')}</div>
           </article>`).join('')
-          : `<div class="state" style="grid-column:1/-1">${icon('users')}<h3>No investors match</h3><p>Try a broader search.</p></div>`;
+          : `<div class="state span-all">${icon('users')}<h3>No investors match</h3><p>Try a broader search.</p></div>`;
       } catch (err) {
         if (err.name === 'AbortError') return;
-        results.innerHTML = `<div class="state error" style="grid-column:1/-1">${icon('alert')}<p>${escape(err.message)}</p></div>`;
+        results.innerHTML = `<div class="state error span-all">${icon('alert')}<p>${escape(err.message)}</p></div>`;
       }
     };
     form.addEventListener('submit', (e) => { e.preventDefault(); load(); });
@@ -42,7 +42,7 @@
   const ws = document.querySelector('[data-investor-workspace]');
   if (!ws) return;
   const card = window.DTI.renderStartupCard;
-  const emptyState = (iconName, title, text) => `<div class="state" style="grid-column:1/-1">${icon(iconName)}<h3>${title}</h3><p>${text}</p></div>`;
+  const emptyState = (iconName, title, text) => `<div class="state span-all">${icon(iconName)}<h3>${title}</h3><p>${text}</p></div>`;
 
   async function load() {
     try {
@@ -55,7 +55,7 @@
       ws.querySelector('[data-count-intros]').textContent = data.introductions.length;
       ws.querySelector('[data-intros]').innerHTML = data.introductions.length ? data.introductions.map((i) => `
         <tr><td><a href="/startups/${escape(i.startup.slug)}">${escape(i.startup.name)}</a></td>
-        <td>${date(i.created_at, false)}</td><td style="max-width:380px">${escape(i.message)}</td>
+        <td>${date(i.created_at, false)}</td><td class="cell-wrap">${escape(i.message)}</td>
         <td><span class="status status-${escape(i.status)}">${escape(i.status)}</span></td>
         <td>${i.startup.email ? `<a href="mailto:${escape(i.startup.email)}">${escape(i.startup.email)}</a>` : '<span class="text-subtle">After acceptance</span>'}</td></tr>`).join('')
         : `<tr><td colspan="5">${emptyState('send', 'No introductions yet', 'Open a startup profile and choose “Request Introduction”.')}</td></tr>`;

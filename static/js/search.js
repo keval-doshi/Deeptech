@@ -76,7 +76,7 @@
         <div class="body">
           ${logoHtml(s, 'sm')}
           <h3><a href="${s.url}">${escape(s.name)}</a>${verified(s)}</h3>
-          <div class="row row-wrap" style="gap:8px">
+          <div class="row row-wrap gap-sm">
             <span class="badge">${escape(s.category.name)}</span>
             <span class="meta">${icon('map-pin')} ${escape(s.city)}</span>
           </div>
@@ -91,8 +91,8 @@
   }
 
   function skeleton(view, n) {
-    const style = view === 'grid' ? 'style="height:300px;border-radius:16px"' : 'style="height:96px;border-radius:14px"';
-    return Array.from({ length: n }, () => `<div class="skeleton" ${style} aria-hidden="true"></div>`).join('');
+    const size = view === 'grid' ? 'sk-card' : 'sk-list-row';
+    return Array.from({ length: n }, () => `<div class="skeleton ${size}" aria-hidden="true"></div>`).join('');
   }
 
   function paginationHtml(page, pages) {

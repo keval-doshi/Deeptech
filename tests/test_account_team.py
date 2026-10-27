@@ -1,6 +1,5 @@
 """Investor verification, team members/invites, data export and account deletion."""
 import json
-import re
 
 from extensions import db
 from models import (InvestorProfile, IntroductionRequest, Notification, Payment, RankingPosition, SavedStartup, Startup,

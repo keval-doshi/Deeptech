@@ -15,9 +15,9 @@
   <div class="card-head">
     <h2><span class="head-icon">{{ icon('history') }}</span> All bids</h2>
     <div class="row">
-      <span class="text-muted" style="font-size:.88rem">Total paid: <strong data-paid-total>—</strong></span>
+      <span class="text-muted text-sm">Total paid: <strong data-paid-total>—</strong></span>
       <label class="sr-only" for="history-status">Filter by status</label>
-      <select id="history-status" style="width:auto" data-history-status>
+      <select id="history-status" class="w-auto" data-history-status>
         <option value="">All statuses</option>
         <option value="active">Active</option>
         <option value="pending_payment">Pending payment</option>
@@ -28,10 +28,10 @@
       </select>
     </div>
   </div>
-  <div style="padding:16px">
+  <div class="pad-md">
     <div class="table-wrap"><table class="table">
       <thead><tr><th>Placed</th><th>Target</th><th>Achieved</th><th class="num">Amount</th><th>Payment</th><th>Ranking until</th><th>Status</th><th></th></tr></thead>
-      <tbody data-history-rows><tr><td colspan="8"><div class="skeleton" style="height:28px"></div></td></tr></tbody>
+      <tbody data-history-rows><tr><td colspan="8"><div class="skeleton sk-table-row"></div></td></tr></tbody>
     </table></div>
     <div class="list-footer"><nav class="pagination" data-history-pages aria-label="Pagination"></nav><span data-history-summary></span></div>
   </div>

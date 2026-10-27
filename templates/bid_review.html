@@ -16,7 +16,7 @@
      data-position="{{ position }}" data-amount="{{ amount }}" data-idempotency-key=""
      data-board-url="{{ url_for('bidding.manage') }}">
   <div class="card-body">
-    <div class="row" style="gap:14px">{{ logo_tile(startup) }}<div><h2 style="margin:0">{{ startup.name }}</h2><span class="meta">{{ startup.category.name }} · {{ startup.location }}</span></div></div>
+    <div class="row gap-md">{{ logo_tile(startup) }}<div><h2 class="m-0">{{ startup.name }}</h2><span class="meta">{{ startup.category.name }} · {{ startup.location }}</span></div></div>
 
     <div class="review-lines">
       <div><span>Target position</span><strong>#{{ position }}</strong></div>
@@ -31,7 +31,7 @@
     <div class="sandbox-note mb-2">{{ icon('alert') }}<span><strong>Sandbox mode.</strong> No real money moves. You'll be taken to a simulated checkout that sends a signed test webhook to this server.</span></div>
     {% endif %}
 
-    <ul class="text-muted" style="font-size:.86rem;padding-left:18px;line-height:1.7">
+    <ul class="text-muted text-sm list-compact">
       <li>The amount is checked again against live bids when you pay. If another startup confirms first, you may land one position lower.</li>
       <li>Your checkout is held for {{ rules.checkout_ttl_minutes }} minutes. After that, place the bid again.</li>
       <li>Promoted positions are labelled as paid placements on the public site. Amounts are never shown publicly.</li>

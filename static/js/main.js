@@ -272,15 +272,6 @@
     navToggle.setAttribute('aria-expanded', String(open));
   });
 
-  // Homepage: transparent dark header over the hero, solid white after it.
-  const hero = document.querySelector('[data-hero]');
-  const header = document.querySelector('.site-header');
-  if (hero && header) {
-    const syncHeader = () => header.classList.toggle('solid', window.scrollY > hero.offsetHeight - header.offsetHeight - 20);
-    window.addEventListener('scroll', syncHeader, { passive: true });
-    syncHeader();
-  }
-
   // Flash dismiss
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-dismiss]');
@@ -323,7 +314,7 @@
       const data = await DTI.api('/api/notifications');
       notificationsLoaded = true;
       if (!data.items.length) {
-        list.innerHTML = '<div class="state" style="border:0;background:none">You are all caught up.</div>';
+        list.innerHTML = '<div class="state plain">You are all caught up.</div>';
         return;
       }
       list.innerHTML = data.items.map((n) => `
@@ -333,7 +324,7 @@
           <span>${DTI.date(n.created_at)}</span>
         </a>`).join('');
     } catch (err) {
-      list.innerHTML = `<div class="state error" style="border:0">${DTI.escape(err.message)}</div>`;
+      list.innerHTML = `<div class="state error plain">${DTI.escape(err.message)}</div>`;
     }
   }
   document.querySelector('[data-mark-read]')?.addEventListener('click', async () => {
