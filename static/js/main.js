@@ -358,4 +358,18 @@
       btn.disabled = false;
     }
   });
+  /* Back links return to the page the person came from. The link's own address
+   * is the fallback when there is nothing sensible to return to. */
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-back]');
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    let from = null;
+    try { from = new URL(document.referrer); } catch (_) { /* no previous page */ }
+    const skip = /^\/(login|register|logout|verify-email|reset-password|forgot-password|payments\/mock-checkout)/;
+    if (from && from.origin === location.origin && from.pathname !== location.pathname
+        && !skip.test(from.pathname) && history.length > 1) {
+      e.preventDefault();
+      history.back();
+    }
+  });
 })();

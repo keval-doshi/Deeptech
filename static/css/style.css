@@ -94,7 +94,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
 
 .container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 24px; }
 .section { padding: 56px 0; }
-.section-sm { padding: 32px 0; }
+.section-sm { padding-top: 32px; padding-bottom: 32px; }
 .section.pt-0 { padding-top: 0; }
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
 .section-head h2 { margin: 0; }
@@ -260,7 +260,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
 
 /* ---- Footer ---------------------------------------------------------- */
 .site-footer { background: var(--ink); color: #a8a8a2; margin-top: 64px; padding: 56px 0 24px; border-top: 3px solid var(--saffron); }
-.footer-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 32px; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 32px; }
 .site-footer .brand { display: inline-flex; color: #fff; font-size: 1.32rem; }
 .site-footer .brand-logo { height: 44px; }
 .site-footer .brand em { color: var(--saffron-on-dark); }

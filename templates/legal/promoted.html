@@ -1,0 +1,28 @@
+{% extends "legal/_layout.html" %}
+{% block title %}Promoted Listing Terms{% endblock %}
+{% block legal %}
+<p>These terms apply when a startup owner bids for a promoted position on {{ site_name }}, along with our <a href="{{ url_for('pages.terms') }}">Terms of Use</a> and <a href="{{ url_for('pages.refunds') }}">Refund Policy</a>.</p>
+
+<h2>How promotion works</h2>
+<ul>
+  <li>There are {{ rules.max_positions }} paid positions. Each startup can hold one active bid.</li>
+  <li>The highest confirmed bid ranks first. If two bids are equal, the one confirmed first ranks higher.</li>
+  <li>A position lasts {{ rules.ranking_period_days }} days from confirmation, unless another bid displaces it sooner.</li>
+  <li>Bids open at ₹{{ '{:,}'.format(rules.opening_bid_paise // 100) }} and rise in steps of ₹{{ '{:,}'.format(rules.increment_paise // 100) }}. These amounts can change, and the checkout shows what applies to your bid.</li>
+</ul>
+
+<h2>Bids and payment</h2>
+<ul>
+  <li>Only owners of a startup can bid for it.</li>
+  <li>Your checkout is held for {{ rules.checkout_ttl_minutes }} minutes. After that, place the bid again.</li>
+  <li>A bid counts only when our payment provider confirms the payment. Two startups can pay at the same moment, so the position you reach is decided by the confirmed amounts and can differ from the one you aimed for.</li>
+  <li>Each new bid is paid in full and replaces your previous one.</li>
+  <li>Taxes are applied as the law requires.</li>
+</ul>
+
+<h2>Disclosure and privacy</h2>
+<p>Promoted positions are always labelled "Promoted" on the public site. Promotion is advertising and doesn't imply that we endorse or have verified a company. Bid amounts stay private and are never shown publicly or to other bidders.</p>
+
+<h2>Our rights</h2>
+<p>We may pause bidding, change these rules for future bids, or remove promotion from a listing that breaks our terms. Bid and payment activity is recorded in audit logs.</p>
+{% endblock %}

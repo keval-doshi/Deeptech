@@ -2,8 +2,10 @@
 {% from "_macros.html" import icon, logo_tile %}
 {% block title %}{{ startup.name }}: {{ startup.tagline }}{% endblock %}
 {% block description %}{{ startup.name }} is a {{ startup.category.name }} startup from {{ startup.location }}. {{ startup.tagline }}{% endblock %}
-{% block meta %}<meta property="og:image" content="{{ startup.cover_url }}">{% endblock %}
+{% block og_image %}{{ absolute_url(startup.cover_url) }}{% endblock %}
+{% block meta %}<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Organization", "name": startup.name, "description": startup.tagline, "url": absolute_url(request.path), "address": {"@type": "PostalAddress", "addressLocality": startup.city, "addressRegion": startup.state, "addressCountry": "IN"}}|tojson }}</script>{% endblock %}
 
+{% block back %}{% endblock %}
 {% block content %}
 {% set funding = startup.funding %}
 {% if not startup.is_public %}
@@ -14,7 +16,7 @@
 
 <section class="profile-hero" style="background-image: url('{{ startup.cover_url }}')">
   <div class="container">
-    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index', _anchor='startups') }}">{{ icon('arrow-left', 'icon-sm') }} Back to Startups</a></nav>
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('startups.index', _anchor='startups') }}" data-back>{{ icon('arrow-left', 'icon-sm') }} Back</a></nav>
     <div class="profile-head">
       {{ logo_tile(startup, 'lg') }}
       <div>
@@ -72,7 +74,7 @@
         <div class="founder-grid">
           {% for f in startup.founders %}
           <div class="founder-card">
-            <span class="avatar">{% if f.photo_path %}<img src="{{ url_for('static', filename=f.photo_path) }}" alt="">{% else %}{{ f.initials }}{% endif %}</span>
+            <span class="avatar">{% if f.photo_path %}<img src="{{ url_for('static', filename=f.photo_path) }}" alt="" loading="lazy">{% else %}{{ f.initials }}{% endif %}</span>
             <div>
               <strong>{{ f.name }}</strong>
               <small>{{ f.title }}</small>

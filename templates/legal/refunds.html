@@ -1,0 +1,28 @@
+{% extends "legal/_layout.html" %}
+{% block title %}Refund Policy{% endblock %}
+{% block legal %}
+<p>This policy covers payments for promoted positions on {{ site_name }}, a service provided by {{ entity }}. Listing a startup is free.</p>
+
+<h2>Confirmed bids</h2>
+<p>A bid is confirmed once your payment is captured and your ranking is applied. Confirmed bids are non-refundable, including when:</p>
+<ul>
+  <li>Another startup later outbids you and your position changes.</li>
+  <li>You place a higher bid. Each new bid is paid in full and replaces your previous one, and earlier payments don't count towards it.</li>
+</ul>
+
+<h2>When no charge is made</h2>
+<p>If a payment fails, or you cancel or leave the checkout before paying, you aren't charged and no ranking is applied. If your bank shows a temporary hold after a failed attempt, it is released by your bank.</p>
+
+<h2>When to contact us</h2>
+<p>Email <a href="mailto:{{ support_email }}">{{ support_email }}</a> with your receipt number, shown in your payments page, if:</p>
+<ul>
+  <li>You were charged twice for the same bid.</li>
+  <li>The amount charged differs from the amount you confirmed.</li>
+  <li>You paid but did not receive a position.</li>
+  <li>You see a charge you don't recognise.</li>
+</ul>
+<p>We will review these cases and refund any amount that was charged in error. Approved refunds go back to the original payment method through Razorpay, and the time they take to appear depends on your bank.</p>
+
+<h2>If we remove a listing</h2>
+<p>If we remove your listing because it broke our <a href="{{ url_for('pages.terms') }}">Terms of Use</a>, paid promotion isn't refunded.</p>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "legal/_layout.html" %}
+{% block title %}Terms of Use{% endblock %}
+{% block legal %}
+<p>{{ site_name }} is operated by {{ entity }}, {{ address }} ("we"). These terms apply when you use the website or create an account. If you don't agree, please don't use the service.</p>
+
+<h2>Who can use the service</h2>
+<p>You must be at least 18 and able to enter a binding contract. If you register for a company or fund, you confirm that you are authorised to act for it.</p>
+
+<h2>Your account</h2>
+<ul>
+  <li>Give accurate information and keep it up to date.</li>
+  <li>Keep your password private. You are responsible for activity on your account.</li>
+  <li>Tell us straight away at <a href="mailto:{{ support_email }}">{{ support_email }}</a> if you think someone else has accessed it.</li>
+</ul>
+
+<h2>Startup listings</h2>
+<p>Founders are responsible for what they publish, including company details, funding figures, images and claims about their technology. You confirm you have the right to use everything you upload. We may review listings before they go live, and we may reject, edit, unlist or remove content that is inaccurate, unlawful or breaks these terms.</p>
+<p>A "Verified" badge means we completed our own checks at that time. It is not a guarantee of a company's quality, finances or prospects.</p>
+
+<h2>Investors and introductions</h2>
+<p>Investor profiles can be verified by our team. Founders decide whether to accept an introduction request, and contact details are shared only when they accept.</p>
+
+<h2>No investment advice</h2>
+<p>{{ site_name }} is a directory. We are not a stock exchange, broker, investment adviser or fundraising intermediary, and we don't take part in any deal. Nothing on the site is an offer of securities or a recommendation. Investors must do their own due diligence and take their own professional advice.</p>
+
+<h2>Promoted listings</h2>
+<p>Founders can pay for a promoted position. These are paid placements and are labelled "Promoted". They don't imply our endorsement. Our <a href="{{ url_for('pages.promoted_terms') }}">Promoted Listing Terms</a> and <a href="{{ url_for('pages.refunds') }}">Refund Policy</a> also apply.</p>
+
+<h2>Acceptable use</h2>
+<p>Don't break the law, impersonate anyone, post false or infringing material, send spam, try to get around security or rate limits, scrape the site in bulk, or interfere with how it runs.</p>
+
+<h2>Content and intellectual property</h2>
+<p>You keep ownership of what you upload, and you allow us to host, display and format it to run and promote the service. The site's own design, software and branding belong to us.</p>
+
+<h2>Suspension and closing your account</h2>
+<p>You can delete your account at any time in your account settings. We may suspend or close accounts that break these terms. Some records are kept after closure where the law requires it, as explained in our <a href="{{ url_for('pages.privacy') }}">Privacy Policy</a>.</p>
+
+<h2>Disclaimers and liability</h2>
+<p>The service is provided "as is". We don't guarantee that it will be uninterrupted or that listings are accurate or complete. To the extent the law allows, we aren't liable for indirect or consequential losses, or for investment decisions made using the site. Our total liability for any claim is limited to the amount you paid us in the 12 months before it arose.</p>
+
+<h2>Changes</h2>
+<p>We may update these terms. We will change the date above and, for significant changes, notify you by email or on the site.</p>
+
+<h2>Governing law and contact</h2>
+<p>These terms are governed by the laws of India, and the courts at {{ jurisdiction }} have exclusive jurisdiction. Questions go to <a href="mailto:{{ support_email }}">{{ support_email }}</a>. Complaints can also go to our Grievance Officer, listed on the <a href="{{ url_for('pages.contact') }}">contact page</a>.</p>
+{% endblock %}

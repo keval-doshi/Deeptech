@@ -2,6 +2,7 @@
 {% from "_macros.html" import icon, flashes %}
 {% block title %}Discover India's Deep-Tech Innovators{% endblock %}
 {% block flashes %}{% endblock %}
+{% block meta %}<script type="application/ld+json">{{ {"@context": "https://schema.org", "@type": "Organization", "name": site_name, "url": absolute_url("/"), "logo": absolute_url(url_for("static", filename="images/favicon-192.png"))}|tojson }}</script>{% endblock %}
 
 {% block content %}
 <section class="hero hero-light" aria-labelledby="hero-title">
@@ -96,7 +97,7 @@
         {% for position, s in todays_ranking %}
         <a class="side-rank" href="{{ url_for('startups.profile', slug=s.slug) }}">
           <span class="side-pos">#{{ position }}</span>
-          {% if s.logo_url %}<img src="{{ s.logo_url }}" alt="">{% else %}<span class="side-initials" style="background: {{ s.category.color }}">{{ s.initials }}</span>{% endif %}
+          {% if s.logo_url %}<img src="{{ s.logo_url }}" alt="" loading="lazy">{% else %}<span class="side-initials" style="background: {{ s.category.color }}">{{ s.initials }}</span>{% endif %}
           <span class="side-name">{{ s.name }}<small>{{ s.category.name }}</small></span>
           {{ icon('crown', 'side-crown') }}
         </a>
@@ -120,7 +121,7 @@
       <div class="activity-items">
         {% for a in activity %}
         <a class="activity-item" href="{{ url_for('startups.profile', slug=a.startup.slug) }}">
-          {% if a.startup.logo_url %}<img src="{{ a.startup.logo_url }}" alt="">{% else %}<span class="side-initials" style="background: {{ a.startup.category.color }}">{{ a.startup.initials }}</span>{% endif %}
+          {% if a.startup.logo_url %}<img src="{{ a.startup.logo_url }}" alt="" loading="lazy">{% else %}<span class="side-initials" style="background: {{ a.startup.category.color }}">{{ a.startup.initials }}</span>{% endif %}
           <span><strong>{{ a.startup.name }}</strong><small>{{ a.text }} · {{ a.at|timeago }}</small></span>
         </a>
         {% endfor %}

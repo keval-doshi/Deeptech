@@ -18,9 +18,11 @@ def _bool(name, default=False):
 
 def _database_url():
     url = os.environ.get("DATABASE_URL", "")
-    # Some hosts still hand out the legacy "postgres://" scheme.
-    if url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql://", 1)
+    # Some hosts still hand out the legacy "postgres://" scheme. Name the installed
+    # driver too: SQLAlchemy's default for plain "postgresql://" is not psycopg2.
+    for scheme in ("postgres://", "postgresql://"):
+        if url.startswith(scheme):
+            url = url.replace(scheme, "postgresql+psycopg2://", 1)
     return url or "sqlite:///" + os.path.join(BASE_DIR, "instance", "deeptechindia.db")
 
 
@@ -77,6 +79,17 @@ class Config:
     # Monitoring
     SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
 
+    # Business details shown on the legal and contact pages
+    SUPPORT_EMAIL = os.environ.get("SUPPORT_EMAIL", "support@deeptechindia.in")
+    LEGAL_ENTITY_NAME = os.environ.get("LEGAL_ENTITY_NAME", "")
+    LEGAL_ADDRESS = os.environ.get("LEGAL_ADDRESS", "")
+    LEGAL_JURISDICTION = os.environ.get("LEGAL_JURISDICTION", "")
+    GRIEVANCE_OFFICER_NAME = os.environ.get("GRIEVANCE_OFFICER_NAME", "")
+    GRIEVANCE_OFFICER_EMAIL = os.environ.get("GRIEVANCE_OFFICER_EMAIL", "")
+    # Legal pages show a "draft" notice until a lawyer has approved them.
+    LEGAL_REVIEWED = _bool("LEGAL_REVIEWED", False)
+    # Date shown on the legal pages and recorded when someone accepts them. Change it when they change.
+    LEGAL_VERSION = "2 November 2026"
 
 
 class DevelopmentConfig(Config):
@@ -86,7 +99,7 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     SECRET_KEY = "test-secret"
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
+    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL", "sqlite://")  # CI also runs the tests on PostgreSQL
     SQLALCHEMY_ENGINE_OPTIONS = {}
     WTF_CSRF_ENABLED = False
     RATELIMIT_ENABLED = False
@@ -99,6 +112,8 @@ class ProductionConfig(Config):
     SESSION_COOKIE_SECURE = True
     REMEMBER_COOKIE_SECURE = True
     PREFERRED_URL_SCHEME = "https"
+    # Static URLs carry a ?v=<mtime> version (see app.py), so browsers can cache them for a while.
+    SEND_FILE_MAX_AGE_DEFAULT = timedelta(days=7)
 
     @classmethod
     def validate(cls):
@@ -115,6 +130,13 @@ class ProductionConfig(Config):
             problems.append("Razorpay keys and webhook secret are required")
         if cls.RATELIMIT_STORAGE_URI.startswith("memory"):
             problems.append("RATELIMIT_STORAGE_URI should use Redis when running multiple workers")
+        if not cls.MAIL_SERVER:
+            problems.append("MAIL_SERVER is required: without it, verification and password-reset emails are never sent")
+        if not cls.SITE_URL.startswith("https://"):
+            problems.append("SITE_URL must be the public https:// address (used in email links and SEO tags)")
+        for name in ("LEGAL_ENTITY_NAME", "LEGAL_ADDRESS", "LEGAL_JURISDICTION", "GRIEVANCE_OFFICER_NAME", "GRIEVANCE_OFFICER_EMAIL"):
+            if not getattr(cls, name):
+                problems.append(f"{name} is required: it appears on the legal and contact pages")
         return problems
 
 

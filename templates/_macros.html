@@ -28,6 +28,10 @@
 </div>
 {%- endmacro %}
 
+{% macro back_link(url) -%}
+  {%- if url %}<a class="back-link" href="{{ url }}" data-back>{{ icon('arrow-left', 'icon-sm') }} Back</a>{% endif -%}
+{%- endmacro %}
+
 {% macro flashes() -%}
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}

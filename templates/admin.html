@@ -10,7 +10,7 @@
   <form method="post" action="{{ url_for('admin.recompute') }}">{{ csrf() }}<button class="btn btn-ghost" data-confirm="Rebuild the public ranking from confirmed bids now?">{{ icon('refresh') }} Rebuild ranking</button></form>
 </div>
 
-<div class="kpi-grid fluid">
+<div class="kpi-grid fluid five">
   <div class="card kpi"><span class="stat-icon">{{ icon('users') }}</span><div><strong>{{ stats.users }}</strong><span>Users</span></div></div>
   <div class="card kpi"><span class="stat-icon">{{ icon('rocket') }}</span><div><strong>{{ stats.startups }}</strong><span>Live startups</span></div></div>
   <div class="card kpi"><span class="stat-icon">{{ icon('clock') }}</span><div><strong>{{ stats.pending }}</strong><span>Awaiting review</span></div></div>

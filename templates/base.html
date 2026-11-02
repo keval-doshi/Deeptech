@@ -1,4 +1,4 @@
-{% from "_macros.html" import icon, flashes %}
+{% from "_macros.html" import icon, flashes, back_link %}
 <!doctype html>
 <html lang="en-IN">
 <head>
@@ -12,6 +12,11 @@
   <meta property="og:title" content="{{ self.title() }}">
   <meta property="og:description" content="{{ self.description() }}">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ absolute_url(request.path) }}">
+  <meta property="og:image" content="{% block og_image %}{{ absolute_url(url_for('static', filename='images/og-default.jpg')) }}{% endblock %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="{{ absolute_url(request.path) }}">
+  {% block robots %}{% endblock %}
   {% block meta %}{% endblock %}
   <link rel="icon" href="{{ url_for('static', filename='images/favicon-32.png') }}" type="image/png" sizes="32x32">
   <link rel="icon" href="{{ url_for('static', filename='images/favicon-192.png') }}" type="image/png" sizes="192x192">
@@ -102,6 +107,7 @@
   </header>
 
   <main id="main">
+    {% block back %}{% set back = back_url() %}{% if back %}<div class="back-bar"><div class="container">{{ back_link(back) }}</div></div>{% endif %}{% endblock %}
     {% block flashes %}<div class="container">{{ flashes() }}</div>{% endblock %}
     {% block content %}{% endblock %}
   </main>
@@ -122,13 +128,21 @@
         <div>
           <h4>For founders</h4>
           <a href="{{ url_for('auth.register', role='startup_owner') }}">List your startup</a>
-          <a href="{{ url_for('dashboard.overview') }}">Startup dashboard</a>
-          <a href="{{ url_for('bidding.manage') }}">Promoted ranking</a>
+          {% if not current_user.is_authenticated or not (current_user.is_admin or current_user.is_investor) %}<a href="{{ url_for('dashboard.overview') }}">Startup dashboard</a>{% endif %}
+          {% if not current_user.is_authenticated or current_user.is_startup_owner_member %}<a href="{{ url_for('bidding.manage') }}">Promoted ranking</a>{% endif %}
         </div>
         <div>
           <h4>For investors</h4>
           <a href="{{ url_for('investors.workspace') }}">Investor workspace</a>
           <a href="{{ url_for('auth.register', role='investor') }}">Join as investor</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="{{ url_for('pages.contact') }}">Contact us</a>
+          <a href="{{ url_for('pages.terms') }}">Terms of Use</a>
+          <a href="{{ url_for('pages.privacy') }}">Privacy Policy</a>
+          <a href="{{ url_for('pages.refunds') }}">Refund Policy</a>
+          <a href="{{ url_for('pages.promoted_terms') }}">Promoted listing terms</a>
         </div>
       </div>
       <div class="footer-bottom">

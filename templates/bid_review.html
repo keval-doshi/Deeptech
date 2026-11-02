@@ -37,7 +37,7 @@
       <li>Promoted positions are labelled as paid placements on the public site. Amounts are never shown publicly.</li>
     </ul>
 
-    <label class="check mt-2"><input type="checkbox" data-accept-terms> <span>I understand that bids are non-refundable once my ranking is confirmed, and I agree to the promoted listing terms.</span></label>
+    <label class="check mt-2"><input type="checkbox" data-accept-terms> <span>I understand that bids are <a href="{{ url_for('pages.refunds') }}" target="_blank" rel="noopener">non-refundable</a> once my ranking is confirmed, and I agree to the <a href="{{ url_for('pages.promoted_terms') }}" target="_blank" rel="noopener">promoted listing terms</a>.</span></label>
 
     <div class="row mt-3 row-wrap">
       <button class="btn btn-primary btn-lg" type="button" data-pay disabled>{{ icon('lock') }} Pay {{ amount|inr }} securely</button>

@@ -1,0 +1,54 @@
+{% extends "legal/_layout.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block legal %}
+<p>{{ entity }}, {{ address }} ("we") runs {{ site_name }}. This policy explains what personal data we handle and the choices you have, in line with India's Digital Personal Data Protection Act, 2023.</p>
+
+<h2>What we collect</h2>
+<ul>
+  <li><strong>Account details:</strong> your name, email address, account type and a one-way hash of your password. We never store the password itself.</li>
+  <li><strong>Startup and investor profiles:</strong> company details, founder names, photos and links, investor firm details and focus areas. Much of this is public by design.</li>
+  <li><strong>Introductions:</strong> requests between investors and founders, and the contact details shared when a founder accepts.</li>
+  <li><strong>Payments:</strong> order and payment IDs, amounts and statuses. Card and bank details go directly to our payment provider and never reach our servers.</li>
+  <li><strong>Technical data:</strong> IP address, used for security, rate limiting and audit logs, and profile view counts.</li>
+</ul>
+
+<h2>Why we use it</h2>
+<p>We use this data to run your account and listing, send account and transaction emails, process payments and rankings, connect founders and investors, prevent abuse, keep required records, and meet legal duties. You give consent when you register, and you can withdraw it by deleting your account.</p>
+
+<h2>Who we share it with</h2>
+<p>We don't sell personal data. We share it only as needed with:</p>
+<ul>
+  <li><strong>Razorpay,</strong> to process payments.</li>
+  <li><strong>Our hosting, email and error-monitoring providers,</strong> who process it on our behalf.</li>
+  <li><strong>Google Fonts,</strong> which receives your IP address when your browser loads the site's fonts.</li>
+  <li><strong>Other users,</strong> when you publish a profile or accept an introduction.</li>
+  <li><strong>Authorities,</strong> when the law requires it.</li>
+</ul>
+
+<h2>Cookies</h2>
+<p>We use only the cookies needed to run the site: one to keep you signed in, an optional "remember me" cookie that lasts up to 14 days, and security tokens that protect forms. We don't use advertising cookies.</p>
+
+<h2>How long we keep it</h2>
+<p>We keep your data while your account is active. When you delete your account, we erase your personal data and disable sign-in. We keep payment and audit records for as long as tax and other laws require. If you are a startup's only member, the startup is deleted, or unlisted if it has payment records. If it has teammates, it passes to them.</p>
+
+<h2>Your rights</h2>
+<ul>
+  <li><strong>See and download your data:</strong> use <em>Download my data</em> in your account settings.</li>
+  <li><strong>Correct it:</strong> edit your profile, or contact us.</li>
+  <li><strong>Erase it:</strong> use <em>Delete my account</em> in your account settings.</li>
+  <li><strong>Complain:</strong> contact our Grievance Officer below. You can also approach the Data Protection Board of India.</li>
+  <li><strong>Nominate:</strong> you may nominate someone to exercise these rights if you die or become unable to. Email us to do this.</li>
+</ul>
+
+<h2>Security</h2>
+<p>We use HTTPS, hashed passwords, signed single-use links, access controls and audit logs. No system is perfectly secure. If a breach affects your data, we will notify you and the authorities as the law requires.</p>
+
+<h2>Children</h2>
+<p>The service is for people aged 18 and over, and we don't knowingly collect children's data.</p>
+
+<h2>Grievance Officer</h2>
+<p>{{ grievance_name }}<br>{{ entity }}, {{ address }}<br><a href="mailto:{{ grievance_email }}">{{ grievance_email }}</a></p>
+
+<h2>Changes</h2>
+<p>We will change the date above when this policy changes and tell you about significant changes by email or on the site.</p>
+{% endblock %}

@@ -18,7 +18,7 @@
         const data = await api(`/api/investors?${new URLSearchParams(new FormData(form))}`, { signal: controller.signal });
         results.innerHTML = data.items.length ? data.items.map((i) => `
           <article class="card investor-card">
-            <div class="top">${i.logo_url ? `<span class="logo-tile sm plain"><img src="${escape(i.logo_url)}" alt=""></span>` : `<span class="logo-tile sm">${escape(i.initials)}</span>`}
+            <div class="top">${i.logo_url ? `<span class="logo-tile sm plain"><img src="${escape(i.logo_url)}" alt="" loading="lazy"></span>` : `<span class="logo-tile sm">${escape(i.initials)}</span>`}
               <div><strong>${escape(i.firm_name)}${i.is_verified ? icon('verified', 'verified') : ''}</strong>
               <span class="meta">${escape(i.investor_type)}${i.city ? ' · ' + escape(i.city) : ''}</span></div></div>
             <p>${escape(i.thesis)}</p>

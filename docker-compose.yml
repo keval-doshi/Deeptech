@@ -1,8 +1,9 @@
-# Production-like stack: PostgreSQL + Redis + the app behind Gunicorn.
-# Put nginx/Caddy (HTTPS) in front of port 8000 in real deployments.
+# Production stack: Caddy (HTTPS) -> Gunicorn -> PostgreSQL + Redis,
+# plus the scheduled jobs and nightly backups. Settings come from .env.
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: deeptechindia
       POSTGRES_USER: deeptech
@@ -16,16 +17,18 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
 
   web:
     build: .
+    restart: unless-stopped
     env_file: .env
-    environment:
+    environment: &app-env
       APP_ENV: production
       DATABASE_URL: postgresql://deeptech:${POSTGRES_PASSWORD}@db:5432/deeptechindia
       RATELIMIT_STORAGE_URI: redis://redis:6379/0
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - uploads:/app/static/uploads
     depends_on:
@@ -33,7 +36,60 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  scheduler:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment: *app-env
+    command: ["sh", "deploy/scheduler.sh"]
+    depends_on:
+      web:
+        condition: service_healthy
+
+  backup:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      PGHOST: db
+      PGUSER: deeptech
+      PGDATABASE: deeptechindia
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      RETENTION_DAYS: "30"
+    entrypoint: ["sh", "/backup.sh"]
+    volumes:
+      - ./deploy/backup.sh:/backup.sh:ro
+      - ./backups:/backups
+      - uploads:/uploads:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN to the public domain name}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      web:
+        condition: service_healthy
 
 volumes:
   pgdata:
   uploads:
+  caddy_data:
+  caddy_config:

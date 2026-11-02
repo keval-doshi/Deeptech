@@ -53,7 +53,7 @@
         {% if pending_intros %}<span class="badge badge-primary">{{ pending_intros }} new</span>{% endif %}</div>
       {% for intro in intros %}
       <div class="intro-row" data-intro="{{ intro.id }}">
-        {% if intro.investor.logo_url %}<span class="logo-tile sm"><img src="{{ intro.investor.logo_url }}" alt="{{ intro.investor.firm_name }} logo"></span>{% else %}<span class="logo-tile sm brand-fill">{{ intro.investor.initials }}</span>{% endif %}
+        {% if intro.investor.logo_url %}<span class="logo-tile sm"><img src="{{ intro.investor.logo_url }}" alt="{{ intro.investor.firm_name }} logo" loading="lazy"></span>{% else %}<span class="logo-tile sm brand-fill">{{ intro.investor.initials }}</span>{% endif %}
         <div class="flex-fill">
           <div class="row row-wrap justify-between"><strong>{{ intro.investor.firm_name }} <span class="badge">{{ intro.investor.investor_type }}</span>{% if intro.investor.is_verified %} <span class="badge badge-success">{{ icon('shield-check') }} Verified investor</span>{% else %} <span class="badge badge-warning">Unverified</span>{% endif %}</strong>{{ status(intro.status) }}</div>
           <p>{{ intro.message }}</p>

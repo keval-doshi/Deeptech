@@ -156,7 +156,7 @@ def api_history():
         "ok": True,
         "items": [bidding_service.serialize_bid(b, rank if b.status == "active" else None) for b in bids],
         "page": page, "pages": max((total + per_page - 1) // per_page, 1), "total": total,
-        "paid_total": paid_total // 100,
+        "paid_total": int(paid_total) // 100,
     })
 
 

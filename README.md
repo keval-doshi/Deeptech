@@ -44,7 +44,7 @@ Without SMTP configured, verification and password-reset emails are written to t
 ```bash
 pytest -q
 ```
-76 tests cover team invites and roles, investor verification, data export and account deletion, end-to-end journeys (founder signup → review → bid → pay, investor introductions, profile editing, admin controls), authentication (hashing, verification, single-use reset links, open-redirect, CSRF, rate limiting), access control and IDOR, public-API data exposure, bid rules and idempotency, and payment handling (signature checks, duplicate and out-of-order webhooks, failed and retried payments, amount mismatches, simultaneous bids, late captures and expiry).
+100 tests cover legal pages and SEO endpoints, production settings, team invites and roles, investor verification, data export and account deletion, end-to-end journeys (founder signup → review → bid → pay, investor introductions, profile editing, admin controls), authentication (hashing, verification, single-use reset links, open-redirect, CSRF, rate limiting), access control and IDOR, public-API data exposure, bid rules and idempotency, and payment handling (signature checks, duplicate and out-of-order webhooks, failed and retried payments, amount mismatches, simultaneous bids, late captures and expiry).
 
 ---
 
@@ -150,15 +150,38 @@ Checkout is Razorpay's hosted modal (`checkout.js`). No card or bank data ever r
 ---
 
 ## 7. Production deployment
-1. Provision PostgreSQL and Redis. Set `APP_ENV=production`, a strong `SECRET_KEY`, `DATABASE_URL`, `RATELIMIT_STORAGE_URI=redis://…`, Razorpay keys, SMTP and (optionally) `SENTRY_DSN`.
-2. `pip install -r requirements.txt && flask --app wsgi db upgrade`
+
+### With Docker (recommended)
+`docker compose up -d --build` runs everything: Caddy (automatic HTTPS), Gunicorn, PostgreSQL, Redis, the scheduled jobs and nightly backups.
+
+1. Point your domain's DNS at the server and open ports 80 and 443.
+2. `cp .env.example .env`, then fill it in. Set `DOMAIN`, `SITE_URL=https://<domain>`, `POSTGRES_PASSWORD` (letters and numbers only, because it goes inside a URL), `SECRET_KEY`, Razorpay keys, SMTP, `SENTRY_DSN` and the business details (`LEGAL_*`, `GRIEVANCE_OFFICER_*`). The app refuses to start while anything required is missing and lists what to fix.
+3. `docker compose up -d --build`. Migrations and base data (`flask setup`: categories and bidding rules) run automatically.
+4. `docker compose exec web flask --app wsgi create-admin`
+5. Set up an uptime monitor on `https://<domain>/health`, and submit `https://<domain>/sitemap.xml` in Google Search Console.
+6. Set `LEGAL_REVIEWED=true` once a lawyer has approved the pages in `templates/legal/`. Until then they show a "draft" notice. Change `LEGAL_VERSION` in `config.py` whenever the text changes.
+
+**Backups** are written nightly to `./backups` and kept for 30 days. Copy that folder to another server or cloud storage, because a backup on the same disk won't survive losing the server. To restore:
+
+```bash
+docker compose stop web scheduler
+docker compose exec -T db dropdb -U deeptech deeptechindia
+docker compose exec -T db createdb -U deeptech deeptechindia
+docker compose exec -T db pg_restore -U deeptech -d deeptechindia --no-owner < backups/db-<date>.dump
+docker compose run --rm --entrypoint sh -v "$PWD/backups:/backups" web -c "tar -xzf /backups/uploads-<date>.tar.gz -C static/uploads"
+docker compose start web scheduler
+```
+
+### Without Docker
+1. Provision PostgreSQL and Redis. Set `APP_ENV=production` and everything listed in `.env.example`.
+2. `pip install -r requirements.txt && flask --app wsgi db upgrade && flask --app wsgi setup`
 3. `flask --app wsgi create-admin` to create the first administrator.
 4. Serve with **Gunicorn** (`gunicorn -c gunicorn.conf.py wsgi:app`) behind nginx or Caddy terminating **HTTPS**. Never use `flask run` in production. Serve `/static/` directly from nginx, and set `client_max_body_size 8m`.
 5. Cron: `bids maintain` every 5 minutes, `payments reconcile` every 10 minutes.
 6. Backups: nightly `pg_dump -Fc` to off-site storage with 30-day retention, plus a copy of `static/uploads/` (or move uploads to S3-compatible object storage). Test restores regularly.
 7. Monitoring: Sentry (`SENTRY_DSN`), Gunicorn access/error logs to your log platform, uptime checks on `/` and alerts on webhook `error` rows.
 
-`docker compose up --build` runs a production-like stack (PostgreSQL + Redis + Gunicorn). Set `POSTGRES_PASSWORD` and a `.env` first.
+Automated checks run on GitHub for each push (`.github/workflows/ci.yml`): lint, the tests on SQLite and PostgreSQL, and migrations on PostgreSQL. To run the tests on PostgreSQL locally, set `TEST_DATABASE_URL` to an empty test database. Its tables are dropped after each test.
 
 ---
 
@@ -176,4 +199,4 @@ These are implemented with sensible defaults but need a business or legal owner 
 | Disclosure | "Promoted #n" badge plus footer note | Legal review of paid-placement disclosure (ASCI guidelines) |
 | Listing approval | Admin approval required | Verification criteria (e.g. DPIIT / incorporation documents) |
 | Email | SMTP via env vars | Transactional email provider and sender domain (SPF/DKIM) |
-| Legal pages | Linked text only | Terms of Use, Privacy Policy (DPDP Act 2023), promoted-listing terms |
+| Legal pages | Drafts in `templates/legal/`, shown with a "draft" notice | Lawyer review of the Terms of Use, Privacy Policy (DPDP Act 2023), Refund Policy and promoted-listing terms, then set `LEGAL_REVIEWED=true` |

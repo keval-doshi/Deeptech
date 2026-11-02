@@ -291,3 +291,22 @@ table.table { width: 100%; border-collapse: collapse; font-size: .9rem; }
 @media (max-width: 640px) {
   .kpi-grid { grid-template-columns: 1fr; }
 }
+
+/* Legal and contact pages */
+.prose { max-width: 72ch; }
+.prose h2 { font-size: 1.25rem; margin: 32px 0 10px; }
+.prose p, .prose li { color: var(--text); line-height: 1.7; }
+.prose ul { padding-left: 20px; margin: 0 0 16px; }
+.prose li { margin-bottom: 6px; }
+.prose a, .contact-grid a { text-decoration: underline; text-underline-offset: 3px; }
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.contact-grid .card { padding: 22px; overflow-wrap: anywhere; }
+.contact-grid h2 { font-size: 1.15rem; margin-bottom: 6px; }
+
+/* Back link */
+.back-bar { background: var(--surface); border-bottom: 1px solid var(--border); }
+.back-bar .back-link { margin: 4px 0; }
+.back-link { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: var(--ink); font-size: .9rem; font-weight: 600; }
+.back-link:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.app-main > .back-link, .auth-card > .back-link { margin-bottom: 8px; }
+.breadcrumb a[data-back] { min-height: 40px; color: var(--ink); font-size: .9rem; font-weight: 600; }

@@ -30,7 +30,7 @@
     <div class="field {% if errors.confirm_password %}has-error{% endif %}"><label for="confirm_password" class="required">Confirm</label><input id="confirm_password" name="confirm_password" type="password" required data-match="password" autocomplete="new-password">{{ field_error(errors, 'confirm_password') }}</div>
   </div>
   <p class="hint text-subtle">At least 10 characters, mixing letters with numbers or symbols.</p>
-  <div class="field {% if errors.terms %}has-error{% endif %}"><label class="check"><input type="checkbox" name="terms" value="1" required> <span>I agree to the Terms of Use and Privacy Policy.</span></label>{{ field_error(errors, 'terms') }}</div>
+  <div class="field {% if errors.terms %}has-error{% endif %}"><label class="check"><input type="checkbox" name="terms" value="1" required> <span>I am 18 or older and agree to the <a href="{{ url_for('pages.terms') }}" target="_blank" rel="noopener">Terms of Use</a> and <a href="{{ url_for('pages.privacy') }}" target="_blank" rel="noopener">Privacy Policy</a>.</span></label>{{ field_error(errors, 'terms') }}</div>
   <button class="btn btn-primary btn-lg btn-block" type="submit">Create account {{ icon('arrow-right') }}</button>
 </form>
 <p class="text-muted mt-3 text-center">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>

@@ -358,6 +358,20 @@ class _Portraits:
         return f"images/people/{photo}"
 
 
+def ensure_base_data():
+    """Create what every environment needs: categories and bidding rules. Existing rows are kept."""
+    from services import ranking_service
+    ranking_service.get_rules()
+    existing = set(db.session.scalars(select(Category.slug)))
+    created = 0
+    for order, (name, slug, icon, color, description) in enumerate(CATEGORIES):
+        if slug not in existing:
+            db.session.add(Category(name=name, slug=slug, icon=icon, color=color, description=description,
+                                    sort_order=order))
+            created += 1
+    return created
+
+
 def seed_database():
     if db.session.scalars(select(Category.id)).first():
         return "Database already contains data; run `flask seed --reset` to start over."
