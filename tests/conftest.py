@@ -24,7 +24,7 @@ models.user.generate_password_hash = partial(models.user.generate_password_hash,
 
 @pytest.fixture
 def app(tmp_path):
-    app = create_app("testing", {"UPLOAD_FOLDER": str(tmp_path / "uploads")})
+    app = create_app("testing", {"UPLOAD_FOLDER": str(tmp_path / "uploads"), "PROOF_FOLDER": str(tmp_path / "proofs")})
 
     # The fixture keeps one app context open, so `g` (where Flask-Login caches
     # the user) would leak between test clients. Real requests get a fresh g.
@@ -71,8 +71,7 @@ def paid_bid(startup, amount_rupees, days_ago=1):
     """Create a confirmed bid directly (bypassing payment) and rebuild the ranking."""
     paid_at = utcnow() - timedelta(days=days_ago)
     bid = Bid(startup_id=startup.id, target_position=1, amount_paise=amount_rupees * 100, status=BID_ACTIVE,
-              idempotency_key=f"fixture-{startup.id}-{amount_rupees}-{days_ago}", paid_at=paid_at,
-              expires_at=paid_at + timedelta(days=30))
+              idempotency_key=f"fixture-{startup.id}-{amount_rupees}-{days_ago}", paid_at=paid_at)
     db.session.add(bid)
     db.session.flush()
     ranking_service.recompute_rankings(ranking_service.get_rules())

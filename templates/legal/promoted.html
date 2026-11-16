@@ -7,7 +7,7 @@
 <ul>
   <li>There are {{ rules.max_positions }} paid positions. Each startup can hold one active bid.</li>
   <li>The highest confirmed bid ranks first. If two bids are equal, the one confirmed first ranks higher.</li>
-  <li>A position lasts {{ rules.ranking_period_days }} days from confirmation, unless another bid displaces it sooner.</li>
+  <li>A position has no fixed end date. You keep it until another startup's confirmed bid displaces it.</li>
   <li>Bids open at ₹{{ '{:,}'.format(rules.opening_bid_paise // 100) }} and rise in steps of ₹{{ '{:,}'.format(rules.increment_paise // 100) }}. These amounts can change, and the checkout shows what applies to your bid.</li>
 </ul>
 

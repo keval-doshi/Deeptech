@@ -55,6 +55,10 @@ class Config:
     MAX_IMAGE_BYTES = 5 * 1024 * 1024  # single image
     UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
     ALLOWED_IMAGE_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+    # Proof-of-company documents are private: kept outside /static and only
+    # served to admins and the startup's own team.
+    PROOF_FOLDER = os.path.join(BASE_DIR, "instance", "proofs")
+    MAX_DOCUMENT_BYTES = 5 * 1024 * 1024
 
     # Rate limiting (use Redis in production: redis://host:6379/0)
     RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")

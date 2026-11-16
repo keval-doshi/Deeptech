@@ -25,7 +25,7 @@ payments_cli = AppGroup("payments", help="Payment maintenance.")
 
 @bids_cli.command("maintain")
 def bids_maintain():
-    """Expire abandoned checkouts and lapsed rankings, then rebuild positions."""
+    """Expire abandoned checkouts, then rebuild positions."""
     from services import bidding_service, ranking_service
     rules = ranking_service.get_rules(lock=True)
     expired = bidding_service.expire_stale_checkouts()

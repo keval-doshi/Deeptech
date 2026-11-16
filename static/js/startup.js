@@ -141,6 +141,15 @@
     }
   });
 
+  /* ---- Proof document: show the chosen file's name in its dropzone ---------- */
+  document.querySelectorAll('input[type="file"][name="proof_document"]').forEach((input) => {
+    const label = input.closest('.dropzone')?.querySelector('[data-file-name]');
+    if (!label) return;
+    input.addEventListener('change', () => {
+      label.textContent = input.files[0] ? input.files[0].name : 'Choose a file';
+    });
+  });
+
   /* ---- List-your-startup: raising toggle + live preview ------------------ */
   const raising = document.querySelector('[name="is_raising"]');
   const raisingFields = document.querySelector('[data-raising-fields]');

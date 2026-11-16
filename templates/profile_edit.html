@@ -16,10 +16,8 @@
   </div>
 </div>
 
-{% if startup.status == 'rejected' %}
-<div class="alert-bar danger">{{ icon('alert') }} <span><strong>Changes requested:</strong> {{ startup.rejection_reason or 'Please update your listing.' }} Saving the Basics tab resubmits your listing for review.</span></div>
-{% elif startup.status == 'pending' %}
-<div class="alert-bar info">{{ icon('clock') }} <span>Your listing is under review. You can keep editing while we take a look; bidding opens once it's approved.</span></div>
+{% if startup.status != 'published' %}
+<div class="alert-bar warning">{{ icon('alert') }} <span>Your listing is not public right now. You can keep editing; contact support to have it published again.</span></div>
 {% endif %}
 <div class="card">
   <div class="tabs inset" role="tablist" data-tabs="hash">
@@ -41,6 +39,9 @@
           <div class="flex-grow"><span class="label">Cover image</span>
             <label class="dropzone mt-1"><img class="preview" src="{{ startup.cover_url }}" alt="Current cover">{{ icon('image') }}<span>Change cover</span><input type="file" name="cover" accept="image/png,image/jpeg,image/webp" data-preview></label></div>
         </div>
+        {% if startup.proof_document_path %}
+        <p class="text-muted" style="font-size:.86rem">{{ icon('file-text', 'icon-sm') }} Proof of company (private): <a class="card-link" href="{{ url_for('startups.proof_document', startup_id=startup.id) }}">{{ startup.proof_document_name }}</a></p>
+        {% endif %}
         <div class="form-grid">
           <div class="field"><label for="name" class="required">Startup name</label><input id="name" name="name" value="{{ startup.name }}" required minlength="2" maxlength="120"></div>
           <div class="field"><label for="category_id" class="required">Category</label><select id="category_id" name="category_id" required>{% for c in categories %}<option value="{{ c.id }}" {% if c.id == startup.category_id %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>

@@ -6,7 +6,7 @@ from extensions import db
 from models import AuditLog, Payment, RankingPosition, WebhookEvent, utcnow
 from models.bid import BID_ACTIVE, BID_FAILED, BID_SUPERSEDED, Bid
 from services.payment_service import MockProvider, _hmac_hex
-from services import bidding_service
+from services import ranking_service
 from tests.conftest import login, payments_for
 
 
@@ -167,12 +167,14 @@ def test_expired_checkout_cannot_be_paid(app, world):
     assert client.post("/api/payments/checkout", json={"bid_id": bid["id"]}).status_code == 410
 
 
-def test_lapsed_rankings_expire(app, world):
+def test_paid_rankings_never_expire(app, world):
+    """A paid position is held until outbid, however long ago it was paid for."""
     bid = db.session.scalars(db.select(Bid).where(Bid.startup_id == world.c.id)).first()
-    bid.expires_at = utcnow() - timedelta(minutes=1)
+    bid.paid_at = utcnow() - timedelta(days=3650)
     db.session.commit()
-    bidding_service.ensure_rankings_fresh()
-    assert _rank(world.c.id) is None and _rank(world.d.id) == 1 and _rank(world.a.id) == 2
+    ranking_service.recompute_rankings(ranking_service.get_rules(lock=True))
+    db.session.commit()
+    assert _rank(world.c.id) == 1
 
 
 def test_mock_checkout_page_runs_full_flow(app, world):

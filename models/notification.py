@@ -60,7 +60,6 @@ class PlatformSetting(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False, default=utcnow, onupdate=utcnow)
 
     DEFAULTS = {
-        "listings_require_approval": "true",
         "allow_new_registrations": "true",
     }
 

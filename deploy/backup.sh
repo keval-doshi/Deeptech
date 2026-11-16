@@ -1,5 +1,5 @@
 #!/bin/sh
-# Nightly database and uploads backup into /backups, keeping RETENTION_DAYS days.
+# Nightly database, uploads and proof-document backup into /backups, keeping RETENTION_DAYS days.
 # Connection settings come from the PG* environment variables.
 # Copy /backups off this server too: a backup on the same disk won't survive losing the server.
 retention="${RETENTION_DAYS:-30}"
@@ -19,6 +19,13 @@ while true; do
     rm -f "/backups/.uploads-$stamp.tmp"
     echo "$stamp ERROR: uploads backup failed" >&2
   fi
-  find /backups -type f \( -name 'db-*.dump' -o -name 'uploads-*.tar.gz' \) -mtime +"$retention" -delete
+  if tar -czf "/backups/.proofs-$stamp.tmp" -C /proofs .; then
+    mv "/backups/.proofs-$stamp.tmp" "/backups/proofs-$stamp.tar.gz"
+    echo "$stamp proof documents backup written"
+  else
+    rm -f "/backups/.proofs-$stamp.tmp"
+    echo "$stamp ERROR: proof documents backup failed" >&2
+  fi
+  find /backups -type f \( -name 'db-*.dump' -o -name 'uploads-*.tar.gz' -o -name 'proofs-*.tar.gz' \) -mtime +"$retention" -delete
   sleep 86400
 done

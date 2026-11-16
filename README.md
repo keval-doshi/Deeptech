@@ -44,7 +44,7 @@ Without SMTP configured, verification and password-reset emails are written to t
 ```bash
 pytest -q
 ```
-100 tests cover legal pages and SEO endpoints, production settings, team invites and roles, investor verification, data export and account deletion, end-to-end journeys (founder signup → review → bid → pay, investor introductions, profile editing, admin controls), authentication (hashing, verification, single-use reset links, open-redirect, CSRF, rate limiting), access control and IDOR, public-API data exposure, bid rules and idempotency, and payment handling (signature checks, duplicate and out-of-order webhooks, failed and retried payments, amount mismatches, simultaneous bids, late captures and expiry).
+101 tests cover legal pages and SEO endpoints, production settings, team invites and roles, investor verification, data export and account deletion, end-to-end journeys (founder signup → listing with proof document → bid → pay, investor introductions, profile editing, admin controls), authentication (hashing, verification, single-use reset links, open-redirect, CSRF, rate limiting), access control and IDOR, public-API data exposure, bid rules and idempotency, and payment handling (signature checks, duplicate and out-of-order webhooks, failed and retried payments, amount mismatches, simultaneous bids, late captures, checkout expiry, and paid rankings that never lapse).
 
 ---
 
@@ -100,11 +100,13 @@ Public responses never include bid amounts, qualifying bids or bid history. `tes
 - **Investor verification** (`/admin#investors`): admins verify investor profiles. Founders see a "Verified investor" or "Unverified" badge on every introduction request.
 - **Data rights (DPDP Act 2023)** (`/dashboard/settings`): *Download my data* exports everything held about the user as JSON. *Delete my account* (password plus typing DELETE) erases personal data and disables sign-in. A sole founder's startup is deleted, or unlisted if it has payment records, which are retained for tax law. Startups with teammates pass to them, with the earliest member promoted to owner if needed. The last administrator can't delete their account.
 
+- **Proof of company** (`/startup/new`): founders must upload one document showing the company is registered (incorporation certificate, DPIIT recognition, GST certificate…), as PDF, PNG, JPG or WebP up to 5 MB. Listings go live immediately with no approval step. Documents are stored privately in `instance/proofs/` (never under `/static`) and can only be downloaded at `/startups/<id>/proof-document` by the startup's team and admins (*Admin → Startups*). Admins can still unpublish a listing.
+
 ## 4. Private bidding system
 
-**Model.** Each startup holds at most one *active* (confirmed, unexpired) bid. The public ranking is computed only from active bids: highest amount first, and the earlier confirmation wins a tie. The result is materialised in `ranking_positions`, which stores position and startup and **no amounts**.
+**Model.** Each startup holds at most one *active* (confirmed) bid. A paid position **never expires**: it is held until another startup outbids it. The public ranking is computed only from active bids: highest amount first, and the earlier confirmation wins a tie. The result is materialised in `ranking_positions`, which stores position and startup and **no amounts**.
 
-**Rules (admin-configurable in `/admin#rules`):** opening bid ₹100 · increment ₹100 · 10 paid positions · 30-day ranking period · 20-minute checkout window · ₹10,00,000 safety cap · global on/off switch.
+**Rules (admin-configurable in `/admin#rules`):** opening bid ₹100 · increment ₹100 · 10 paid positions · held until outbid (no expiry) · 20-minute checkout window · ₹10,00,000 safety cap · global on/off switch.
 
 **Flow and safeguards**
 1. **Board.** The server computes each position's qualifying bid and *minimum next bid* (qualifying bid + increment), excluding the owner's own bid. Owners can only bid for positions above their current one. Competitor identities are never returned.
@@ -116,7 +118,7 @@ Public responses never include bid amounts, qualifying bids or bid history. `tes
    - A failed attempt followed by a successful retry on the same order is handled correctly.
    - A capture that arrives after the owner cancelled or the checkout expired is still honoured, because the money was taken.
    - Rankings are rebuilt in the same transaction; displaced startups get "outbid" notifications.
-5. **Maintenance.** `flask --app app bids maintain` expires abandoned checkouts and lapsed rankings; run it from cron every 5 minutes. Lapsed rankings are also expired lazily whenever a ranking is read.
+5. **Maintenance.** `flask --app app bids maintain` expires abandoned checkouts and rebuilds the ranking; run it from cron every 5 minutes.
 
 Every bid, checkout, confirmation, failure, mismatch and admin rule change is written to `audit_logs` and `ranking_events`.
 
@@ -178,7 +180,7 @@ docker compose start web scheduler
 3. `flask --app wsgi create-admin` to create the first administrator.
 4. Serve with **Gunicorn** (`gunicorn -c gunicorn.conf.py wsgi:app`) behind nginx or Caddy terminating **HTTPS**. Never use `flask run` in production. Serve `/static/` directly from nginx, and set `client_max_body_size 8m`.
 5. Cron: `bids maintain` every 5 minutes, `payments reconcile` every 10 minutes.
-6. Backups: nightly `pg_dump -Fc` to off-site storage with 30-day retention, plus a copy of `static/uploads/` (or move uploads to S3-compatible object storage). Test restores regularly.
+6. Backups: nightly `pg_dump -Fc` to off-site storage with 30-day retention, plus a copy of `static/uploads/` and the private `instance/proofs/` folder (or move uploads to S3-compatible object storage). Test restores regularly.
 7. Monitoring: Sentry (`SENTRY_DSN`), Gunicorn access/error logs to your log platform, uptime checks on `/` and alerts on webhook `error` rows.
 
 Automated checks run on GitHub for each push (`.github/workflows/ci.yml`): lint, the tests on SQLite and PostgreSQL, and migrations on PostgreSQL. To run the tests on PostgreSQL locally, set `TEST_DATABASE_URL` to an empty test database. Its tables are dropped after each test.
@@ -195,8 +197,8 @@ These are implemented with sensible defaults but need a business or legal owner 
 | Bid pricing | Full amount paid per bid; the new bid replaces the startup's previous one (no top-up credit) | Whether earlier payments count towards a higher bid |
 | Refunds | Confirmed bids are non-refundable; displaced startups are not refunded | Refund policy for outbid or unplaced paid bids (admins are alerted to unplaced paid bids) |
 | Simultaneous payments | Accepted; the amount decides the position and the earlier confirmation wins ties | Alternatively hold a position during checkout, or auto-refund |
-| Ranking period, positions, increments | 30 days, 10 positions, ₹100 opening and increment | Commercial pricing |
+| Positions, increments | 10 positions held until outbid, ₹100 opening and increment | Commercial pricing |
 | Disclosure | "Promoted #n" badge plus footer note | Legal review of paid-placement disclosure (ASCI guidelines) |
-| Listing approval | Admin approval required | Verification criteria (e.g. DPIIT / incorporation documents) |
+| Listing approval | No approval: listings go live immediately; a proof-of-company document (PDF/image) is required at registration and admins can unpublish | Which documents count as proof |
 | Email | SMTP via env vars | Transactional email provider and sender domain (SPF/DKIM) |
 | Legal pages | Drafts in `templates/legal/`, shown with a "draft" notice | Lawyer review of the Terms of Use, Privacy Policy (DPDP Act 2023), Refund Policy and promoted-listing terms, then set `LEGAL_REVIEWED=true` |

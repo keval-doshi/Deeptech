@@ -31,6 +31,7 @@ services:
       - "8000"
     volumes:
       - uploads:/app/static/uploads
+      - proofs:/app/instance/proofs  # private proof-of-company documents
     depends_on:
       db:
         condition: service_healthy
@@ -67,6 +68,7 @@ services:
       - ./deploy/backup.sh:/backup.sh:ro
       - ./backups:/backups
       - uploads:/uploads:ro
+      - proofs:/proofs:ro
     depends_on:
       db:
         condition: service_healthy
@@ -91,5 +93,6 @@ services:
 volumes:
   pgdata:
   uploads:
+  proofs:
   caddy_data:
   caddy_config:

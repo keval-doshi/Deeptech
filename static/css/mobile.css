@@ -18,6 +18,16 @@
   .side-ranks .side-name { max-width: 150px; }
 }
 
+/* ---------- Tablet only ------------------------------------------------- */
+@media (min-width: 721px) and (max-width: 1100px) {
+  /* Leaderboard rows: text uses the full width; badge + Save drop to a footer line */
+  .lb-row { grid-template-columns: 44px 56px minmax(0, 1fr); gap: 10px 16px; }
+  .lb-row .lb-rank, .lb-row .logo-tile { grid-row: 1 / span 2; }
+  .lb-main p { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .lb-side { grid-column: 3; padding-top: 10px; border-top: 1px dashed var(--border); }
+  .lb-side .save-btn { margin-left: auto; }
+}
+
 @media (max-width: 960px) {
   /* Hero keeps the laptop layout: copy on the left, artwork on the right,
      faded into the page so the two read side by side at every width */

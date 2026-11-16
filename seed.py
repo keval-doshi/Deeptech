@@ -476,7 +476,7 @@ def _seed_bids(startups, owner, now):
         paid_at = now - timedelta(days=days_ago, hours=3)
         bid = Bid(startup_id=startup.id, user_id=user.id if user else None, target_position=position,
                   amount_paise=amount * 100, status=status, idempotency_key=f"seed-{startup.id}-{amount}-{days_ago}xx",
-                  paid_at=paid_at, expires_at=paid_at + timedelta(days=30), achieved_position=position,
+                  paid_at=paid_at, achieved_position=position,
                   created_at=paid_at - timedelta(minutes=4))
         db.session.add(bid)
         db.session.flush()

@@ -10,7 +10,7 @@
 {% set funding = startup.funding %}
 {% if not startup.is_public %}
 <div class="container"><div class="alert-bar warning mt-2">
-  {{ icon('info') }} This profile is <strong>{{ startup.status }}</strong> and only visible to your team{% if startup.rejection_reason %}: {{ startup.rejection_reason }}{% endif %}.
+  {{ icon('info') }} This profile is <strong>{{ startup.status }}</strong> and only visible to your team.
 </div></div>
 {% endif %}
 

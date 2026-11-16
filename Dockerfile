@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY --chown=app:app . .
-RUN mkdir -p instance static/uploads && chown -R app:app instance static/uploads
+RUN mkdir -p instance/proofs static/uploads && chown -R app:app instance static/uploads
 USER app
 
 EXPOSE 8000

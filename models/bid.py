@@ -32,7 +32,6 @@ class BiddingRules(db.Model):
     increment_paise = db.Column(db.BigInteger, nullable=False, default=10_000)     # ₹100
     max_bid_paise = db.Column(db.BigInteger, nullable=False, default=10_00_000_00)  # ₹10,00,000 safety cap
     max_positions = db.Column(db.Integer, nullable=False, default=10)
-    ranking_period_days = db.Column(db.Integer, nullable=False, default=30)
     checkout_ttl_minutes = db.Column(db.Integer, nullable=False, default=20)
     bidding_enabled = db.Column(db.Boolean, nullable=False, default=True)
     updated_by_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="SET NULL"))
@@ -44,7 +43,6 @@ class BiddingRules(db.Model):
             "increment": self.increment_paise // 100,
             "max_bid": self.max_bid_paise // 100,
             "max_positions": self.max_positions,
-            "ranking_period_days": self.ranking_period_days,
             "checkout_ttl_minutes": self.checkout_ttl_minutes,
             "bidding_enabled": self.bidding_enabled,
         }
@@ -74,7 +72,6 @@ class Bid(TimestampMixin, db.Model):
     achieved_position = db.Column(db.Integer)
     checkout_expires_at = db.Column(db.DateTime)
     paid_at = db.Column(db.DateTime, index=True)
-    expires_at = db.Column(db.DateTime, index=True)  # end of the paid ranking period
 
     startup = db.relationship("Startup")
     user = db.relationship("User")
