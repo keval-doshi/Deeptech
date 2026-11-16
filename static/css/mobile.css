@@ -20,14 +20,17 @@
   .side-ranks .side-name { max-width: 150px; }
 }
 
+/* ---------- Tablet only ------------------------------------------------- */
+@media (min-width: 721px) and (max-width: 1100px) {
+  /* Leaderboard rows: text uses the full width; badge + Save drop to a footer line */
+  .lb-row { grid-template-columns: 44px 56px minmax(0, 1fr); gap: 10px 16px; }
+  .lb-row .lb-rank, .lb-row .logo-tile { grid-row: 1 / span 2; }
+  .lb-main p { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .lb-side { grid-column: 3; padding-top: 10px; border-top: 1px dashed var(--border); }
+  .lb-side .save-btn { margin-left: auto; }
+}
+
 @media (max-width: 960px) {
-  /* Hero: clean light background + the artwork as a vivid picture card */
-  .hero-light { background: linear-gradient(180deg, #eaf1ff 0%, #f6f4ff 55%, #fff 100%); }
-  .hero-light .hero-media { display: none; }
-  .hero-light h1, .hero-light .lead { text-shadow: none; }
-  .hero-light .hero-inner { padding-top: 30px; padding-bottom: 76px; gap: 0; }
-  .hero-art { display: block; margin-top: 26px; border-radius: 22px; aspect-ratio: 21 / 9; background: #dfe9fb url("../images/hero-india.jpg") 60% center / cover no-repeat;
-    box-shadow: 0 18px 40px rgba(30, 40, 90, .18), 0 0 0 1px rgba(255, 255, 255, .6) inset; }
   .home-listing .search-panel { margin-top: -44px; }
 
   /* Search: filters apply instantly, so the extra Search button isn't needed */
@@ -41,13 +44,17 @@
 
 /* ---------- Phone ----------------------------------------------------- */
 @media (max-width: 720px) {
-  /* Hero */
-  .hero-light .hero-inner { padding-top: 24px; }
+  /* Hero: text on top, the artwork behind it filling the lower half.
+     Fixed 1050px-wide (353px tall) artwork with the India map centred ~535px in; pin the map
+     at 58vw and fade the artwork's top edge into the background. */
+  .hero-light .hero-media { background-size: 1050px auto; background-position: calc(58vw - 535px) bottom;
+    -webkit-mask-image: linear-gradient(180deg, transparent calc(100% - 353px), #000 calc(100% - 200px)); mask-image: linear-gradient(180deg, transparent calc(100% - 353px), #000 calc(100% - 200px)); }
+  .hero-light .hero-media::before { background: linear-gradient(180deg, rgba(255, 255, 255, .94) 0%, rgba(255, 255, 255, .86) 36%, rgba(255, 255, 255, .35) 56%, rgba(255, 255, 255, 0) 70%); }
+  .hero-light .hero-inner { padding-top: 24px; padding-bottom: 240px; gap: 0; }
   .hero-light .eyebrow { font-size: .68rem; letter-spacing: .12em; margin-bottom: 10px; }
   .hero-light .lead { font-size: 1rem; margin-bottom: 20px; }
   .hero-actions { gap: 10px; }
   .hero-actions .btn-lg { flex: 1 1 0; padding: 12px 14px; font-size: .92rem; }
-  .hero-art { aspect-ratio: 16 / 10; margin-top: 22px; border-radius: 20px; background-position: 58% center; }
 
   /* Compact search: input on top, two filters side by side */
   .search-panel { grid-template-columns: 1fr 1fr !important; gap: 8px; padding: 10px; border-radius: 18px; }

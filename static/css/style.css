@@ -273,6 +273,7 @@ hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
   .main-nav .dropdown-panel { box-shadow: none; border: 0; padding: 0 0 0 8px; }
   .dropdown-grid { min-width: 0; grid-template-columns: 1fr 1fr; }
   .header-actions .btn-list { display: none; }
+  .header-actions { margin-left: auto; }  /* the nav no longer fills the gap once it collapses */
   .hero-inner { grid-template-columns: 1fr; min-height: 0; }
   .hero-media { inset: 0; opacity: .22; }
   .hero-media::before { background: rgba(251, 250, 255, .55); }
@@ -531,11 +532,23 @@ img, video { height: auto; }
 .hero-light .hero-stats span { color: var(--muted); }
 .home-listing .search-panel { margin-top: -48px; }
 
+/* Tablet: keep the desktop layout (text left, artwork right). At 480px tall the
+   artwork is ~1430px wide with the India map centred ~730px in; pin it at 70vw. */
 @media (max-width: 960px) {
-  .hero-light .hero-media { opacity: 1; background-position: 72% center; }
-  .hero-light .hero-media::before { background: linear-gradient(180deg, rgba(255, 255, 255, .93) 0%, rgba(255, 255, 255, .82) 55%, rgba(255, 255, 255, .55) 100%); }
-  .hero-light .hero-inner { grid-template-columns: 1fr; min-height: 0; padding-top: 36px; padding-bottom: 84px; }
-  .hero-light .hero-copy .lead { max-width: 560px; }
+  .hero-light .hero-media { opacity: 1; background-size: auto 100%; background-position: calc(70vw - 730px) center; }
+  .hero-light .hero-media::before { background: linear-gradient(90deg, rgba(255, 255, 255, .92) 0%, rgba(255, 255, 255, .8) 34%, rgba(255, 255, 255, .2) 54%, rgba(255, 255, 255, 0) 66%); }
+  .hero-light .hero-inner { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); min-height: 480px; padding-top: 40px; padding-bottom: 92px; }
+  .hero-light h1 { font-size: clamp(1.9rem, 4.4vw, 2.6rem); }
+}
+@media (max-width: 820px) {
+  .hero-light .hero-media { background-position: calc(66vw - 730px) center; }
+  .hero-light .hero-inner { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 16px; }
+  .hero-light .eyebrow { font-size: .7rem; }
+  .hero-light .hero-actions { flex-wrap: nowrap; gap: 10px; }
+  .hero-light .hero-actions .btn-lg { padding: 12px 16px; font-size: .92rem; white-space: nowrap; }
+}
+@media (max-width: 720px) {
+  .hero-light .hero-inner { grid-template-columns: 1fr; min-height: 0; }
 }
 
 @media (min-width: 1800px) {
