@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% from "_macros.html" import icon, logo_tile, flashes %}
+{% from "_macros.html" import icon, logo_tile, flashes, back_link %}
 {% block body_class %}app-body{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">{% endblock %}
+{% block back %}{% endblock %}
 {% block flashes %}{% endblock %}
 {% block footer %}{% endblock %}
 
@@ -41,11 +42,12 @@
       {{ icon('headset') }}
       <strong>Need Help?</strong>
       <p>Contact our support team</p>
-      <a class="btn btn-outline btn-sm btn-block" href="mailto:support@deeptechindia.in">Contact Support {{ icon('arrow-right', 'icon-sm') }}</a>
+      <a class="btn btn-outline btn-sm btn-block" href="mailto:{{ support_email }}">Contact Support {{ icon('arrow-right', 'icon-sm') }}</a>
     </div>
   </nav>
 
   <div class="app-main">
+    {{ back_link(back_url()) }}
     {{ flashes() }}
     {% if current_user.is_authenticated and not current_user.is_verified %}
     <div class="alert-bar warning mt-2">

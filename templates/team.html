@@ -16,7 +16,7 @@
     <div class="card" data-team>
       <div class="card-head"><h2><span class="head-icon">{{ icon('users') }}</span> Members ({{ members|length }})</h2></div>
       <div class="card-body">
-        <div class="edit-list" style="margin:0">
+        <div class="edit-list m-0">
           {% for m in members %}
           <div class="edit-item team-row" data-item data-member="{{ m.id }}">
             <span class="avatar">{{ m.user.initials }}</span>
@@ -64,7 +64,7 @@
     <div class="card">
       <div class="card-head"><h2><span class="head-icon">{{ icon('clock') }}</span> Pending invitations</h2></div>
       <div class="card-body">
-        <div class="edit-list" style="margin:0">
+        <div class="edit-list m-0">
           {% for i in invites %}
           <div class="edit-item" data-item>
             <div class="grow"><strong>{{ i.email }}</strong><small>{{ i.role|capitalize }} · expires {{ i.expires_at|ist('%d %b %Y') }}</small></div>
@@ -83,11 +83,11 @@
       <span class="head-icon">{{ icon('shield-check') }}</span>
       <div>
         <h3>Roles</h3>
-        <ol style="list-style:none;padding:0">
+        <ol class="list-plain">
           <li><strong>Owner:</strong> everything, including bids, payments and managing the team.</li>
           <li class="mt-1"><strong>Editor:</strong> edit the company profile and respond to investor introductions. Can't see payments or place bids.</li>
         </ol>
-        <p class="text-muted mt-1 mb-0" style="font-size:.82rem">Every startup keeps at least one owner. Invitations expire after 7 days.</p>
+        <p class="text-muted text-xs mt-1 mb-0">Every startup keeps at least one owner. Invitations expire after 7 days.</p>
       </div>
     </div>
   </div>

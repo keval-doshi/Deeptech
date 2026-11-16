@@ -129,7 +129,8 @@ def register():
             db.session.flush()
             if user.is_investor:
                 db.session.add(InvestorProfile(user_id=user.id, firm_name=data["firm_name"]))
-            audit("user.registered", "user", user.id, actor=user, role=user.role)
+            audit("user.registered", "user", user.id, actor=user, role=user.role,
+                  terms_version=current_app.config["LEGAL_VERSION"])
             db.session.commit()
             send_verification(user)
             login_user(user)

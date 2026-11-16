@@ -5,3 +5,7 @@ __pycache__
 .pytest_cache
 static/uploads/*
 tests
+.git
+.github
+_design_backup
+backups

@@ -29,11 +29,11 @@
   </section>
 
   <div class="alert-bar warning hidden" data-lock-banner role="status">
-    {{ icon('lock') }} <span data-lock-text style="flex:1 1 280px"></span>
+    {{ icon('lock') }} <span class="flex-grow" data-lock-text></span>
     <a class="btn btn-sm btn-ghost" href="#" data-lock-action hidden></a>
   </div>
   <div class="alert-bar warning hidden" data-pending-banner>
-    {{ icon('clock') }} <span data-pending-text style="flex:1 1 280px"></span>
+    {{ icon('clock') }} <span class="flex-grow" data-pending-text></span>
     <button class="btn btn-sm btn-primary" type="button" data-resume-pending>Complete payment</button>
     <button class="btn btn-sm btn-ghost" type="button" data-cancel-pending>Cancel</button>
   </div>
@@ -55,7 +55,7 @@
         <span class="live-dot"><span data-updated>Updating…</span></span>
       </div>
       <div class="pr-list" role="list" data-board-rows>
-        {% for i in range(5) %}<div class="skeleton" style="height:76px;border-radius:14px"></div>{% endfor %}
+        {% for i in range(5) %}<div class="skeleton sk-position"></div>{% endfor %}
       </div>
       <p class="panel-foot">{{ icon('lock', 'icon-sm') }} Amounts are private. Competitors never see who you are, and the public site shows positions only.</p>
     </section>
@@ -63,11 +63,11 @@
     <aside class="bids-side">
       <section class="panel" aria-labelledby="ladder-title">
         <div class="panel-head"><h2 id="ladder-title">Bid ladder</h2></div>
-        <div class="ladder" data-ladder><div class="skeleton" style="height:120px"></div></div>
+        <div class="ladder" data-ladder><div class="skeleton sk-ladder"></div></div>
       </section>
       <section class="panel" aria-labelledby="activity-title">
         <div class="panel-head"><h2 id="activity-title">Your activity</h2><a class="card-link" href="{{ url_for('bidding.history') }}">All bids {{ icon('arrow-right', 'icon-sm') }}</a></div>
-        <ul class="timeline" data-recent><li class="skeleton" style="height:90px"></li></ul>
+        <ul class="timeline" data-recent><li class="skeleton sk-timeline"></li></ul>
       </section>
     </aside>
   </div>

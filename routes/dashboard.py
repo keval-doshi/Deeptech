@@ -100,8 +100,8 @@ def payments():
         abort(403)  # payment records are visible to owners only
     rows = db.session.scalars(select(Payment).where(Payment.startup_id == startup.id)
                               .order_by(Payment.created_at.desc()).limit(100)).all()
-    total_paid = db.session.scalar(select(func.coalesce(func.sum(Payment.amount_paise), 0))
-                                   .where(Payment.startup_id == startup.id, Payment.status == "paid"))
+    total_paid = int(db.session.scalar(select(func.coalesce(func.sum(Payment.amount_paise), 0))
+                                       .where(Payment.startup_id == startup.id, Payment.status == "paid")))
     return render_template("payments.html", startup=startup, payments=rows, total_paid=total_paid,
                            active="payments")
 

@@ -31,8 +31,8 @@ def console():
         "startups": count(Startup, Startup.status == STATUS_PUBLISHED),
         "unlisted": count(Startup, Startup.status != STATUS_PUBLISHED),
         "intros": count(IntroductionRequest),
-        "revenue": db.session.scalar(select(func.coalesce(func.sum(Payment.amount_paise), 0))
-                                     .where(Payment.status == "paid")) // 100,
+        "revenue": int(db.session.scalar(select(func.coalesce(func.sum(Payment.amount_paise), 0))
+                                         .where(Payment.status == "paid"))) // 100,
         "active_bids": count(Bid, Bid.status == "active"),
     }
     startups = db.session.scalars(select(Startup).order_by(Startup.created_at.desc()).limit(200)).all()

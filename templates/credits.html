@@ -10,7 +10,7 @@
     <thead><tr><th>File</th><th>Title</th><th>Author</th><th>Licence</th></tr></thead>
     <tbody>
     {% for file, c in items %}
-      <tr><td><img src="{{ url_for('static', filename='images/photos/' ~ file) }}" alt="" style="width:96px;height:60px;object-fit:cover;border-radius:6px" loading="lazy"></td>
+      <tr><td><img src="{{ url_for('static', filename='images/photos/' ~ file) }}" alt="" class="credit-thumb" loading="lazy"></td>
         <td><a href="{{ c.source }}" target="_blank" rel="noopener noreferrer">{{ c.title.replace('File:', '') }}</a></td>
         <td>{{ c.author or 'Unknown' }}</td><td>{{ c.license }}</td></tr>
     {% else %}<tr><td colspan="4" class="text-muted">No credited images.</td></tr>{% endfor %}

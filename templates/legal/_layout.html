@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block description %}{{ self.title() }} for {{ site_name }}, a discovery platform for Indian deep-tech startups.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1>{{ self.title() }}</h1>
+  <p>Last updated {{ version }}</p>
+</div></section>
+<div class="container section-sm">
+  {% if not reviewed %}<div class="alert-bar warning" role="note">Draft pending legal review. This text describes how the platform works today, but it has not yet been approved by a lawyer.</div>{% endif %}
+  <article class="prose">{% block legal %}{% endblock %}</article>
+</div>
+{% endblock %}

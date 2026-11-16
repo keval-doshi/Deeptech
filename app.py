@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 load_dotenv()  # must run before config reads the environment
 
-from flask import Flask, render_template, request  # noqa: E402
+from flask import Flask, render_template, request, url_for  # noqa: E402
 from flask_login import current_user  # noqa: E402
 from flask_wtf.csrf import CSRFError  # noqa: E402
 from werkzeug.middleware.proxy_fix import ProxyFix  # noqa: E402
@@ -95,19 +95,57 @@ def _register_blueprints(app):
     from routes.dashboard import bp as dashboard_bp
     from routes.funding import bp as funding_bp
     from routes.investors import bp as investors_bp
+    from routes.pages import bp as pages_bp
     from routes.payments import bp as payments_bp
     from routes.startups import bp as startups_bp
     from routes.team import bp as team_bp
 
     for blueprint in (startups_bp, auth_bp, categories_bp, funding_bp, investors_bp,
-                      dashboard_bp, notifications_bp, team_bp, bidding_bp, payments_bp, admin_bp):
+                      dashboard_bp, notifications_bp, team_bp, bidding_bp, payments_bp, admin_bp, pages_bp):
         app.register_blueprint(blueprint)
+
+
+# Where the Back link goes when there is no previous page, such as a shared link.
+# Pages not listed go to the homepage. None means the page has no Back link.
+BACK_PARENTS = {
+    "startups.index": None,
+    "auth.forgot_password": None,  # has its own "Back to sign in" link
+    "payments.mock_checkout": None,  # has its own "Cancel and return" button
+    "auth.reset_password": "auth.login",
+    "bidding.manage": "dashboard.overview",
+    "bidding.history": "bidding.manage",
+    "bidding.review": "bidding.manage",
+    "bidding.result": "bidding.manage",
+    "dashboard.company_profile": "dashboard.overview",
+    "dashboard.payments": "dashboard.overview",
+    "team.team_page": "dashboard.overview",
+}
 
 
 def _register_context(app):
     from sqlalchemy import func, select
 
     from models import Category, Notification
+
+    @app.url_defaults
+    def version_static_urls(endpoint, values):
+        # A new file means a new URL, so long browser caching never serves stale CSS or JS.
+        if endpoint == "static" and "filename" in values and "v" not in values:
+            try:
+                values["v"] = int(os.path.getmtime(os.path.join(app.static_folder, values["filename"])))
+            except OSError:
+                pass
+
+    def back_url():
+        endpoint = request.endpoint
+        if endpoint == "dashboard.settings" and current_user.is_authenticated:
+            from routes.auth import home_for
+            return home_for(current_user)
+        parent = BACK_PARENTS.get(endpoint, "startups.index")
+        return url_for(parent) if parent else None
+
+    def absolute_url(path):
+        return path if path.startswith(("http://", "https://")) else app.config["SITE_URL"].rstrip("/") + path
 
     @app.context_processor
     def inject_globals():
@@ -124,6 +162,9 @@ def _register_context(app):
             "unread_notifications": unread,
             "payment_provider": app.config["PAYMENT_PROVIDER"],
             "current_year": date.today().year,
+            "support_email": app.config["SUPPORT_EMAIL"],
+            "absolute_url": absolute_url,
+            "back_url": back_url,
         }
 
 
@@ -175,6 +216,8 @@ def _configure_logging(app):
 def _init_monitoring(app):
     dsn = app.config.get("SENTRY_DSN")
     if not dsn:
+        if app.config["ENV_NAME"] == "production":
+            app.logger.warning("SENTRY_DSN is not set: errors on the live site will only reach the logs")
         return
     try:
         import sentry_sdk

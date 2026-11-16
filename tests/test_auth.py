@@ -106,6 +106,7 @@ def test_csrf_is_enforced_on_forms():
         assert response.status_code == 400
         api = app.test_client().post("/api/bids", json={})
         assert api.status_code in (400, 401)
+        db.session.remove()
         db.drop_all()
 
 
@@ -117,6 +118,7 @@ def test_login_is_rate_limited():
         codes = [client.post("/login", data={"email": "x@example.com", "password": "wrong"}).status_code
                  for _ in range(11)]
         assert codes[:10] == [400] * 10 and codes[10] == 429
+        db.session.remove()
         db.drop_all()
 
 

@@ -11,7 +11,7 @@ from sqlalchemy import func, select
 
 from extensions import db
 from models import (AuditLog, Bid, IntroductionRequest, Notification, Payment,
-                    RankingEvent, RankingPosition, SavedStartup, Startup, StartupInvite, StartupView, User, utcnow)
+                    RankingEvent, RankingPosition, SavedStartup, StartupInvite, StartupView, User, utcnow)
 from models.bid import BID_ACTIVE, BID_CANCELLED, BID_EXPIRED, BID_PENDING
 from models.payment import PAY_CANCELLED, PAY_CREATED
 from models.startup import STATUS_DRAFT

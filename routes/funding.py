@@ -15,7 +15,7 @@ def funding_summary():
                .where(Startup.status == STATUS_PUBLISHED, FundingProfile.is_raising.is_(True)))
     sub = raising.subquery()
     count = db.session.scalar(select(func.count()).select_from(sub))
-    target = db.session.scalar(select(func.coalesce(func.sum(sub.c.raising_target_inr), 0)))
+    target = int(db.session.scalar(select(func.coalesce(func.sum(sub.c.raising_target_inr), 0))))
     by_stage = dict(db.session.execute(
         select(sub.c.stage, func.count()).group_by(sub.c.stage)).all())
     return {

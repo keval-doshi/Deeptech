@@ -1,6 +1,7 @@
-"""Flask CLI commands: seeding, admin creation and scheduled maintenance.
+"""Flask CLI commands: seeding, setup, admin creation and scheduled maintenance.
 
     flask --app app seed               # SAMPLE data for development
+    flask --app app setup              # base data every environment needs (safe to re-run)
     flask --app app create-admin       # interactive
     flask --app app bids maintain      # run from cron every 5 minutes
     flask --app app payments reconcile # run from cron every 10 minutes
@@ -43,7 +44,14 @@ def payments_reconcile(older_than):
         select(Payment).where(Payment.status == PAY_CREATED, Payment.created_at <= cutoff)
     ).all()
     for payment in pending:
-        status = payment_service.reconcile(payment)
+        # One order the provider can't answer for must not hold up the rest.
+        try:
+            status = payment_service.reconcile(payment)
+        except Exception as exc:
+            db.session.rollback()
+            current_app.logger.exception("Reconcile failed for %s", payment.receipt)
+            click.echo(f"{payment.receipt}: error ({exc})")
+            continue
         click.echo(f"{payment.receipt}: {status}")
     click.echo(f"Checked {len(pending)} payments.")
 
@@ -64,6 +72,14 @@ def register_commands(app):
         db.create_all()
         summary = seed_database()
         click.echo(summary)
+
+    @app.cli.command("setup")
+    def setup():
+        """Create the categories and bidding rules. Keeps existing rows, so it is safe to re-run."""
+        from seed import ensure_base_data
+        created = ensure_base_data()
+        db.session.commit()
+        click.echo(f"Base data ready: {created} new categories.")
 
     @app.cli.command("create-admin")
     @click.option("--email", prompt=True)

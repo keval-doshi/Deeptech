@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "redesign/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: deeptech
+          POSTGRES_PASSWORD: ci-only-password
+          POSTGRES_DB: deeptechindia
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U deeptech -d deeptechindia"
+          --health-interval 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt ruff==0.8.4
+      - name: Lint
+        run: ruff check --select F .
+      - name: Tests on SQLite
+        run: pytest -q
+      - name: Tests on PostgreSQL
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg2://deeptech:ci-only-password@localhost:5432/deeptechindia
+        run: pytest -q
+      - name: Migrations on PostgreSQL
+        env:
+          DATABASE_URL: postgresql://deeptech:ci-only-password@localhost:5432/deeptechindia
+        run: |
+          flask --app app db upgrade
+          flask --app app db check
+          flask --app app setup

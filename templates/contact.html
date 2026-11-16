@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Contact us{% endblock %}
+{% block description %}Contact {{ site_name }} about listings, investor accounts, payments or privacy.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container">
+  <h1>Contact us</h1>
+  <p>Questions about a listing, an investor account or a payment? Email us and include your account email, plus your receipt number for anything about a payment.</p>
+</div></section>
+<div class="container section-sm">
+  <div class="contact-grid">
+    <div class="card"><h2>Support</h2><p class="text-muted">Listings, accounts, payments and refunds.</p><p><a href="mailto:{{ support_email }}">{{ support_email }}</a></p></div>
+    <div class="card"><h2>Grievance Officer</h2><p class="text-muted">Complaints about content or how we handle your personal data.</p><p>{{ grievance_name }}<br><a href="mailto:{{ grievance_email }}">{{ grievance_email }}</a></p></div>
+    <div class="card"><h2>Registered office</h2><p class="text-muted">{{ entity }}</p><p>{{ address }}</p></div>
+  </div>
+</div>
+{% endblock %}

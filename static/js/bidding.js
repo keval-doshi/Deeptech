@@ -230,7 +230,7 @@
         name: checkout.name,
         description: checkout.description,
         prefill: checkout.prefill,
-        theme: { color: '#5b3df5' },
+        theme: { color: '#111111' },
         // The browser callback only redirects. The server waits for the
         // signed webhook (or queries Razorpay itself) before ranking.
         handler: () => { location.href = checkout.result_url; },
@@ -330,7 +330,7 @@
     const filter = history.querySelector('[data-history-status]');
     let page = 1;
     const load = async () => {
-      rows.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="height:28px"></div></td></tr>';
+      rows.innerHTML = '<tr><td colspan="7"><div class="skeleton sk-table-row"></div></td></tr>';
       try {
         const q = new URLSearchParams({ page });
         if (filter.value) q.set('status', filter.value);

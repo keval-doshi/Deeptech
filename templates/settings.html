@@ -5,7 +5,7 @@
 {% block app %}
 <div class="page-intro"><div><span class="crumb">Settings</span><h1>Account settings</h1><p>{{ current_user.email }} · {{ {'startup_owner': 'Startup account', 'investor': 'Investor account', 'admin': 'Administrator'}[current_user.role] }}</p></div></div>
 
-<div class="app-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))">
+<div class="app-grid fluid">
   <form class="card" method="post" data-validate novalidate>
     <div class="card-head"><h2><span class="head-icon">{{ icon('user') }}</span> Profile</h2></div>
     <div class="card-body">
@@ -31,7 +31,7 @@
   <div class="card">
     <div class="card-head"><h2><span class="head-icon">{{ icon('file-text') }}</span> Your data</h2></div>
     <div class="card-body">
-      <p class="text-muted" style="font-size:.9rem">Download a copy of everything we hold about you: your account, startup or investor profile, introductions, bids, payments, notifications and activity log (JSON).</p>
+      <p class="text-muted text-md">Download a copy of everything we hold about you: your account, startup or investor profile, introductions, bids, payments, notifications and activity log (JSON).</p>
       <a class="btn btn-ghost" href="{{ url_for('dashboard.export_data') }}" download>{{ icon('download', 'icon-sm') }} Download my data</a>
     </div>
   </div>
@@ -42,7 +42,7 @@
     <div class="card-body">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       {% if errors.delete_form %}<div class="flash flash-error mb-2" role="alert">{{ icon('alert') }}<span>{{ errors.delete_form }}</span></div>{% endif %}
-      <ul class="text-muted" style="font-size:.86rem;padding-left:18px;line-height:1.7;margin-top:0">
+      <ul class="text-muted text-sm list-compact mt-0">
         <li>Your name, email, password and notifications are erased and you're signed out.</li>
         {% if startup %}<li>If you're the only member of {{ startup.name }}, its listing is removed. If it has payment records, it's unlisted instead and the records are kept for tax purposes.</li>
         <li>If you have teammates, {{ startup.name }} stays with them.</li>{% endif %}

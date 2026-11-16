@@ -7,3 +7,5 @@ static/uploads/*
 !static/uploads/.gitkeep
 .pytest_cache/
 *.db
+backups/
+_design_backup/
