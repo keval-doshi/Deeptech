@@ -19,7 +19,7 @@ from models.user import ROLE_ADMIN
 from services import ranking_service
 from services.audit_service import audit
 from services.notification_service import notify
-from utils.uploads import delete_image
+from utils.uploads import delete_image, delete_proof_document
 
 
 class AccountError(Exception):
@@ -87,6 +87,7 @@ def _retire_startup(startup, actor):
             [f.photo_path for f in startup.founders] + [p.image_path for p in startup.products] + \
             [g.image_path for g in startup.gallery]:
         delete_image(path)
+    delete_proof_document(startup.proof_document_path)
     for model in (RankingPosition, RankingEvent, Bid, SavedStartup, StartupView, IntroductionRequest, StartupInvite):
         db.session.execute(model.__table__.delete().where(model.__table__.c.startup_id == startup.id))
     audit("startup.deleted_on_account_deletion", "startup", startup.id, actor=actor, name=startup.name)

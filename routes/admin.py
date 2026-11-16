@@ -6,7 +6,7 @@ from sqlalchemy import func, select
 from extensions import db, limiter
 from models import (AuditLog, Bid, InvestorProfile, IntroductionRequest, Payment, PlatformSetting, RankingPosition, Startup,
                     User, WebhookEvent, utcnow)
-from models.startup import STATUS_PENDING, STATUS_PUBLISHED, STATUS_REJECTED
+from models.startup import STATUS_DRAFT, STATUS_PUBLISHED
 from models.user import ROLE_ADMIN, ROLES
 from services import payment_service, ranking_service
 from services.audit_service import audit
@@ -29,16 +29,13 @@ def console():
     stats = {
         "users": count(User),
         "startups": count(Startup, Startup.status == STATUS_PUBLISHED),
-        "pending": count(Startup, Startup.status == STATUS_PENDING),
+        "unlisted": count(Startup, Startup.status != STATUS_PUBLISHED),
         "intros": count(IntroductionRequest),
         "revenue": db.session.scalar(select(func.coalesce(func.sum(Payment.amount_paise), 0))
                                      .where(Payment.status == "paid")) // 100,
         "active_bids": count(Bid, Bid.status == "active"),
     }
-    pending = db.session.scalars(select(Startup).where(Startup.status == STATUS_PENDING)
-                                 .order_by(Startup.created_at)).all()
-    startups = db.session.scalars(select(Startup).where(Startup.status != STATUS_PENDING)
-                                  .order_by(Startup.name).limit(200)).all()
+    startups = db.session.scalars(select(Startup).order_by(Startup.created_at.desc()).limit(200)).all()
     ranking = db.session.scalars(select(RankingPosition).order_by(RankingPosition.position)).all()
     payments = db.session.scalars(select(Payment).order_by(Payment.created_at.desc()).limit(50)).all()
     webhooks = db.session.scalars(select(WebhookEvent).order_by(WebhookEvent.received_at.desc()).limit(30)).all()
@@ -49,7 +46,7 @@ def console():
                                    .where(User.active.is_(True))
                                    .order_by(InvestorProfile.is_verified, InvestorProfile.created_at.desc())).all()
     stats["unverified_investors"] = sum(1 for i in investors if not i.is_verified)
-    return render_template("admin.html", stats=stats, pending=pending, startups=startups, ranking=ranking,
+    return render_template("admin.html", stats=stats, startups=startups, ranking=ranking,
                            payments=payments, webhooks=webhooks, users=users, logs=logs,
                            rules=ranking_service.get_rules(), settings=settings, roles=ROLES, investors=investors)
 
@@ -62,21 +59,18 @@ def startup_action(startup_id):
     startup = db.session.get(Startup, startup_id) or abort(404)
     action = request.form.get("action")
     affects_ranking = False
-    if action == "approve":
+    if action == "publish":
         startup.status = STATUS_PUBLISHED
         startup.published_at = startup.published_at or utcnow()
         startup.rejection_reason = None
-        notify_startup(startup.id, "Your startup is live!", f"{startup.name} is now listed publicly.",
+        notify_startup(startup.id, "Your startup is live again", f"{startup.name} is listed publicly.",
                        f"/startups/{startup.slug}", "review")
         affects_ranking = True
-    elif action == "reject":
-        reason = (request.form.get("reason") or "").strip()[:300] or "Listing does not meet our guidelines."
-        startup.status = STATUS_REJECTED
-        startup.rejection_reason = reason
-        notify_startup(startup.id, "Listing needs changes", reason, "/dashboard/profile", "review")
-        affects_ranking = True
     elif action == "unpublish":
-        startup.status = STATUS_PENDING
+        startup.status = STATUS_DRAFT
+        notify_startup(startup.id, "Your listing was taken down",
+                       "An administrator removed your startup from the directory. Contact support for details.",
+                       "/dashboard", "review")
         affects_ranking = True
     elif action in ("verify", "unverify"):
         startup.is_verified = action == "verify"
@@ -120,7 +114,6 @@ def update_rules():
     v.integer("increment", "Increment", required=True, min_value=1, max_value=10_00_000)
     v.integer("max_bid", "Maximum bid", required=True, min_value=1, max_value=1_00_00_000)
     v.integer("max_positions", "Paid positions", required=True, min_value=1, max_value=50)
-    v.integer("ranking_period_days", "Ranking period", required=True, min_value=1, max_value=365)
     v.integer("checkout_ttl_minutes", "Checkout window", required=True, min_value=5, max_value=120)
     v.boolean("bidding_enabled")
     try:
@@ -134,7 +127,6 @@ def update_rules():
     rules.increment_paise = data["increment"] * 100
     rules.max_bid_paise = data["max_bid"] * 100
     rules.max_positions = data["max_positions"]
-    rules.ranking_period_days = data["ranking_period_days"]
     rules.checkout_ttl_minutes = data["checkout_ttl_minutes"]
     rules.bidding_enabled = data["bidding_enabled"]
     rules.updated_by_id = current_user.id

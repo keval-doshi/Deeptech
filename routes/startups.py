@@ -1,23 +1,24 @@
 """Public startup discovery pages plus the startup REST API."""
 from datetime import date, timedelta
 
-from flask import Blueprint, abort, jsonify, redirect, render_template, request, session, url_for
+from flask import Blueprint, abort, jsonify, redirect, render_template, request, send_file, session, url_for
 from flask_login import current_user, login_required
 from sqlalchemy import case, func, or_, select
 from sqlalchemy.exc import IntegrityError
+from werkzeug.utils import secure_filename
 
 from extensions import db, limiter
-from models import (Category, Founder, FundingProfile, GalleryImage, InvestorProfile, PlatformSetting,
-                    Product, RankingEvent, RankingPosition, SavedStartup, Startup, StartupMember, StartupUpdate,
+from models import (Category, Founder, FundingProfile, GalleryImage, InvestorProfile, Product, RankingEvent, RankingPosition, SavedStartup, Startup, StartupMember, StartupUpdate,
                     StartupView, utcnow)
 from models.funding import FUNDING_STAGES
-from models.startup import STATUS_PENDING, STATUS_PUBLISHED, STATUS_REJECTED, TEAM_SIZES
+from models.startup import STATUS_PUBLISHED, TEAM_SIZES
 from models.user import ROLE_ADMIN, ROLE_STARTUP_OWNER
-from services import bidding_service, ranking_service
+from services import ranking_service
 from services.audit_service import audit
 from services.notification_service import notify_admins
 from utils.security import get_managed_startup_or_404, json_error, roles_required
-from utils.uploads import UploadError, delete_image, save_image
+from utils.uploads import (UploadError, delete_image, delete_proof_document, proof_document_abspath,
+                           save_image, save_proof_document)
 from utils.validation import ValidationError, Validator, like_escape, slugify, year_bounds
 
 bp = Blueprint("startups", __name__)
@@ -278,7 +279,6 @@ def _latest_activity(limit=6):
 
 @bp.route("/")
 def index():
-    bidding_service.ensure_rankings_fresh()
     return render_template("index.html", stats=_site_stats(), locations=_locations(), stages=FUNDING_STAGES,
                            todays_ranking=_todays_ranking(), activity=_latest_activity())
 
@@ -369,27 +369,35 @@ def api_create():
     v.integer("total_raised_inr", "Total raised", min_value=0, max_value=10**12)
     if not request.form.get("confirm_accuracy"):
         v.errors["confirm_accuracy"] = "Please confirm the information is accurate."
+    proof = request.files.get("proof_document")
+    if not proof or not proof.filename:
+        v.errors["proof_document"] = "Upload a document that proves your company is registered."
     try:
         data = v.check()
     except ValidationError as exc:
         return json_error("Please fix the highlighted fields.", 400, errors=exc.errors)
 
-    needs_review = PlatformSetting.get_bool("listings_require_approval")
     startup = Startup(
         slug=_unique_slug(data["name"]), name=data["name"], tagline=data["tagline"],
         description=data["description"], category_id=int(data["category_id"]), tags=data["tags"] or "",
         city=data["city"], state=data.get("state") or "", founded_year=data["founded_year"],
         team_size=data["team_size"], website=data.get("website"), contact_email=data["contact_email"],
         address=data.get("address"), created_by_id=current_user.id,
-        status=STATUS_PENDING if needs_review else STATUS_PUBLISHED,
-        published_at=None if needs_review else utcnow(),
+        status=STATUS_PUBLISHED, published_at=utcnow(),
     )
     db.session.add(startup)
     db.session.flush()
     try:
+        startup.proof_document_path = save_proof_document(proof, f"startups/{startup.id}")
+    except UploadError as exc:
+        db.session.rollback()
+        return json_error(str(exc), 400, errors={"proof_document": str(exc)})
+    startup.proof_document_name = secure_filename(proof.filename)[-120:] or "document"
+    try:
         _apply_images(startup, request.files)
     except UploadError as exc:
         db.session.rollback()
+        delete_proof_document(startup.proof_document_path)
         return json_error(str(exc), 400, errors={getattr(exc, "field", "logo"): str(exc)})
     db.session.add(StartupMember(startup_id=startup.id, user_id=current_user.id, role="owner"))
     db.session.add(FundingProfile(
@@ -398,8 +406,7 @@ def api_create():
         raising_target_inr=data.get("raising_target_inr") or 0,
     ))
     audit("startup.created", "startup", startup.id, actor=current_user, status=startup.status)
-    if needs_review:
-        notify_admins("New startup awaiting review", startup.name, "/admin#approvals", "review")
+    notify_admins("New startup listed", startup.name, "/admin#startups", "review")
     db.session.commit()
     return jsonify({"ok": True, "id": startup.id, "slug": startup.slug, "status": startup.status,
                     "redirect": url_for("dashboard.overview")}), 201
@@ -425,16 +432,25 @@ def api_update(startup_id):
     except UploadError as exc:
         db.session.rollback()
         return json_error(str(exc), 400, errors={getattr(exc, "field", "logo"): str(exc)})
-    resubmitted = False
-    if startup.status == STATUS_REJECTED and not current_user.is_admin:
-        # Editing a rejected listing sends it back to the review queue.
-        startup.status = STATUS_PENDING
-        startup.rejection_reason = None
-        resubmitted = True
-        notify_admins("Listing resubmitted for review", startup.name, "/admin#approvals", "review")
-    audit("startup.updated", "startup", startup.id, actor=current_user, fields=sorted(data), resubmitted=resubmitted)
+    audit("startup.updated", "startup", startup.id, actor=current_user, fields=sorted(data))
     db.session.commit()
-    return jsonify({"ok": True, "startup": startup.to_profile(), "resubmitted": resubmitted})
+    return jsonify({"ok": True, "startup": startup.to_profile()})
+
+
+@bp.get("/startups/<int:startup_id>/proof-document")
+@login_required
+def proof_document(startup_id):
+    """Download the private proof document: admins and the startup's own team only."""
+    startup = get_managed_startup_or_404(startup_id)
+    path = proof_document_abspath(startup.proof_document_path)
+    if path is None:
+        abort(404)
+    audit("startup.proof_document.downloaded", "startup", startup.id, actor=current_user)
+    db.session.commit()
+    response = send_file(path, as_attachment=True, download_name=startup.proof_document_name or "proof-document",
+                         max_age=0)
+    response.headers["Cache-Control"] = "private, no-store"
+    return response
 
 
 @bp.put("/api/startups/<int:startup_id>/funding")

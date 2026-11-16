@@ -28,10 +28,8 @@
   </div>
 </section>
 
-{% if startup.status == 'pending' %}
-<div class="alert-bar info">{{ icon('clock') }} <span>Your listing is <strong>under review</strong>. You can keep editing your profile while we take a look.</span></div>
-{% elif startup.status == 'rejected' %}
-<div class="alert-bar danger">{{ icon('alert') }} <span style="flex:1 1 260px">Your listing needs changes: {{ startup.rejection_reason }}</span><a class="btn btn-sm btn-ghost" href="{{ url_for('dashboard.company_profile') }}">Update profile</a></div>
+{% if startup.status != 'published' %}
+<div class="alert-bar warning">{{ icon('alert') }} <span>Your listing is <strong>not public</strong> right now, so it doesn't appear in the directory or the paid ranking. Contact support for details.</span></div>
 {% endif %}
 
 <div class="bids-layout">

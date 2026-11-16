@@ -84,17 +84,12 @@
       set('[data-current-position]', s.current_position
         ? `<span class="hs-crown ${crownClass(s.current_position)}">${icon('crown')}</span>#${s.current_position}` : '<span class="hs-dim">Unranked</span>');
       set('[data-current-bid]', s.current_bid ? inr(s.current_bid) : '<span class="hs-dim">—</span>');
-      let days = '<span class="hs-dim">—</span>';
-      if (b.ranking_expires_at && s.current_position) {
-        const left = Math.max(0, Math.ceil((new Date(b.ranking_expires_at + 'Z') - Date.now()) / 86400000));
-        days = `${left}<small> day${left === 1 ? '' : 's'}</small>`;
-      }
-      set('[data-days-left]', days);
+      set('[data-held-until]', s.current_position ? 'Until outbid' : '<span class="hs-dim">—</span>');
       const up = s.views_change_pct >= 0;
       set('[data-views]', `${s.views.toLocaleString('en-IN')}<small class="${up ? 'up' : 'down'}">${up ? '▲' : '▼'} ${Math.abs(s.views_change_pct)}%</small>`);
       set('[data-updated]', `Updated ${date(b.updated_at)}`);
       const r = b.rules;
-      set('[data-rules-text]', `Opening bid <b>${inr(r.opening_bid)}</b> · steps of <b>${inr(r.increment)}</b> · rankings last <b>${r.ranking_period_days} days</b>`);
+      set('[data-rules-text]', `Opening bid <b>${inr(r.opening_bid)}</b> · steps of <b>${inr(r.increment)}</b> · you keep your spot <b>until you're outbid</b>`);
     };
 
     const renderLadder = (data) => {
@@ -128,12 +123,10 @@
       const reason = data.board.blocked_reason;
       banner.classList.toggle('hidden', !reason);
       if (!reason) return;
-      banner.className = `alert-bar ${reason === 'rejected' ? 'danger' : reason === 'paused' ? 'info' : 'warning'}`;
+      banner.className = `alert-bar ${reason === 'paused' ? 'info' : 'warning'}`;
       let text = data.board.blocked_message;
-      if (data.board.rejection_reason) text += ` Reviewer's note: “${data.board.rejection_reason}”`;
       banner.querySelector('[data-lock-text]').textContent = text;
-      const actions = { rejected: ['Update company profile', '/dashboard/profile'], pending_review: ['Review your profile', '/dashboard/profile'],
-        unverified: ['Account settings', '/dashboard/settings'] };
+      const actions = { unverified: ['Account settings', '/dashboard/settings'] };
       const link = banner.querySelector('[data-lock-action]');
       link.hidden = !actions[reason];
       if (actions[reason]) { link.textContent = actions[reason][0]; link.href = actions[reason][1]; }
@@ -309,7 +302,7 @@
       if (bid.receipt) result.querySelector('[data-receipt]').textContent = bid.receipt;
       if (paid) {
         const text = result.querySelector('[data-active-text]');
-        if (bid.achieved_position === bid.target_position) text.textContent = `You're now ranked #${bid.achieved_position} until ${date(bid.expires_at, false)}.`;
+        if (bid.achieved_position === bid.target_position) text.textContent = `You're now ranked #${bid.achieved_position}. You keep this spot until another startup outbids you.`;
         else if (bid.achieved_position) text.textContent = `Another bid was confirmed first, so you're ranked #${bid.achieved_position}. You can top up from Manage Bids.`;
         else text.textContent = 'Payment received. Our team will contact you about your placement.';
       }
@@ -337,7 +330,7 @@
     const filter = history.querySelector('[data-history-status]');
     let page = 1;
     const load = async () => {
-      rows.innerHTML = '<tr><td colspan="8"><div class="skeleton" style="height:28px"></div></td></tr>';
+      rows.innerHTML = '<tr><td colspan="7"><div class="skeleton" style="height:28px"></div></td></tr>';
       try {
         const q = new URLSearchParams({ page });
         if (filter.value) q.set('status', filter.value);
@@ -351,15 +344,14 @@
             <td>${b.achieved_position ? '#' + b.achieved_position : '—'}</td>
             <td class="num"><strong>${inr(b.amount)}</strong></td>
             <td>${b.payment_status ? `<span class="status status-${escape(b.payment_status)}">${escape(b.payment_status)}</span>` : '—'}</td>
-            <td>${b.expires_at ? date(b.expires_at, false) : '—'}</td>
             <td>${statusPill(b.display_status)}</td>
             <td>${b.receipt ? `<a href="/dashboard/bids/result/${b.id}" class="card-link">Details</a>` : ''}</td>
           </tr>`).join('')
-          : `<tr><td colspan="8"><div class="state">${icon('history')}<h3>No bids found</h3><p>Bids you place will appear here.</p></div></td></tr>`;
+          : `<tr><td colspan="7"><div class="state">${icon('history')}<h3>No bids found</h3><p>Bids you place will appear here.</p></div></td></tr>`;
         pages.innerHTML = data.pages > 1 ? Array.from({ length: data.pages }, (_, i) =>
           `<button type="button" data-p="${i + 1}" ${i + 1 === data.page ? 'aria-current="page"' : ''}>${i + 1}</button>`).join('') : '';
       } catch (err) {
-        rows.innerHTML = `<tr><td colspan="8"><div class="state error">${icon('alert')}<p>${escape(err.message)}</p></div></td></tr>`;
+        rows.innerHTML = `<tr><td colspan="7"><div class="state error">${icon('alert')}<p>${escape(err.message)}</p></div></td></tr>`;
       }
     };
     filter.addEventListener('change', () => { page = 1; load(); });

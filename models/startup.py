@@ -75,6 +75,9 @@ class Startup(TimestampMixin, db.Model):
     address = db.Column(db.String(255))
     logo_path = db.Column(db.String(255))
     cover_path = db.Column(db.String(255))
+    # Private proof-of-company document (path relative to PROOF_FOLDER). Never public.
+    proof_document_path = db.Column(db.String(255))
+    proof_document_name = db.Column(db.String(120))
     is_verified = db.Column(db.Boolean, nullable=False, default=False)
     status = db.Column(db.String(20), nullable=False, default=STATUS_PENDING, index=True)
     rejection_reason = db.Column(db.String(300))

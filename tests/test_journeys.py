@@ -16,6 +16,7 @@ from services import payment_service
 from tests.conftest import PASSWORD, login, make_user, payments_for
 
 STRONG = "Str0ng-pass-word"
+PDF_BYTES = b"%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n"
 
 
 def png_bytes(color="purple", size=(600, 600)):
@@ -28,7 +29,8 @@ def listing_form(name="Orbit Forge", **extra):
     data = {"name": name, "tagline": "Reusable upper stages for small launchers", "description": "d" * 120,
             "category_id": "1", "city": "Pune", "state": "Maharashtra", "founded_year": "2022", "team_size": "11-50",
             "contact_email": "team@orbitforge.in", "website": "orbitforge.in", "is_raising": "on", "stage": "Seed",
-            "raising_target_inr": "50000000", "confirm_accuracy": "on", "logo": (io.BytesIO(png_bytes()), "logo.png")}
+            "raising_target_inr": "50000000", "confirm_accuracy": "on", "logo": (io.BytesIO(png_bytes()), "logo.png"),
+            "proof_document": (io.BytesIO(PDF_BYTES), "Certificate of Incorporation.pdf")}
     data.update(extra)
     return data
 
@@ -49,7 +51,7 @@ def mock_pay(client, bid_id):
 
 
 # ---------------------------------------------------------------------------
-# Founder: sign up → list → review → bid → pay → ranked
+# Founder: sign up → list (live immediately) → bid → pay → ranked
 # ---------------------------------------------------------------------------
 
 def test_founder_journey_from_signup_to_ranked(app, world):
@@ -64,27 +66,17 @@ def test_founder_journey_from_signup_to_ranked(app, world):
     created = founder.post("/api/startups", data=listing_form(), content_type="multipart/form-data")
     assert created.status_code == 201, created.get_json()
     startup = db.session.get(Startup, created.get_json()["id"])
-    assert startup.status == "pending" and startup.logo_path and startup.website == "https://orbitforge.in"
+    # No approval step: the listing is public straight away and can bid.
+    assert startup.status == "published" and startup.published_at and startup.logo_path
+    assert startup.website == "https://orbitforge.in" and startup.proof_document_path
     assert startup.funding.is_raising and startup.funding.stage == "Seed"
     assert founder.post("/api/startups", data=listing_form("Second Co"), content_type="multipart/form-data").status_code == 409
-
-    # Pending listings are hidden and can't bid, and the board says why.
-    assert app.test_client().get(f"/startups/{startup.slug}").status_code == 404
+    assert app.test_client().get(f"/startups/{startup.slug}").status_code == 200
     board = founder.get("/api/dashboard/bids").get_json()["board"]
-    assert board["blocked_reason"] == "pending_review" and "under review" in board["blocked_message"]
     first = board["positions"][0]
-    assert first["higher"] and not first["eligible"] and first["minimum_next_bid"] == 1600
-    refused = founder.post("/api/bids", json={"position": 1, "amount": 1600, "idempotency_key": "p" * 32})
-    assert refused.status_code == 403 and "under review" in refused.get_json()["error"]
-
-    # Admin approves → founder notified → bidding unlocked.
-    admin = login(app, world.admin)
-    assert admin.post(f"/admin/startups/{startup.id}/action", data={"action": "approve"}).status_code == 302
-    assert db.session.get(Startup, startup.id).status == "published"
-    assert db.session.scalar(db.select(Notification).where(Notification.user_id == user.id,
-                                                           Notification.title.like("%live%")))
-    board = founder.get("/api/dashboard/bids").get_json()["board"]
-    assert board["blocked_reason"] is None and board["positions"][0]["eligible"]
+    assert board["blocked_reason"] is None and first["eligible"] and first["minimum_next_bid"] == 1600
+    assert db.session.scalar(db.select(Notification).where(Notification.user_id == world.admin.id,
+                                                           Notification.title == "New startup listed"))
 
     # Review page, bid, sandbox payment → ranked #1.
     assert founder.get("/dashboard/bids/review?position=1&amount=1600").status_code == 200
@@ -103,20 +95,53 @@ def test_founder_journey_from_signup_to_ranked(app, world):
     assert any("ranked #1" in n["title"] for n in notes)
 
 
-def test_rejected_listing_is_resubmitted_on_edit(app, world):
-    owner = make_user("reject.me@example.com")
+def test_proof_document_is_required_and_private(app, world):
+    owner = make_user("proof.owner@example.com")
     db.session.commit()
     client = login(app, owner)
-    created = client.post("/api/startups", data=listing_form("Rework Labs"), content_type="multipart/form-data").get_json()
-    login(app, world.admin).post(f"/admin/startups/{created['id']}/action",
-                                 data={"action": "reject", "reason": "Please add a real website."})
-    board = client.get("/api/dashboard/bids").get_json()["board"]
-    assert board["blocked_reason"] == "rejected" and board["rejection_reason"] == "Please add a real website."
-    updated = client.put(f"/api/startups/{created['id']}", json={"website": "https://reworklabs.in"}).get_json()
-    assert updated["resubmitted"] is True
-    assert db.session.get(Startup, created["id"]).status == "pending"
-    assert db.session.scalar(db.select(Notification).where(Notification.user_id == world.admin.id,
-                                                           Notification.title.like("%resubmitted%")))
+
+    def attempt(proof):
+        form = listing_form("Proof Labs")
+        if proof is None:
+            del form["proof_document"]
+        else:
+            form["proof_document"] = proof
+        return client.post("/api/startups", data=form, content_type="multipart/form-data")
+
+    for proof in (None, (io.BytesIO(b"<html>"), "x.pdf"), (io.BytesIO(b"MZ"), "x.exe")):
+        refused = attempt(proof)
+        assert refused.status_code == 400 and "proof_document" in refused.get_json()["errors"], proof
+    assert not db.session.scalars(db.select(Startup).where(Startup.name == "Proof Labs")).first()
+
+    # An image is accepted too (re-encoded like any other upload).
+    created = attempt((io.BytesIO(png_bytes()), "gst.png"))
+    assert created.status_code == 201, created.get_json()
+    startup = db.session.get(Startup, created.get_json()["id"])
+    assert not startup.proof_document_path.startswith("uploads/")  # stored outside /static
+    url = f"/startups/{startup.id}/proof-document"
+
+    # The startup's own team and admins can download it; nobody else can tell it exists.
+    own = client.get(url)
+    assert own.status_code == 200 and "attachment" in own.headers["Content-Disposition"]
+    assert own.headers["Cache-Control"] == "private, no-store"
+    assert login(app, world.admin).get(url).status_code == 200
+    assert login(app, world.owner_a).get(url).status_code == 404
+    assert login(app, world.investor).get(url).status_code == 404
+    assert app.test_client().get(url).status_code in (302, 401)
+    public = json.dumps(app.test_client().get(f"/api/startups/{startup.slug}").get_json())
+    assert "proof_document" not in public and startup.proof_document_path not in public
+
+
+def test_admin_can_unpublish_and_republish(app, world):
+    admin = login(app, world.admin)
+    admin.post(f"/admin/startups/{world.a.id}/action", data={"action": "unpublish"})
+    assert db.session.get(Startup, world.a.id).status == "draft"
+    assert app.test_client().get(f"/startups/{world.a.slug}").status_code == 404
+    board = login(app, world.owner_a).get("/api/dashboard/bids").get_json()["board"]
+    assert board["blocked_reason"] == "unpublished"
+    admin.post(f"/admin/startups/{world.a.id}/action", data={"action": "publish"})
+    assert db.session.get(Startup, world.a.id).status == "published"
+    assert admin.post(f"/admin/startups/{world.a.id}/action", data={"action": "approve"}).status_code == 400
 
 
 def test_listing_validation_and_bad_uploads(app, world):
@@ -222,10 +247,10 @@ def test_profile_editor_crud_and_ownership(app, world):
 def test_admin_rules_settings_and_users(app, world):
     admin = login(app, world.admin)
     form = {"opening_bid": "200", "increment": "250", "max_bid": "500000", "max_positions": "8",
-            "ranking_period_days": "15", "checkout_ttl_minutes": "10", "bidding_enabled": "on"}
+            "checkout_ttl_minutes": "10", "bidding_enabled": "on"}
     assert admin.post("/admin/rules", data=form).status_code == 302
     rules = db.session.get(BiddingRules, 1)
-    assert (rules.increment_paise, rules.max_positions, rules.ranking_period_days) == (25_000, 8, 15)
+    assert (rules.increment_paise, rules.max_positions) == (25_000, 8)
     rows = {r["position"]: r for r in login(app, world.owner_a).get("/api/dashboard/bids").get_json()["board"]["positions"]}
     assert rows[1]["minimum_next_bid"] == 1750
     assert admin.post("/admin/rules", data={**form, "increment": "0"}).status_code == 302
@@ -235,9 +260,9 @@ def test_admin_rules_settings_and_users(app, world):
     admin.post("/admin/rules", data={k: v for k, v in form.items() if k != "bidding_enabled"})
     assert login(app, world.owner_a).get("/api/dashboard/bids").get_json()["board"]["blocked_reason"] == "paused"
 
-    # Auto-publish new listings
-    admin.post("/admin/settings", data={"allow_new_registrations": "on"})
-    assert PlatformSetting.get_bool("listings_require_approval") is False
+    # New listings are always published immediately; the old approval switch is gone.
+    admin.post("/admin/settings", data={"allow_new_registrations": "on", "listings_require_approval": "on"})
+    assert "listings_require_approval" not in PlatformSetting.DEFAULTS
     quick = make_user("quick@example.com")
     db.session.commit()
     created = login(app, quick).post("/api/startups", data=listing_form("Quick Launch"), content_type="multipart/form-data")

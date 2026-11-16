@@ -3,7 +3,6 @@
 Bid amounts never leave these owner-scoped endpoints. Competitor identities
 are never included in any response.
 """
-from datetime import timedelta
 
 from flask import Blueprint, abort, flash, jsonify, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -64,8 +63,7 @@ def review():
     current_position, current_amount = bidding_service.current_position(startup.id)
     return render_template("bid_review.html", startup=startup, position=position, amount=amount,
                            minimum=minimum // 100, rules=rules, current_position=current_position,
-                           current_bid=current_amount // 100 if current_amount else None,
-                           ranking_until=utcnow() + timedelta(days=rules.ranking_period_days), active="bids")
+                           current_bid=current_amount // 100 if current_amount else None, active="bids")
 
 
 @bp.route("/dashboard/bids/history")
@@ -93,7 +91,6 @@ def result(bid_id):
 @owner_only
 def api_board():
     startup = require_owned_startup(owner=True)
-    bidding_service.ensure_rankings_fresh()
     if bidding_service.expire_stale_checkouts(startup.id):
         db.session.commit()
     board = bidding_service.position_board(startup, user=current_user)

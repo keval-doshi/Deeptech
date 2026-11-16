@@ -22,7 +22,7 @@
       <div><span>Target position</span><strong>#{{ position }}</strong></div>
       <div><span>Your current position</span><strong>{{ '#' ~ current_position if current_position else 'Not ranked' }}</strong></div>
       <div><span>Minimum required right now</span><strong>{{ minimum|inr }}</strong></div>
-      <div><span>Ranking period</span><strong>{{ rules.ranking_period_days }} days (until about {{ ranking_until|ist('%d %b %Y') }})</strong></div>
+      <div><span>How long you keep it</span><strong>Until another startup outbids you</strong></div>
       {% if current_bid %}<div><span>Replaces your current bid</span><strong>{{ current_bid|inr }}</strong></div>{% endif %}
       <div class="total"><span>Amount payable</span><strong>{{ amount|inr }}</strong></div>
     </div>

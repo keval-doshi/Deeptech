@@ -351,7 +351,6 @@ def confirm_payment(provider_name, event):
         previous.status = BID_SUPERSEDED
     bid.status = BID_ACTIVE
     bid.paid_at = now
-    bid.expires_at = ranking_service.ranking_expiry(rules, now)
     db.session.flush()
 
     ranking_service.recompute_rankings(rules, now)
@@ -365,7 +364,7 @@ def confirm_payment(provider_name, event):
 
     if position == bid.target_position:
         title = f"Payment received. You're now ranked #{position}"
-        body = f"Your ₹{bid.amount_rupees:,} bid is confirmed for {rules.ranking_period_days} days."
+        body = f"Your ₹{bid.amount_rupees:,} bid is confirmed. You keep this spot until another startup outbids you."
     elif position:
         title = f"Payment received. You're ranked #{position}"
         body = (f"Another bid for #{bid.target_position} was confirmed moments before yours, "

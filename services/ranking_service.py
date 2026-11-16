@@ -1,17 +1,16 @@
 """Paid ranking computation.
 
-The ranking is derived purely from *confirmed, unexpired* bids: highest
-amount first, earlier confirmation wins a tie. Because it is recomputed from
+The ranking is derived purely from *confirmed* bids: highest amount first,
+earlier confirmation wins a tie. A paid position never expires; it is held
+until another startup outbids it. Because it is recomputed from
 the database while holding the bidding-rules row lock, concurrent payments
 cannot leave the order in an inconsistent state.
 """
-from datetime import timedelta
-
-from sqlalchemy import or_, select
+from sqlalchemy import select
 
 from extensions import db
 from models import Bid, BiddingRules, RankingEvent, RankingPosition, Startup, utcnow
-from models.bid import BID_ACTIVE, BID_EXPIRED
+from models.bid import BID_ACTIVE
 from models.startup import STATUS_PUBLISHED
 from services.notification_service import notify_startup
 
@@ -33,34 +32,15 @@ def get_rules(lock=False):
     return rules
 
 
-def active_bids(now=None):
+def active_bids():
     """All live paid bids, best first. One per startup (older ones are superseded)."""
-    now = now or utcnow()
     query = (
         select(Bid)
         .join(Startup, Startup.id == Bid.startup_id)
-        .where(
-            Bid.status == BID_ACTIVE,
-            or_(Bid.expires_at.is_(None), Bid.expires_at > now),
-            Startup.status == STATUS_PUBLISHED,
-        )
+        .where(Bid.status == BID_ACTIVE, Startup.status == STATUS_PUBLISHED)
         .order_by(Bid.amount_paise.desc(), Bid.paid_at.asc(), Bid.id.asc())
     )
     return db.session.scalars(query).all()
-
-
-def expire_lapsed_bids(now=None):
-    now = now or utcnow()
-    lapsed = db.session.scalars(
-        select(Bid).where(Bid.status == BID_ACTIVE, Bid.expires_at.is_not(None), Bid.expires_at <= now)
-    ).all()
-    for bid in lapsed:
-        bid.status = BID_EXPIRED
-        db.session.add(RankingEvent(startup_id=bid.startup_id, bid_id=bid.id, event_type="ranking_expired",
-                                    detail="Paid ranking period ended"))
-        notify_startup(bid.startup_id, "Your paid ranking period has ended",
-                       "Place a new bid to keep your startup promoted.", "/dashboard/bids", "bid")
-    return lapsed
 
 
 def recompute_rankings(rules, now=None):
@@ -69,9 +49,7 @@ def recompute_rankings(rules, now=None):
     Returns {startup_id: (old_position, new_position)} for every change.
     """
     now = now or utcnow()
-    expire_lapsed_bids(now)
-
-    ordered = active_bids(now)[: rules.max_positions]
+    ordered = active_bids()[: rules.max_positions]
     new_positions = {bid.startup_id: (index, bid) for index, bid in enumerate(ordered, start=1)}
     old_positions = {row.startup_id: row.position for row in db.session.scalars(select(RankingPosition))}
 
@@ -109,7 +87,3 @@ def public_ranking():
     """{startup_id: position} for display. Never includes amounts."""
     rows = db.session.execute(select(RankingPosition.startup_id, RankingPosition.position)).all()
     return {startup_id: position for startup_id, position in rows}
-
-
-def ranking_expiry(rules, now=None):
-    return (now or utcnow()) + timedelta(days=rules.ranking_period_days)

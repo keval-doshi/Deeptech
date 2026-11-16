@@ -13,7 +13,7 @@ from extensions import db
 from models import Bid, RankingEvent, RankingPosition, utcnow
 from models.bid import BID_ACTIVE, BID_CANCELLED, BID_EXPIRED, BID_PENDING
 from models.payment import PAY_CANCELLED, PAY_CREATED, PAY_EXPIRED
-from models.startup import STATUS_PENDING, STATUS_PUBLISHED, STATUS_REJECTED
+from models.startup import STATUS_PUBLISHED
 from services import ranking_service
 from services.audit_service import audit
 
@@ -27,23 +27,6 @@ class BidError(Exception):
         self.status = status
         self.field = field
         self.data = data or {}
-
-
-def ensure_rankings_fresh():
-    """Expire lapsed rankings lazily so public pages never show stale promotions.
-
-    Also expires abandoned checkouts. A cron job (`flask bids maintain`) does
-    the same thing on a schedule; this is the safety net.
-    """
-    now = utcnow()
-    stale_rank = db.session.execute(
-        select(RankingPosition.position).join(Bid, Bid.id == RankingPosition.bid_id)
-        .where(Bid.expires_at.is_not(None), Bid.expires_at <= now).limit(1)
-    ).first()
-    if stale_rank:
-        rules = ranking_service.get_rules(lock=True)
-        ranking_service.recompute_rankings(rules, now)
-        db.session.commit()
 
 
 def expire_stale_checkouts(startup_id=None, now=None):
@@ -66,9 +49,9 @@ def _close_pending(bid, bid_status, payment_status, detail):
                                 detail=detail))
 
 
-def _others_amounts(startup_id, now=None):
+def _others_amounts(startup_id):
     """Amounts of every live bid except this startup's own, best first."""
-    return [b.amount_paise for b in ranking_service.active_bids(now) if b.startup_id != startup_id]
+    return [b.amount_paise for b in ranking_service.active_bids() if b.startup_id != startup_id]
 
 
 def current_position(startup_id):
@@ -90,9 +73,6 @@ def minimum_for_position(position, others, rules):
 
 
 BLOCK_MESSAGES = {
-    "pending_review": "Your listing is under review. Bidding opens as soon as an admin approves it "
-                      "(usually within 1–2 working days).",
-    "rejected": "Your listing needs changes before it can go live. Update your company profile to resubmit it.",
     "unpublished": "Your listing is not public right now, so it can't hold a ranking. Contact support.",
     "paused": "Bidding is temporarily paused by the platform. Please check back soon.",
     "unverified": "Verify your email address to place bids.",
@@ -101,10 +81,6 @@ BLOCK_MESSAGES = {
 
 def bidding_block_reason(startup, rules, user=None):
     """Why this startup/user can't bid right now, or None if they can."""
-    if startup.status == STATUS_PENDING:
-        return "pending_review"
-    if startup.status == STATUS_REJECTED:
-        return "rejected"
     if startup.status != STATUS_PUBLISHED:
         return "unpublished"
     if not rules.bidding_enabled:
@@ -126,7 +102,7 @@ def position_board(startup, rules=None, user=None):
             select(RankingPosition.position, Bid.amount_paise).join(Bid, Bid.id == RankingPosition.bid_id)
         )
     }
-    others = _others_amounts(startup.id, now)
+    others = _others_amounts(startup.id)
     occupied = len(ranking)
     visible = min(rules.max_positions, max(occupied + (0 if my_position else 1), 1))
 
@@ -153,15 +129,13 @@ def position_board(startup, rules=None, user=None):
     my_active = db.session.scalars(
         select(Bid).where(Bid.startup_id == startup.id, Bid.status == BID_ACTIVE)
         .order_by(Bid.paid_at.desc())
-    ).first()
+    ).first() if not my_amount else None
     return {
         "rules": rules.to_dict(),
         "blocked_reason": blocked,
         "blocked_message": BLOCK_MESSAGES.get(blocked),
-        "rejection_reason": startup.rejection_reason if blocked == "rejected" else None,
         "current_position": my_position,
         "current_bid": my_amount // 100 if my_amount else (my_active.amount_rupees if my_active else None),
-        "ranking_expires_at": my_active.expires_at.isoformat() if my_active and my_active.expires_at else None,
         "positions": rows,
         "pending_bid": serialize_bid(pending) if pending else None,
         "updated_at": now.isoformat(),
@@ -286,7 +260,6 @@ def serialize_bid(bid, ranked_position=None):
         "display_status": display_status(bid, ranked_position),
         "created_at": bid.created_at.isoformat(),
         "paid_at": bid.paid_at.isoformat() if bid.paid_at else None,
-        "expires_at": bid.expires_at.isoformat() if bid.expires_at else None,
         "checkout_expires_at": bid.checkout_expires_at.isoformat() if bid.checkout_expires_at else None,
         "payment_status": payment.status if payment else None,
         "receipt": payment.receipt if payment else None,
